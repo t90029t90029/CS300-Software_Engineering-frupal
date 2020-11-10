@@ -6,6 +6,8 @@ const int HEIGHT = 128;
 class Map {
   public:
     Map();
+    void displayMap();
   private:
     Tile tiles[HEIGHT][WIDTH];
 };
+
