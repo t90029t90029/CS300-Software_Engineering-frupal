@@ -1,5 +1,5 @@
 #include "Tile.h"
 
-Tile::Tile(): type(MEADOW) { 
+Tile::Tile(): type(MEADOW), item(' ') { 
 
 }

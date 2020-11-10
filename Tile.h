@@ -10,4 +10,5 @@ class Tile {
   public:
     Tile(); 
     TileType type;
+		char item;
 };
