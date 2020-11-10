@@ -61,5 +61,6 @@ void Tile::displayMap()
             }
         }
     }
+    refresh();
 
 }
