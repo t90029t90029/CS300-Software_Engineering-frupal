@@ -55,9 +55,8 @@ void Map::displayMap()
                     attron(COLOR_PAIR(5));
                     mvprintw(h, w, "%c", empty);
                     attroff(COLOR_PAIR(5));
-                case default:
+                default:
                     break;
-                }
             }
         }
     }
