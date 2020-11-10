@@ -29,31 +29,31 @@ void Map::displayMap()
                 case MEADOW:
                     //make square GREEN at tiles[h][w];
                     attron(COLOR_PAIR(1));
-                    mvprint(h, w, "%c", empty);
+                    mvprintw(h, w, "%c", empty);
                     attroff(COLOR_PAIR(1));
                     break;
                 case WATER:
                     //make square BLUE at tiles[h][w];
                     attron(COLOR_PAIR(2));
-                    mvprint(h, w, "%c", empty);
+                    mvprintw(h, w, "%c", empty);
                     attroff(COLOR_PAIR(2));
                     break;
                 case SWAMP:
                     //make square MAGENTA at tiles[h][w];
                     attron(COLOR_PAIR(3));
-                    mvprint(h, w, "%c", empty);
+                    mvprintw(h, w, "%c", empty);
                     attroff(COLOR_PAIR(3));
                     break;
                 case WALL:
                     //make square WHITE at tiles[h][w];
                     attron(COLOR_PAIR(4));
-                    mvprint(h, w, "%c", empty);
+                    mvprintw(h, w, "%c", empty);
                     attroff(COLOR_PAIR(4));
                     break;
                 case DIAMOND:
                     //make square CYAN at tiles[h][w];
                     attron(COLOR_PAIR(5));
-                    mvprint(h, w, "%c", empty);
+                    mvprintw(h, w, "%c", empty);
                     attroff(COLOR_PAIR(5));
                 case default:
                     break;
