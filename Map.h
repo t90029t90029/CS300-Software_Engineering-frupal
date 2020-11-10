@@ -1,5 +1,5 @@
 #include "Tile.h"
-
+#include<ncurses.h>
 const int WIDTH = 128;
 const int HEIGHT = 128;
 
