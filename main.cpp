@@ -13,7 +13,6 @@ int main() {
   initscr();
   keypad(stdscr, true); // Accept keypad input
   noecho();             // Don't let user type
-
   // Input loop until quit
   while ((input = getch()) != INPUT_QUIT && !engine.isGameOver()) {
     switch (tolower(input)) {
