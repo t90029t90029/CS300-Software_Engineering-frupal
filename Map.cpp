@@ -70,3 +70,71 @@ void Map::displayMap()
     attroff(COLOR_PAIR(6));
     refresh(); 
 }
+void Map::loader() {
+	string line;
+	int nline = 0;
+	ifstream mapfile ("map1.txt");
+	if(mapfile.is_open()){
+		while (getline(mapfile, line)) {
+			for(unsigned i = 0; i < line.length(); i++) {
+				switch(line.at(i)) {
+					case 'M':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = 'M';
+						break;
+					case 'W':
+						tiles[nline][i].type = WATER;
+						tiles[nline][i].item = 'W';
+						break;
+					case 'S':
+						tiles[nline][i].type = SWAMP;
+						tiles[nline][i].item = 'S';
+						break;
+					case 'L':
+						tiles[nline][i].type = WALL;
+						tiles[nline][i].item = 'L';
+						break;
+					case 'D':
+						tiles[nline][i].type = DIAMOND;
+						tiles[nline][i].item = 'D';
+						break;
+					case 'H':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = 'S';
+						break;
+					case 'B':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = 'B';
+						break;
+					case 'T':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = 'T';
+						break;
+					case 'F':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = 'F';
+						break;
+					case '!':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = '!';
+						break;
+					case '?':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = '?';
+						break;
+					case '$':
+						tiles[nline][i].type = MEADOW;
+						tiles[nline][i].item = '$';
+						break;
+					default:
+						break;
+				}
+			}
+			nline++;
+		}
+		mapfile.close();
+
+	}
+	else 
+		cout<<"Failed to open file\n";
+}
