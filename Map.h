@@ -1,6 +1,5 @@
 #include "Tile.h"
 #include<ncurses.h>
-
 #include<string>
 #include<fstream>
 #include<iostream>

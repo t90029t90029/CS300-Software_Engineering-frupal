@@ -57,7 +57,6 @@ void Map::display(int playerY, int playerX)
         attroff(COLOR_PAIR(currentType));
       }
     }
-
     attron(COLOR_PAIR(PLAYER));
     mvprintw(playerY, playerX, "%c", playerSymbol);
     attroff(COLOR_PAIR(PLAYER));
