@@ -18,6 +18,11 @@ debug:
 	$(CC) *.cpp $(CFLAGS) -g
 	gdb ./$(PROJECT)
 
+leak:
+	make clean
+	$(CC) *.cpp $(CFLAGS) -g
+	valgrind --leak-check=full ./$(PROJECT)
+
 clean:
 	rm -f $(PROJECT)
 
