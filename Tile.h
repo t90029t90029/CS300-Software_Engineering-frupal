@@ -1,14 +1,16 @@
 enum TileType {
-  MEADOW, 
-  WATER, 
-  SWAMP, 
-  WALL, 
-  DIAMOND
+  EMPTY,
+  MEADOW,
+  WATER,
+  SWAMP,
+  WALL,
+  DIAMOND,
+  PLAYER
 };
 
 class Tile {
   public:
-    Tile(); 
+    Tile();
     TileType type;
 		char item;
 };

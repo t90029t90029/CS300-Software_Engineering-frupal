@@ -1,6 +1,11 @@
 class Player {
   public:
-    static void Where(int &x, int &y);
     Player();
+    void locate(int &y, int &x);
+    void move(int y, int x);
+    bool isAlive(void);
+  private:
     int energy;
+    int y;
+    int x;
 };
