@@ -1,12 +1,9 @@
 #include "Tile.h"
-#include "Player.h"
 #include<ncurses.h>
-
 #include<string>
 #include<fstream>
 #include<iostream>
 using namespace std;
-
 const int WIDTH = 128;
 const int HEIGHT = 128;
 

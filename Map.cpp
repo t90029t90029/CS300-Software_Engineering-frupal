@@ -1,6 +1,7 @@
 #include "Map.h"
 
 Map::Map() {
+
 }
 
 
@@ -13,13 +14,8 @@ void Map::displayMap()
     init_pair(3, COLOR_BLACK, COLOR_MAGENTA); 
     init_pair(4, COLOR_BLACK, COLOR_WHITE); 
     init_pair(5, COLOR_BLACK, COLOR_CYAN); 
-    init_pair(6, COLOR_BLACK, COLOR_RED);
 
     char empty = ' ';
-    char playerSymbol = '@';
-    int x = 0;
-    int y = 0;
-    Player::Where(x,y);     
 
     TileType currentType = tiles[0][0].type;
 
@@ -64,10 +60,6 @@ void Map::displayMap()
             }
         }
     }
-    attron(COLOR_PAIR(6));
-    mvprintw(y, x, "%c", playerSymbol);
-    move(y, x);
-    attroff(COLOR_PAIR(6));
     refresh(); 
 }
 void Map::loader() {
