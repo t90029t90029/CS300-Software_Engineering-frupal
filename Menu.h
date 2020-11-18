@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "Player.h"
 
-const int MENU_WIDTH = 20;
+const int MENU_WIDTH = 25;
 const char MENU_BORDER = '#';
 
 class Menu {
