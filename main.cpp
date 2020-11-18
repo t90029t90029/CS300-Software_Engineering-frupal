@@ -7,25 +7,15 @@
 
 int main() {
   Engine engine;
-  char input;
+  int input;
 
-  // Initiate ncurses
-  initscr();
-  keypad(stdscr, true); // Accept keypad input
-  noecho();             // Don't let user type
+  // Load and display map
+  engine.init();
+  
   // Input loop until quit
-  while ((input = getch()) != INPUT_QUIT && !engine.isGameOver()) {
-    switch (tolower(input)) {
-    // Arrow keys
-    case KEY_UP:
-    case KEY_DOWN:
-    case KEY_RIGHT:
-    case KEY_LEFT:
-      break;
-    }
-  }
+  while ((input = getch()) != INPUT_QUIT && !engine.isGameOver())
+    engine.receiveInput(input);
 
-  getch();
   endwin();
 
   return 0;

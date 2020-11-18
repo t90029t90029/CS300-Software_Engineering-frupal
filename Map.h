@@ -1,11 +1,10 @@
-#include "Tile.h"
-#include "Player.h"
-#include<ncurses.h>
+#pragma once
 
+#include "Tile.h"
+#include<ncurses.h>
 #include<string>
 #include<fstream>
 #include<iostream>
-using namespace std;
 
 const int WIDTH = 128;
 const int HEIGHT = 128;
@@ -13,9 +12,10 @@ const int HEIGHT = 128;
 class Map {
   public:
     Map();
-    void displayMap();
-    void loader();
+    ~Map();
+    void display(int playerX, int playerY);
+    void load();
   private:
-    Tile tiles[HEIGHT][WIDTH];
+    Tile ** tiles;
 };
 

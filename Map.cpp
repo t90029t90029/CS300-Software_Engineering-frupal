@@ -1,76 +1,69 @@
 #include "Map.h"
 
+using namespace std;
+
 Map::Map() {
+  tiles = new Tile*[HEIGHT];
+
+  for(int i=0;i<HEIGHT;++i){
+    tiles[i] = new Tile[WIDTH];
+  }
 }
 
+Map::~Map() {
+  if(!tiles){
+    return;
+  }
 
-void Map::displayMap()
+  for(int i=0;i<HEIGHT;++i){
+    delete []tiles[i];
+    tiles[i] = NULL;
+  }
+
+  delete []tiles;
+  tiles = NULL;
+
+  return;
+}
+
+void Map::display(int playerY, int playerX)
 {
     start_color();
 
-    init_pair(1, COLOR_BLACK, COLOR_GREEN); 
-    init_pair(2, COLOR_BLACK, COLOR_BLUE); 
-    init_pair(3, COLOR_BLACK, COLOR_MAGENTA); 
-    init_pair(4, COLOR_BLACK, COLOR_WHITE); 
-    init_pair(5, COLOR_BLACK, COLOR_CYAN); 
-    init_pair(6, COLOR_BLACK, COLOR_RED);
+    init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
+    init_pair(WATER, COLOR_BLACK, COLOR_BLUE);
+    init_pair(SWAMP, COLOR_BLACK, COLOR_MAGENTA);
+    init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
+    init_pair(DIAMOND, COLOR_BLACK, COLOR_CYAN);
+    init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
 
     char empty = ' ';
     char playerSymbol = '@';
-    int x = 0;
-    int y = 0;
-    Player::Where(x,y);     
 
-    TileType currentType = tiles[0][0].type;
+    TileType currentType;
 
-    for(int h = 0; h <= HEIGHT; ++h)
+    for(int h = 0; h < HEIGHT; ++h)
     {
-        for(int w = 0; w<= WIDTH; ++w)
-        {
-            currentType = tiles[h][w].type;
-            switch(currentType)
-            {
-                case MEADOW:
-                    //make square GREEN at tiles[h][w];
-                    attron(COLOR_PAIR(1));
-                    mvprintw(h, w, "%c", empty);
-                    attroff(COLOR_PAIR(1));
-                    break;
-                case WATER:
-                    //make square BLUE at tiles[h][w];
-                    attron(COLOR_PAIR(2));
-                    mvprintw(h, w, "%c", empty);
-                    attroff(COLOR_PAIR(2));
-                    break;
-                case SWAMP:
-                    //make square MAGENTA at tiles[h][w];
-                    attron(COLOR_PAIR(3));
-                    mvprintw(h, w, "%c", empty);
-                    attroff(COLOR_PAIR(3));
-                    break;
-                case WALL:
-                    //make square WHITE at tiles[h][w];
-                    attron(COLOR_PAIR(4));
-                    mvprintw(h, w, "%c", empty);
-                    attroff(COLOR_PAIR(4));
-                    break;
-                case DIAMOND:
-                    //make square CYAN at tiles[h][w];
-                    attron(COLOR_PAIR(5));
-                    mvprintw(h, w, "%c", empty);
-                    attroff(COLOR_PAIR(5));
-                default:
-                    break;
-            }
-        }
+      for(int w = 0; w < WIDTH; ++w)
+      {
+        char item = empty = ' ';
+        if (tiles[h][w].item != empty)
+          item = tiles[h][w].item;
+
+        currentType = tiles[h][w].type;
+
+        attron(COLOR_PAIR(currentType));
+        mvprintw(h, w, "%c", item);
+        attroff(COLOR_PAIR(currentType));
+      }
     }
-    attron(COLOR_PAIR(6));
-    mvprintw(y, x, "%c", playerSymbol);
-    move(y, x);
-    attroff(COLOR_PAIR(6));
-    refresh(); 
+    attron(COLOR_PAIR(PLAYER));
+    mvprintw(playerY, playerX, "%c", playerSymbol);
+    attroff(COLOR_PAIR(PLAYER));
+    refresh();
 }
-void Map::loader() {
+
+void Map::load() {
 	string line;
 	int nline = 0;
 	ifstream mapfile ("map1.txt");
@@ -80,23 +73,18 @@ void Map::loader() {
 				switch(line.at(i)) {
 					case 'M':
 						tiles[nline][i].type = MEADOW;
-						tiles[nline][i].item = 'M';
 						break;
 					case 'W':
 						tiles[nline][i].type = WATER;
-						tiles[nline][i].item = 'W';
 						break;
 					case 'S':
 						tiles[nline][i].type = SWAMP;
-						tiles[nline][i].item = 'S';
 						break;
 					case 'L':
 						tiles[nline][i].type = WALL;
-						tiles[nline][i].item = 'L';
 						break;
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
-						tiles[nline][i].item = 'D';
 						break;
 					case 'H':
 						tiles[nline][i].type = MEADOW;
@@ -135,6 +123,6 @@ void Map::loader() {
 		mapfile.close();
 
 	}
-	else 
+	else
 		cout<<"Failed to open file\n";
 }
