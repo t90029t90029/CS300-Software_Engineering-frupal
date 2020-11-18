@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tile.h"
 #include<ncurses.h>
 #include<string>

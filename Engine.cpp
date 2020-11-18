@@ -13,6 +13,7 @@ Engine::Engine() {
 void Engine::init() {
   map.load();
   map.display(0, 0);
+  menu.display(&player, &map);
 }
 
 void Engine::receiveInput(int input) {
@@ -59,6 +60,7 @@ void Engine::movePlayer(int direction) {
 
   player.move(y, x);
   map.display(y, x);
+  menu.display(&player, &map);
 }
 
 bool Engine::isGameOver() {

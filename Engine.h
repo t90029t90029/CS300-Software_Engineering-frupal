@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Player.h"
+#include "Menu.h"
 #include <ctype.h>
 
 class Engine {
@@ -12,5 +13,6 @@ class Engine {
 
   private:
     Map map;
+    Menu menu;
     Player player;
 };
