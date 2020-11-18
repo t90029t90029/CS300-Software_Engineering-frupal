@@ -36,27 +36,58 @@ void Map::display(int playerY, int playerX)
     init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
     init_pair(DIAMOND, COLOR_BLACK, COLOR_CYAN);
     init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
-
+    init_pair('0', COLOR_BLACK, COLOR_BLACK);
     char empty = ' ';
     char playerSymbol = '@';
 
     TileType currentType;
+    //Get sight from viewpoint
+    //set sight to be either +-1 around the player, or +-2 around the player. 
+    //set tiles around player location to visible
+    // int sight = getSight();
+    //if(sight == 1)
+    //for(int h = -1; i <= 1; ++h)
+    //{
+    //  for(int w = -1; w <= 1; ++w)
+    //  {
+    //      tiles[playerY+h][playerX+w].isVisible = TRUE;
+    //  }
+    //} 
+    //if(sight == 2)
+    //for(int h = -2; i <= 2; ++h)
+    //{
+    //  for(int w = -2; w <= 2; ++w)
+    //  {
+    //      tiles[playerY+h][playerX+w].isVisible = TRUE;
+    //  }
+    //} 
 
     for(int h = 0; h < HEIGHT; ++h)
     {
       for(int w = 0; w < WIDTH; ++w)
       {
-        char item = empty = ' ';
-        if (tiles[h][w].item != empty)
-          item = tiles[h][w].item;
+        //Check if visible = true, if true print tile, else print black
+        if(tiles[h][w].isVisible == TRUE) 
+        {
+            char item = empty = ' ';
+            if (tiles[h][w].item != empty)
+                item = tiles[h][w].item;
 
-        currentType = tiles[h][w].type;
+            currentType = tiles[h][w].type;
 
-        attron(COLOR_PAIR(currentType));
-        mvprintw(h, w, "%c", item);
-        attroff(COLOR_PAIR(currentType));
+            attron(COLOR_PAIR(currentType));
+            mvprintw(h, w, "%c", item);
+            attroff(COLOR_PAIR(currentType));
+       }
+       else
+       {
+            attron(COLOR_PAIR(0));
+            mvprintw(h, w, "%c", empty);
+            attroff(COLOR_PAIR(0));
+       }
       }
     }
+    
     attron(COLOR_PAIR(PLAYER));
     mvprintw(playerY, playerX, "%c", playerSymbol);
     attroff(COLOR_PAIR(PLAYER));
