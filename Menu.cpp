@@ -50,7 +50,7 @@ void Menu::displayTile(int y, int x) {
 
   mvprintw(1, TEXT_X, "> Grovnik: %d", tile->type);
 
-  if (tile->item != NULL) {
+  if (tile->item) {
     mvprintw(2, TEXT_X, "> Cost: ?");
     mvprintw(3, TEXT_X, "> Energy: ?");
   }
@@ -65,7 +65,7 @@ void Menu::displayOptions(int y, int x) {
   Tile * tile = map->getTile(y, x);
 
   // If it has an item, display info about it
-  if (tile->item != NULL) {
+  if (tile->item) {
     mvprintw(++line, TEXT_X, "Enter) Buy");
   }
 
