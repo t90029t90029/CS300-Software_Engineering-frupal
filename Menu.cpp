@@ -4,11 +4,15 @@
 using namespace std;
 
 void Menu::init(Map * m, Player * p) {
+  this->line = 0; // This determines which line to print on
   this->map = m;
   this->player = p;
 }
 
 void Menu::display() {
+  // Reset line position
+  this->line = 0;
+
   // Determine where we're printing
   MENU_X = COLS - MENU_WIDTH;
   TEXT_X = MENU_X + 2;
@@ -48,25 +52,28 @@ void Menu::displayTile(int y, int x) {
   //Examine tile at player's position
   Tile * tile = map->getTile(y, x);
 
-  mvprintw(1, TEXT_X, "> Grovnik: %d", tile->type);
+  mvprintw(++this->line, TEXT_X, "> Grovnik: %d", tile->type);
 
   if (tile->item != NULL) {
-    mvprintw(2, TEXT_X, "> Cost: ?");
-    mvprintw(3, TEXT_X, "> Energy: ?");
+    mvprintw(++this->line, TEXT_X, "> Cost: ?");
+    mvprintw(++this->line, TEXT_X, "> Energy: ?");
   }
+
+  ++this->line; // Add separation line
 }
 
 void Menu::displayOptions(int y, int x) {
   string direction;  // Direction text
-  int line = 5;      // Current line
-  mvprintw(line, TEXT_X, "Options:"); // Option heading
+
+
+  mvprintw(++this->line, TEXT_X, "Options:"); // Option heading
 
   //Examine tile at player's position
   Tile * tile = map->getTile(y, x);
 
   // If it has an item, display info about it
   if (tile->item != NULL) {
-    mvprintw(++line, TEXT_X, "Enter) Buy");
+    mvprintw(++this->line, TEXT_X, "Enter) Buy");
   }
 
   // Check tiles neighboring player's position
@@ -96,7 +103,7 @@ void Menu::displayOptions(int y, int x) {
     tile = map->getTile(_y, _x);
     if (tile != NULL) {
       if (tile->type == MEADOW || tile->type == SWAMP) {
-        mvprintw(++line, TEXT_X, direction.c_str());
+        mvprintw(++this->line, TEXT_X, direction.c_str());
       }
     }
   }
