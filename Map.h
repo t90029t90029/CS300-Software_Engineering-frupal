@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tile.h"
 #include<ncurses.h>
 #include<string>
@@ -13,6 +15,7 @@ class Map {
     ~Map();
     void display(int playerX, int playerY);
     void load();
+    Tile *getTile(int y, int x);
   private:
     Tile ** tiles;
 };

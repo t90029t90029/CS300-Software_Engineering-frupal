@@ -126,3 +126,13 @@ void Map::load() {
 	else
 		cout<<"Failed to open file\n";
 }
+
+Tile* Map::getTile(int y, int x) {
+  if (HEIGHT - 1 < y || y < 0)
+    return NULL;
+
+  if (WIDTH - 1 < x || x < 0)
+    return NULL;
+
+  return &tiles[y][x];
+}
