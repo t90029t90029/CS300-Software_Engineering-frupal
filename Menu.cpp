@@ -14,7 +14,11 @@ void Menu::display() {
   this->line = 0;
 
   // Determine where we're printing
-  MENU_X = COLS - MENU_WIDTH;
+  MENU_X = WIDTH + 1;
+  if (COLS - MENU_X < MENU_WIDTH) {
+    MENU_X = COLS - MENU_WIDTH;
+  }
+
   TEXT_X = MENU_X + 2;
 
   // Clear the menu
