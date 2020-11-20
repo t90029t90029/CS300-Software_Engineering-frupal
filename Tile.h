@@ -14,5 +14,5 @@ class Tile {
     Tile();
     TileType type;
     char item;
-    Item *itemType;
+    Item *itemType1;
 };
