@@ -22,6 +22,6 @@ class Tile {
     ItemType itemtype;
     int getCost(ItemType itemtype);
     int getEnergy(ItemType itemtype);
-
     char item;
+    bool isVisible;
 };

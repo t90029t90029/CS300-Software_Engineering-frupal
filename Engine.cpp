@@ -12,11 +12,15 @@ Engine::Engine() {
 
 void Engine::init() {
   srand(time(NULL));
+  int playerX;
+  int playerY;
 
-  map.load();
+  map.load(playerY, playerX);
+  player.setStartLocation(playerY, playerX);
+  
   menu.init(&map, &player);
-
-  map.display(0, 0);
+  player.locate(playerY, playerX);
+  map.display(playerY, playerX);
   menu.display();
 }
 

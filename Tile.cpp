@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(): type(MEADOW), item(' ') {
+Tile::Tile(): type(MEADOW), item(' ') , isVisible(false){
 
 }
 
