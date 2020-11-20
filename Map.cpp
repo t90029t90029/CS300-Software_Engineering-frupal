@@ -47,27 +47,17 @@ void Map::display(int playerY, int playerX)
     //set sight to be either +-1 around the player, or +-2 around the player.
     //set tiles around player location to visible
     // int sight = getSight();
-    //int sight = 1;
-    //if(sight == 1)
-   // {
-//        for(int h = 0; h <= 1; ++h)
-  //      {
-    //        for(int w = 0; w <= 1; ++w)
-      //      {
-         int h = 1;
-         int w = 1;
-         tiles[playerY-h][playerX].isVisible = true;
-         tiles[playerY-h][playerX-w].isVisible = true;
-         tiles[playerY-h][playerX+w].isVisible = true;
-         tiles[playerY][playerX].isVisible = true;
-         tiles[playerY][playerX-w].isVisible = true;
-         tiles[playerY][playerX+w].isVisible = true;
-         tiles[playerY+h][playerX-w].isVisible = true;
-         tiles[playerY+h][playerX+w].isVisible = true;
-         tiles[playerY+h][playerX].isVisible = true;
-        //    }
-       // }
-   // }
+    int sight = 1;
+    if(sight == 1)
+    {
+        for(int h = -1; h <= 1; ++h)
+        {
+           for(int w = -1; w <= 1; ++w)
+            {
+                tiles[playerY+h][playerX+w].isVisible = true;
+            }
+        }
+    }
     //if(sight == 2)
     //for(int h = -2; i <= 2; ++h)
     //{
