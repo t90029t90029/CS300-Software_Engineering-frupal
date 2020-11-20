@@ -22,6 +22,5 @@ class Menu {
 
     void displayOptions(int y, int x);
     void displayTile(int y, int x);
-    void displayPlayer(void);
     void clear(void);
 };

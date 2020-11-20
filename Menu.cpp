@@ -15,10 +15,11 @@ void Menu::display() {
 
   // Determine where we're printing
   MENU_X = WIDTH + 1;
-  if (COLS - MENU_X < MENU_WIDTH)
+  if (COLS - MENU_X < MENU_WIDTH) {
     MENU_X = COLS - MENU_WIDTH;
+  }
 
-  TEXT_X = MENU_X + 2; // WHere menu text begins
+  TEXT_X = MENU_X + 2;
 
   // Clear the menu
   clear();
@@ -30,12 +31,20 @@ void Menu::display() {
   int x, y;
   player->locate(y, x);
 
+  // Display tile info
   displayTile(y, x);
+
+  // Display options for current tile
   displayOptions(y, x);
-  displayPlayer();
+
+  // Display player stats at the bottom
+  int energy = player->getEnergy();
+  int money = player->getMoney();
+
+  mvprintw(LINES - 3, TEXT_X, "Whiffles: %d", money);
+  mvprintw(LINES - 2, TEXT_X, "Energy: %d", energy);
 }
 
-// Clear menu text
 void Menu::clear() {
   for (int i = 0; i < LINES; ++i) {
     move(i, MENU_X);
@@ -43,13 +52,6 @@ void Menu::clear() {
   }
 }
 
-// Display player stats
-void Menu::displayPlayer() {
-  mvprintw(LINES - 3, TEXT_X, "Whiffles: %d", player->getMoney());
-  mvprintw(LINES - 2, TEXT_X, "Energy: %d", player->getEnergy());
-}
-
-// Display info about tile or item
 void Menu::displayTile(int y, int x) {
   //Examine tile at player's position
   Tile * tile = map->getTile(y, x);
@@ -64,7 +66,6 @@ void Menu::displayTile(int y, int x) {
   ++this->line; // Add separation line
 }
 
-// Display available options
 void Menu::displayOptions(int y, int x) {
   string direction;  // Direction text
 
