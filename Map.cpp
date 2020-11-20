@@ -36,25 +36,61 @@ void Map::display(int playerY, int playerX)
     init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
     init_pair(DIAMOND, COLOR_BLACK, COLOR_CYAN);
     init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
+    init_pair('0', COLOR_BLACK, COLOR_BLACK);
 
     char empty = ' ';
     char playerSymbol = '@';
 
     TileType currentType;
 
+    //Get sight from viewpoint
+    //set sight to be either +-1 around the player, or +-2 around the player.
+    //set tiles around player location to visible
+    // int sight = getSight();
+    int sight = 1;
+    if(sight == 1)
+    {
+        for(int h = -1; h <= 1; ++h)
+        {
+           for(int w = -1; w <= 1; ++w)
+            {
+                tiles[playerY+h][playerX+w].isVisible = true;
+            }
+        }
+    }
+    //if(sight == 2)
+    //for(int h = -2; i <= 2; ++h)
+    //{
+    //  for(int w = -2; w <= 2; ++w)
+    //  {
+    //      tiles[playerY+h][playerX+w].isVisible = TRUE;
+    //  }
+    //}
+
     for(int h = 0; h < HEIGHT; ++h)
     {
       for(int w = 0; w < WIDTH; ++w)
       {
-        char item = empty = ' ';
-        if (tiles[h][w].item != empty)
-          item = tiles[h][w].item;
+        //Check if visible = true, if true print tile, else print black
+        if(tiles[h][w].isVisible == true)
+        {
+            char item = empty = ' ';
+            if(tiles[h][w].item != empty)
+                item = tiles[h][w].item;
 
-        currentType = tiles[h][w].type;
+            currentType = tiles[h][w].type;
 
-        attron(COLOR_PAIR(currentType));
-        mvprintw(h, w, "%c", item);
-        attroff(COLOR_PAIR(currentType));
+            attron(COLOR_PAIR(currentType));
+            mvprintw(h, w, "%c", item);
+            attroff(COLOR_PAIR(currentType));
+       }
+       else
+       {
+            attron(COLOR_PAIR(0));
+            mvprintw(h, w, "%c", empty);
+            attroff(COLOR_PAIR(0));
+       }
+
       }
     }
     attron(COLOR_PAIR(PLAYER));
@@ -63,9 +99,10 @@ void Map::display(int playerY, int playerX)
     refresh();
 }
 
-void Map::load() {
+void Map::load(int & playerStartY, int & playerStartX) {
 	string line;
 	int nline = 0;
+	int whichItem;
 	ifstream mapfile ("map1.txt");
 	if(mapfile.is_open()){
 		while (getline(mapfile, line)) {
@@ -102,6 +139,13 @@ void Map::load() {
 					case 'F':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'F';
+						whichItem = rand() % 3 + 1;
+						if(whichItem == 1)
+						  tiles[nline][i].itemtype = CRACKER;
+						else if(whichItem == 2)
+						  tiles[nline][i].itemtype = STEAK;
+						else if(whichItem == 3)
+						  tiles[nline][i].itemtype = SPRITE;
 						break;
 					case '!':
 						tiles[nline][i].type = MEADOW;
@@ -116,7 +160,12 @@ void Map::load() {
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '$';
 						break;
-					default:
+					case '@':
+                                                tiles[nline][i].type = MEADOW;
+                                                playerStartY = nline;
+                                                playerStartX = i;
+                                                break;
+                                        default:
 						break;
 				}
 			}
@@ -127,4 +176,14 @@ void Map::load() {
 	}
 	else
 		cout<<"Failed to open file\n";
+}
+
+Tile* Map::getTile(int y, int x) {
+  if (HEIGHT - 1 < y || y < 0)
+    return NULL;
+
+  if (WIDTH - 1 < x || x < 0)
+    return NULL;
+
+  return &tiles[y][x];
 }
