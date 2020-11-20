@@ -1,4 +1,7 @@
+#pragma once
+
 #include "Item.h"
+
 enum TileType {
   EMPTY,
   MEADOW,
@@ -9,7 +12,7 @@ enum TileType {
   PLAYER
 };
 
-enum ItemType {
+enum FoodType {
   CRACKER,
   STEAK,
   SPRITE,
@@ -22,9 +25,8 @@ class Tile {
     TileType type;
     char item;
     Item *itemType1;
-    ItemType itemtype;
-    int getCost(ItemType itemtype);
-    int getEnergy(ItemType itemtype);
-    char item;
+    FoodType itemtype;
+    int getCost(FoodType itemtype);
+    int getEnergy(FoodType itemtype);
     bool isVisible;
 };
