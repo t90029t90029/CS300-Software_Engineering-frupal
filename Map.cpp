@@ -134,6 +134,7 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case 'T':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'T';
+						tiles[nline][i].itemType1 = new Tool;
 						break;
 					case 'F':
 						tiles[nline][i].type = MEADOW;
@@ -149,6 +150,7 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case '!':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '!';
+						tiles[nline][i].itemType1 = new Obstacle;
 						break;
 					case '?':
 						tiles[nline][i].type = MEADOW;
