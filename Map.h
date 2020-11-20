@@ -13,8 +13,8 @@ class Map {
   public:
     Map();
     ~Map();
-    void display(int playerX, int playerY);
-    void load();
+    void display(int playerY, int playerX);
+    void load(int & playerStartY, int & playerStartX);
     Tile *getTile(int y, int x);
   private:
     Tile ** tiles;

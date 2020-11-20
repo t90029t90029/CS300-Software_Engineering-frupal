@@ -41,3 +41,9 @@ void Player::setMoney(int value) {
     money = value;
 }
 
+
+void Player::setStartLocation(int playerStartY, int playerStartX)
+{
+    this->y = playerStartY;
+    this->x = playerStartX;
+}
