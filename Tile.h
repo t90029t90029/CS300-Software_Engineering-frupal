@@ -13,5 +13,4 @@ class Tile {
     Tile();
     TileType type;
 		char item;
-    bool isVisible;
 };
