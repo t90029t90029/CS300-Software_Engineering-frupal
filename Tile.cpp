@@ -4,7 +4,7 @@ Tile::Tile(): type(MEADOW), item(' ') , isVisible(false){
 
 }
 
-int Tile::getCost(ItemType itemtype){
+int Tile::getCost(FoodType itemtype){
   if(itemtype == CRACKER)
     return 50;
   else if(itemtype == STEAK)
@@ -14,8 +14,8 @@ int Tile::getCost(ItemType itemtype){
 
   return 0;	//no match
 }
- 
-int Tile::getEnergy(ItemType itemtype){
+
+int Tile::getEnergy(FoodType itemtype){
   if(itemtype == CRACKER)
     return 20;
   else if(itemtype == STEAK)
