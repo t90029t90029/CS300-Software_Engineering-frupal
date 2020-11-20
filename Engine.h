@@ -12,7 +12,6 @@ class Engine {
     void receiveInput(int input);
     void movePlayer(int direction);
     bool isGameOver();
-    int northSwamp();
     void foundItem(int,int);
 
   private:
