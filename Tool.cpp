@@ -67,3 +67,11 @@ int Tool::getStrength() {
   }
   return rating;
 }
+
+int Tool::getObstacle() {
+  return 0;
+}
+
+int Tool::getDetails() {
+  return 0;
+}

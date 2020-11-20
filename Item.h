@@ -18,10 +18,10 @@ class Item {
   public:
     Item(){};
     ~Item(){};
-    int getCost();
-    int getStrength();
-    int getObstacle();
-    int getDetails();
+    virtual int getCost() = 0;
+    virtual int getStrength() = 0;
+    virtual int getObstacle() = 0;
+    virtual int getDetails() = 0;
   private:
     ItemType type;
     string name;

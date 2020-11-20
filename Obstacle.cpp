@@ -22,6 +22,17 @@ int Obstacle::getStrength() {
   return energy;
 }
 
+int Obstacle::getCost() {
+  return 0;
+}
+
+int Obstacle::getObstacle() {
+  return 0;
+}
+int Obstacle::getDetails() {
+  return 0;
+}
+
 
 
 
