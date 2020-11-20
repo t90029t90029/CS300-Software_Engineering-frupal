@@ -8,9 +8,20 @@ enum TileType {
   PLAYER
 };
 
+enum ItemType {
+  CRACKER,
+  STEAK,
+  SPRITE,
+  NON
+};
+
 class Tile {
   public:
     Tile();
     TileType type;
-		char item;
+    ItemType itemtype;
+    int getCost(ItemType itemtype);
+    int getEnergy(ItemType itemtype);
+
+    char item;
 };

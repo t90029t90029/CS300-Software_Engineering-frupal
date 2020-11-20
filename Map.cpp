@@ -66,6 +66,7 @@ void Map::display(int playerY, int playerX)
 void Map::load() {
 	string line;
 	int nline = 0;
+	int whichItem;
 	ifstream mapfile ("map1.txt");
 	if(mapfile.is_open()){
 		while (getline(mapfile, line)) {
@@ -101,6 +102,13 @@ void Map::load() {
 					case 'F':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'F';
+						whichItem = rand() % 3 + 1;
+						if(whichItem == 1)
+						  tiles[nline][i].itemtype = CRACKER;
+						else if(whichItem == 2)
+						  tiles[nline][i].itemtype = STEAK;
+						else if(whichItem == 3)
+						  tiles[nline][i].itemtype = SPRITE;
 						break;
 					case '!':
 						tiles[nline][i].type = MEADOW;
@@ -125,4 +133,14 @@ void Map::load() {
 	}
 	else
 		cout<<"Failed to open file\n";
+}
+
+Tile* Map::getTile(int y, int x) {
+  if (HEIGHT - 1 < y || y < 0)
+    return NULL;
+
+  if (WIDTH - 1 < x || x < 0)
+    return NULL;
+
+  return &tiles[y][x];
 }
