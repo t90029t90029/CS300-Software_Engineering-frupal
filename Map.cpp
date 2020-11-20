@@ -66,7 +66,7 @@ void Map::display(int playerY, int playerX)
 void Map::load() {
 	string line;
 	int nline = 0;
-	int foodtype;
+	int whichItem;
 	ifstream mapfile ("map1.txt");
 	if(mapfile.is_open()){
 		while (getline(mapfile, line)) {
@@ -102,13 +102,13 @@ void Map::load() {
 					case 'F':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'F';
-						foodtype = rand() % 3 + 1;
-						if(foodtype == 1)
-						  tiles[nline][i].food = CRACKER;
-						else if(foodtype == 2)
-						  tiles[nline][i].food = STEAK;
-						else if(foodtype == 3)
-						  tiles[nline][i].food = SPRITE;
+						whichItem = rand() % 3 + 1;
+						if(whichItem == 1)
+						  tiles[nline][i].itemtype = CRACKER;
+						else if(whichItem == 2)
+						  tiles[nline][i].itemtype = STEAK;
+						else if(whichItem == 3)
+						  tiles[nline][i].itemtype = SPRITE;
 						break;
 					case '!':
 						tiles[nline][i].type = MEADOW;
