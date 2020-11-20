@@ -8,9 +8,17 @@ enum TileType {
   PLAYER
 };
 
+enum FoodType {
+  CRACKER,
+  STEAK,
+  SPRITE,
+  NON
+};
+
 class Tile {
   public:
     Tile();
     TileType type;
-		char item;
+    FoodType food;
+    char item;
 };
