@@ -1,8 +1,6 @@
 #include "Player.h"
 #include "Map.h"
 
-using namespace std;
-
 Player::Player(): energy(100), money(0), y(0), x(0){
 }
 
