@@ -36,7 +36,7 @@ void Map::display(int playerY, int playerX)
     init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
     init_pair(DIAMOND, COLOR_BLACK, COLOR_CYAN);
     init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
-    char empty = ' ';
+    char:empty = ' ';
     char playerSymbol = '@';
 
     TileType currentType;
@@ -45,6 +45,15 @@ void Map::display(int playerY, int playerX)
     {
       for(int w = 0; w < WIDTH; ++w)
       {
+        char item = empty = ' ';
+        if (tiles[h][w].item != empty)
+          item = tiles[h][w].item;
+
+        currentType = tiles[h][w].type;
+
+        attron(COLOR_PAIR(currentType));
+        mvprintw(h, w, "%c", item);
+        attroff(COLOR_PAIR(currentType));
       }
     }
     
