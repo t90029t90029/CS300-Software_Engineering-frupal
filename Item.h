@@ -13,19 +13,11 @@ enum ItemType {
   TREASURE
 };
 
-
-class Item {
-  public:
-    Item(){};
-    ~Item(){};
-    virtual int getCost() = 0;
-    virtual int getStrength() = 0;
-    virtual int getObstacle() = 0;
-    virtual int getDetails() = 0;
-  private:
-    ItemType type;
-    string name;
-};
+enum ObstacleType{
+  BOULDER,
+  TREE,
+  SOIL
+}; 
 
 enum ToolType{
   AXE,
@@ -34,35 +26,49 @@ enum ToolType{
   SHOVEL
 };
 
-class Tool: public Item {
+class Item {
   public:
-    Tool();
-    ~Tool();
-    int getCost();
-    int getStrength();
-    int getObstacle();
-    int getDetails();
+    Item(){};
+    ~Item(){};
+    virtual int getCost() = 0;
+    virtual int getStrength() = 0;
+    virtual ObstacleType getObstacle() = 0;
+    virtual int getDetails() = 0;
   private:
-    ToolType type;
+    ItemType type;
     string name;
-    int cost;
-    int rating;
 };
 
 
-enum ObstacleType{
-  BOULDER,
-  TREE
-}; 
+
+
 class Obstacle: public Item {
   public:
     Obstacle();
     ~Obstacle();
     int getCost();
     int getStrength();
-    int getObstacle();
+    ObstacleType getObstacle();
     int getDetails();
   private:
     ObstacleType type;
     int energy;
 };
+
+
+class Tool: public Item {
+  public:
+    Tool();
+    ~Tool();
+    int getCost();
+    int getStrength();
+    ObstacleType getObstacle();
+    int getDetails();
+  private:
+    ToolType type;
+    string name;
+    int cost;
+    int rating;
+    ObstacleType obstacleType;
+};
+

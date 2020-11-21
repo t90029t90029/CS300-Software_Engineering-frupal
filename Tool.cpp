@@ -29,15 +29,19 @@ int Tool::getCost() {
   switch(type) {
     case AXE:
 	    cost = 10;
+	    obstacleType = TREE;
 	    break;
     case HOE:
 	    cost = 20;
+	    obstacleType = SOIL;
 	    break;
     case PICKAXE:
 	    cost = 30;
+	    obstacleType = BOULDER;
 	    break;
     case SHOVEL:
 	    cost = 40;
+	    obstacleType = SOIL;
 	    break;
     default:
 	    break;
@@ -68,8 +72,8 @@ int Tool::getStrength() {
   return rating;
 }
 
-int Tool::getObstacle() {
-  return 0;
+ObstacleType Tool::getObstacle() {
+  return obstacleType;
 }
 
 int Tool::getDetails() {
