@@ -10,6 +10,7 @@ class Player {
     int getMoney(void);
     void setEnergy(int value);
     void setMoney(int value);
+    void setStartLocation(int playerStartY, int playerStartX);
   private:
     int energy;
     int money;

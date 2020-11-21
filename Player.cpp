@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Map.h"
 
-Player::Player(): energy(100), money(0), y(0), x(0) {
+Player::Player(): energy(100), money(0), y(0), x(0){
 }
 
 void Player::move(int y, int x) {
@@ -39,4 +39,11 @@ void Player::setMoney(int value) {
     money = 0;
   else
     money = value;
+}
+
+
+void Player::setStartLocation(int playerStartY, int playerStartX)
+{
+    this->y = playerStartY;
+    this->x = playerStartX;
 }

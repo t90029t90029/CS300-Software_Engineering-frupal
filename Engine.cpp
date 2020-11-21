@@ -11,10 +11,16 @@ Engine::Engine() {
 }
 
 void Engine::init() {
-  map.load();
-  menu.init(&map, &player);
+  srand(time(NULL));
+  int playerX;
+  int playerY;
 
-  map.display(0, 0);
+  map.load(playerY, playerX);
+  player.setStartLocation(playerY, playerX);
+  
+  menu.init(&map, &player);
+  player.locate(playerY, playerX);
+  map.display(playerY, playerX);
   menu.display();
 }
 
@@ -73,10 +79,76 @@ void Engine::movePlayer(int direction) {
   player.setEnergy(player.getEnergy()-enCost);
 	  
   player.move(y, x);
+  foundItem(y,x);
   map.display(y, x);
   menu.display();
 }
 
 bool Engine::isGameOver() {
   return !player.isAlive();
+}
+
+void Engine::foundItem(int y,int x){
+  Tile * tile = map.getTile(y,x);
+  char item = tile->item;
+  int money = player.getMoney();
+  int energy = player.getEnergy();
+  int cost;
+  int randomY;	//random number
+  int randomX;	//random number
+  int coin;	//0 or 1
+  std::string clue;
+
+  switch(item){
+    case '$':
+	    tile->item = ' ';
+	    money += rand() % 901 + 100;
+	    player.setMoney(money);
+	    break;
+
+    case 'F':
+    	    cost = tile->getCost(tile->itemtype);
+	    if(cost > money){
+	      //a menu function :inform the player the item is too expensive
+	      break;
+	    }
+	    player.setMoney(money-cost);
+
+	    energy += tile->getEnergy(tile->itemtype);
+	    if(energy > 100)
+	      energy = 100;
+	    player.setEnergy(energy);
+
+	    tile->itemtype = NON;
+	    tile->item = ' ';
+	    break;
+
+    case '?':
+	    coin = rand() % 2;
+	    randomY = rand() % 128 + 1;
+	    randomX = rand() % 128 + 1;
+
+	    //tell the truth
+	    if(coin){
+	        clue = "You are"+ std::to_string(x) +" grovnicks from the western border, there is no swamp to the north, ";
+
+	      //TODO call the function to get the position of the diamond;
+	      clue += "and the royal diamonds are located y grovnicks to the East and z grovnicks to the South.";
+	    }
+	   
+	    //tell the lie
+	    else{
+	      clue = "You are"+ std::to_string(y) +" grovnicks from the western border, there is no swamp to the north, and the royal diamonds are located "+ std::to_string(randomX) +" grovnicks to the East ";
+	      clue += "and "+ std::to_string(randomY) +" grovnicks to the South.";
+	    }
+
+	    // TODO make the clue be stored in the menu class and clear the item
+	    tile->item = ' ';
+	    tile->itemtype = NON;
+	    break;
+
+    default: 
+	    break;
+  }
+  return;
 }

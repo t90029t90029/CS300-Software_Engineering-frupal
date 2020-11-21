@@ -18,6 +18,7 @@ class Menu {
 
     Map *map;
     Player *player;
+    int line;
 
     void displayOptions(int y, int x);
     void displayTile(int y, int x);
