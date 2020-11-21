@@ -72,6 +72,26 @@ int Tool::getObstacle() {
   return 0;
 }
 
-int Tool::getDetails() {
+int Tool::getDetails(string & source) {
+  if(name.length() > 0){
+    source = name;
+    return 1;
+  }
+  return 0;
+}
+
+int Tool::getMoney() {
+  return 0;
+}
+
+int Tool::getTruth() {
+  return 0;
+}
+
+void Tool::setClue(string clue){
+  return;
+}
+
+int Tool::getToggle(){
   return 0;
 }

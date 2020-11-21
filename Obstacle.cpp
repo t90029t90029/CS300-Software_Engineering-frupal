@@ -29,12 +29,23 @@ int Obstacle::getCost() {
 int Obstacle::getObstacle() {
   return 0;
 }
-int Obstacle::getDetails() {
+
+int Obstacle::getDetails(string & source) {
   return 0;
 }
 
+int Obstacle::getMoney() {
+  return 0;
+}
+    
+int Obstacle::getTruth() {
+  return 0;
+}
 
+void Obstacle::setClue(string clue){
+  return;
+}
 
-
-
-
+int Obstacle::getToggle(){
+  return 0;
+}
