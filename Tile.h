@@ -12,21 +12,11 @@ enum TileType {
   PLAYER
 };
 
-enum FoodType {
-  CRACKER,
-  STEAK,
-  SPRITE,
-  NON
-};
-
 class Tile {
   public:
     Tile();
     TileType type;
     char item;
-    Item *itemType1;
-    FoodType itemtype;
-    int getCost(FoodType itemtype);
-    int getEnergy(FoodType itemtype);
     bool isVisible;
+    Item *itemType;
 };
