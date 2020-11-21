@@ -16,6 +16,7 @@ void Engine::init() {
   int playerY;
 
   map.load(playerY, playerX);
+  map.viewportSize(LINES, COLS);
   player.setStartLocation(playerY, playerX);
   
   menu.init(&map, &player);
