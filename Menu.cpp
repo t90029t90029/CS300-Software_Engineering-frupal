@@ -37,6 +37,9 @@ void Menu::display() {
   // Display options for current tile
   displayOptions(y, x);
 
+  // Display the clue if there is a clue
+  displayClue(y, x);
+
   // Display player stats at the bottom
   int energy = player->getEnergy();
   int money = player->getMoney();
@@ -58,7 +61,7 @@ void Menu::displayTile(int y, int x) {
 
   mvprintw(++this->line, TEXT_X, "> Grovnik: %d", tile->type);
 
-  if (tile->item != NULL) {
+  if (tile->item) {
     mvprintw(++this->line, TEXT_X, "> Cost: ?");
     mvprintw(++this->line, TEXT_X, "> Energy: ?");
   }
@@ -76,7 +79,7 @@ void Menu::displayOptions(int y, int x) {
   Tile * tile = map->getTile(y, x);
 
   // If it has an item, display info about it
-  if (tile->item != NULL) {
+  if (tile->item) {
     mvprintw(++this->line, TEXT_X, "Enter) Buy");
   }
 
@@ -108,6 +111,24 @@ void Menu::displayOptions(int y, int x) {
     if (tile != NULL) {
       if (tile->type == MEADOW || tile->type == SWAMP) {
         mvprintw(++this->line, TEXT_X, direction.c_str());
+      }
+    }
+  }
+}
+
+void Menu::displayClue(int y,int x){
+  Tile * tile = map->getTile(y, x);
+  string clue;
+  string piece;
+  this->line = 14;
+  mvprintw(this->line, TEXT_X,"Clue :");
+  if(tile->itemType){
+    if(tile->itemType->getToggle()){
+      if(tile->itemType->getDetails(clue)){
+    	  piece = clue.substr(0, 19);
+          mvprintw(++this->line, TEXT_X,piece.c_str());
+    	  piece = clue.substr(clue.find("from"));
+          mvprintw(++this->line, TEXT_X,piece.c_str());
       }
     }
   }

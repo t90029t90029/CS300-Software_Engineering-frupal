@@ -17,7 +17,6 @@ void Engine::init() {
 
   map.load(playerY, playerX);
   player.setStartLocation(playerY, playerX);
-  
   menu.init(&map, &player);
   player.locate(playerY, playerX);
   map.display(playerY, playerX);
@@ -39,7 +38,8 @@ void Engine::receiveInput(int input) {
 }
 
 void Engine::movePlayer(int direction) {
-  int x = 0, y = 0;
+  //energy cost, 1 for normal, 2 for swamp, 0 when boat
+  int x = 0, y = 0, enCost = 1;
   player.locate(y, x);
 
   switch (direction) {
@@ -65,7 +65,18 @@ void Engine::movePlayer(int direction) {
   // Check X is in bounds
   if (x < 0) x = 0;
   if (x > WIDTH - 1) x = WIDTH - 1;
-
+  //move player while adding limits of walls and energy consumption
+  //holder for checking different types
+  TileType type;
+  type = (*map.getTile(y, x)).type;
+  if(type == WALL || type == WATER){
+	  //include a check for if player has boat
+	  //waiting items inventory
+     player.locate(y, x);
+  }else if(type == SWAMP)
+	  ++enCost;
+  player.setEnergy(player.getEnergy()-enCost);
+	  
   player.move(y, x);
   foundItem(y,x);
   map.display(y, x);
@@ -82,57 +93,52 @@ void Engine::foundItem(int y,int x){
   int money = player.getMoney();
   int energy = player.getEnergy();
   int cost;
-  int randomY;	//random number
-  int randomX;	//random number
-  int coin;	//0 or 1
+  //int randomY;	//random number
+  //int randomX;	//random number
   std::string clue;
 
   switch(item){
     case '$':
-	    tile->item = ' ';
-	    money += rand() % 901 + 100;
+	    money += tile->itemType->getMoney();
 	    player.setMoney(money);
+
+	    tile->item = ' ';
 	    break;
 
     case 'F':
-    	    cost = tile->getCost(tile->itemtype);
+    	    cost = tile->itemType->getCost();
 	    if(cost > money){
 	      //a menu function :inform the player the item is too expensive
 	      break;
 	    }
 	    player.setMoney(money-cost);
 
-	    energy += tile->getEnergy(tile->itemtype);
+	    energy += tile->itemType->getStrength();
 	    if(energy > 100)
 	      energy = 100;
 	    player.setEnergy(energy);
 
-	    tile->itemtype = NON;
 	    tile->item = ' ';
 	    break;
 
     case '?':
-	    coin = rand() % 2;
-	    randomY = rand() % 128 + 1;
-	    randomX = rand() % 128 + 1;
+	    //randomY = rand() % 128 + 1;
+	    //randomX = rand() % 128 + 1;
 
 	    //tell the truth
-	    if(coin){
-	        clue = "You are"+ std::to_string(x) +" grovnicks from the western border, there is no swamp to the north, ";
-
-	      //TODO call the function to get the position of the diamond;
-	      clue += "and the royal diamonds are located y grovnicks to the East and z grovnicks to the South.";
+	    if(tile->itemType->getTruth()){
+	      clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
+	      //clue += "";
 	    }
 	   
 	    //tell the lie
 	    else{
-	      clue = "You are"+ std::to_string(y) +" grovnicks from the western border, there is no swamp to the north, and the royal diamonds are located "+ std::to_string(randomX) +" grovnicks to the East ";
-	      clue += "and "+ std::to_string(randomY) +" grovnicks to the South.";
+	      clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
+	      //clue += "";
 	    }
 
-	    // TODO make the clue be stored in the menu class and clear the item
+	    tile->itemType->setClue(clue);
 	    tile->item = ' ';
-	    tile->itemtype = NON;
 	    break;
 
     default: 

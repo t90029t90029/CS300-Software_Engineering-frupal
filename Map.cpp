@@ -102,7 +102,6 @@ void Map::display(int playerY, int playerX)
 void Map::load(int & playerStartY, int & playerStartX) {
 	string line;
 	int nline = 0;
-	int whichItem;
 	ifstream mapfile ("map1.txt");
 	if(mapfile.is_open()){
 		while (getline(mapfile, line)) {
@@ -134,29 +133,27 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case 'T':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'T';
+						tiles[nline][i].itemType = new Tool;
 						break;
 					case 'F':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'F';
-						whichItem = rand() % 3 + 1;
-						if(whichItem == 1)
-						  tiles[nline][i].itemtype = CRACKER;
-						else if(whichItem == 2)
-						  tiles[nline][i].itemtype = STEAK;
-						else if(whichItem == 3)
-						  tiles[nline][i].itemtype = SPRITE;
+						tiles[nline][i].itemType = new Food;
 						break;
 					case '!':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '!';
+						tiles[nline][i].itemType = new Obstacle;
 						break;
 					case '?':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '?';
+						tiles[nline][i].itemType = new Clue;
 						break;
 					case '$':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '$';
+						tiles[nline][i].itemType = new Treasure;
 						break;
 					case '@':
                                                 tiles[nline][i].type = MEADOW;

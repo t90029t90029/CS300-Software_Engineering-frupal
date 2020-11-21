@@ -1,3 +1,4 @@
 /frupal
 .*
 !/.gitignore
+/frupal.dSYM
