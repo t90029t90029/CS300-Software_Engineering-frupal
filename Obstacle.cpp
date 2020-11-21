@@ -10,6 +10,9 @@ Obstacle::Obstacle() {
     case BOULDER:
 	    energy = 20;
 	    break;
+    case SOIL:
+	    energy = 15;
+	    break;
     default:
 	    break;
   } 
@@ -26,8 +29,8 @@ int Obstacle::getCost() {
   return 0;
 }
 
-int Obstacle::getObstacle() {
-  return 0;
+ObstacleType Obstacle::getObstacle() {
+  return type;
 }
 int Obstacle::getDetails() {
   return 0;
