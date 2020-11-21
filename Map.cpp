@@ -43,29 +43,20 @@ void Map::display(int playerY, int playerX)
 
     TileType currentType;
 
-    //Get sight from viewpoint
-    //set sight to be either +-1 around the player, or +-2 around the player.
-    //set tiles around player location to visible
-    // int sight = getSight();
     int sight = 1;
     if(sight == 1)
     {
         for(int h = -1; h <= 1; ++h)
         {
            for(int w = -1; w <= 1; ++w)
-            {
-                tiles[playerY+h][playerX+w].isVisible = true;
-            }
+           {
+                if(playerY+h < HEIGHT && playerY+h >= 0 && playerX+w >= 0 && playerX+w < WIDTH)
+                {
+                    tiles[playerY+h][playerX+w].isVisible = true;
+                }
+           }
         }
     }
-    //if(sight == 2)
-    //for(int h = -2; i <= 2; ++h)
-    //{
-    //  for(int w = -2; w <= 2; ++w)
-    //  {
-    //      tiles[playerY+h][playerX+w].isVisible = TRUE;
-    //  }
-    //}
 
     for(int h = 0; h < HEIGHT; ++h)
     {
