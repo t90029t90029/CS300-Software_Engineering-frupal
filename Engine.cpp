@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include <sstream>
 
 Engine::Engine() {
   // Initiate ncurses
@@ -77,13 +78,15 @@ bool Engine::isGameOver() {
 
 void Engine::foundItem(int y,int x){
   Tile * tile = map.getTile(y,x);
+  std::ostringstream output;
   char item = tile->item;
   int money = player.getMoney();
   int energy = player.getEnergy();
   int cost;
-  //int randomY;	//random number
-  //int randomX;	//random number
   std::string clue;
+  int randomY = rand() % 128;	//random number
+  int randomX = rand() % 128;	//random number
+  Tile * temp = map.getTile(randomY,randomX);	//random tile
 
   switch(item){
     case '$':
@@ -110,19 +113,27 @@ void Engine::foundItem(int y,int x){
 	    break;
 
     case '?':
-	    //randomY = rand() % 128 + 1;
-	    //randomX = rand() % 128 + 1;
-
+	    while(!temp){
+  	      randomY = rand() % 128;
+  	      randomX = rand() % 128;
+  	      temp = map.getTile(randomY,randomX);
+	    }
 	    //tell the truth
 	    if(tile->itemType->getTruth()){
 	      clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
-	      //clue += "";
+
+	      output<<randomX<<","<<randomY;
+
+	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
 	    }
 	   
 	    //tell the lie
 	    else{
 	      clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
-	      //clue += "";
+
+	      output<<randomY<<","<<randomX;	//in reverse order
+
+	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
 	    }
 
 	    tile->itemType->setClue(clue);
