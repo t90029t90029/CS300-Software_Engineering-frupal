@@ -13,7 +13,11 @@ bool Player::hasShip() {
 }
 
 int Player::hasTool(ObstacleType type) {
-  return true;
+  return 2;
+}
+
+Tool * Player::getTools() {
+  return tools;
 }
 /** **/
 

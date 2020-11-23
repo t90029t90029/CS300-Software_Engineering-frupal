@@ -2,6 +2,8 @@
 #include "Map.h"
 #include "Item.h"
 
+#define INVENTORY_MAX 10
+
 class Player {
   public:
     Player();
@@ -24,7 +26,12 @@ class Player {
     // the strength of the tool is returned
     // Otherwise, -1
     int hasTool(ObstacleType type);
+
+    // Get array of tools in inventory
+    Tool * getTools(void);
   private:
+    // An array of tools in the inventory
+    Tool * tools;
     int energy;
     int money;
     int y;
