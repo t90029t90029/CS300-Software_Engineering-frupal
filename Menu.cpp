@@ -120,14 +120,24 @@ void Menu::displayClue(int y,int x){
   Tile * tile = map->getTile(y, x);
   string clue;
   string piece;
+  //std::size_t position;
   this->line = 14;
   mvprintw(this->line, TEXT_X,"Clue :");
   if(tile->itemType){
     if(tile->itemType->getToggle()){
       if(tile->itemType->getDetails(clue)){
+	  //print from the 1st to the 20th
     	  piece = clue.substr(0, 19);
           mvprintw(++this->line, TEXT_X,piece.c_str());
-    	  piece = clue.substr(clue.find("from"));
+	  //print from the 22th to the 44th
+    	  piece = clue.substr(21, 23);
+          mvprintw(++this->line, TEXT_X,piece.c_str());
+	  ++this->line;
+	  //print from the 45th to the 52th
+    	  piece = clue.substr(44, 8);
+          mvprintw(++this->line, TEXT_X,piece.c_str());
+	  //print from the 53th to the end
+  	  piece = clue.substr(53);
           mvprintw(++this->line, TEXT_X,piece.c_str());
       }
     }
