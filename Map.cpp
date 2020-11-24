@@ -26,7 +26,7 @@ Map::~Map() {
   return;
 }
 
-void Map::display(int playerY, int playerX)
+void Map::display(int playerY, int playerX, bool hasBinoculars)
 {
     start_color();
 
@@ -42,22 +42,20 @@ void Map::display(int playerY, int playerX)
     char playerSymbol = '@';
 
     TileType currentType;
-
     int sight = 1;
-    if(sight == 1)
+    if(hasBinoculars == true)
+        sight = 2;
+ 
+    for(int h = -sight; h <= sight; ++h)
     {
-        for(int h = -1; h <= 1; ++h)
+        for(int w = -sight; w <= sight; ++w)
         {
-           for(int w = -1; w <= 1; ++w)
-           {
-                if(playerY+h < HEIGHT && playerY+h >= 0 && playerX+w >= 0 && playerX+w < WIDTH)
-                {
+            if(playerY+h < HEIGHT && playerY+h >= 0 && playerX+w >= 0 && playerX+w < WIDTH)
+            {
                     tiles[playerY+h][playerX+w].isVisible = true;
-                }
-           }
+            }
         }
     }
-
     for(int h = 0; h < HEIGHT; ++h)
     {
       for(int w = 0; w < WIDTH; ++w)
