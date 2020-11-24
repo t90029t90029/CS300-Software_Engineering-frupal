@@ -43,6 +43,8 @@ void Engine::movePlayer(int direction) {
   int x = 0, y = 0, enCost = 1;
   player.locate(y, x);
 
+  int origY = y, origX = x;
+
   switch (direction) {
   // Arrow keys
   case KEY_UP:
@@ -66,6 +68,7 @@ void Engine::movePlayer(int direction) {
   // Check X is in bounds
   if (x < 0) x = 0;
   if (x > WIDTH - 1) x = WIDTH - 1;
+
   //move player while adding limits of walls and energy consumption
   //holder for checking different types
   TileType type;
@@ -74,13 +77,23 @@ void Engine::movePlayer(int direction) {
 	  //include a check for if player has boat
 	  //waiting items inventory
      player.locate(y, x);
-  }else if(type == SWAMP)
+  }
+  else if (type == SWAMP)
 	  ++enCost;
+
   player.setEnergy(player.getEnergy()-enCost);
-	  
+
   player.move(y, x);
   foundItem(y,x);
-  map.display(y, x);
+
+  if (map.isPurchasable(y, x)) {
+    map.display(origY, origX);
+    map.highlightItem(y, x);
+  }
+  else {
+    map.display(y, x);
+  }
+
   menu.display();
 }
 
@@ -138,7 +151,7 @@ void Engine::foundItem(int y,int x){
 
 	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
 	    }
-	   
+
 	    //tell the lie
 	    else{
 	      clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
@@ -152,7 +165,7 @@ void Engine::foundItem(int y,int x){
 	    tile->item = ' ';
 	    break;
 
-    default: 
+    default:
 	    break;
   }
   return;

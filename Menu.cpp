@@ -72,16 +72,7 @@ void Menu::displayTile(int y, int x) {
 void Menu::displayOptions(int y, int x) {
   string direction;  // Direction text
 
-
   mvprintw(++this->line, TEXT_X, "Options:"); // Option heading
-
-  //Examine tile at player's position
-  Tile * tile = map->getTile(y, x);
-
-  // If it has an item, display info about it
-  if (tile->item) {
-    mvprintw(++this->line, TEXT_X, "Enter) Buy");
-  }
 
   // Check tiles neighboring player's position
   for (int i = 0; i < 4; ++i) {
@@ -106,13 +97,19 @@ void Menu::displayOptions(int y, int x) {
       break;
     }
 
-    // If the neigboring tile is passable, display the option
-    tile = map->getTile(_y, _x);
+    // If the neigboring tile is passable, display the option to move
+    Tile * tile = map->getTile(_y, _x);
     if (tile != NULL) {
       if (tile->type == MEADOW || tile->type == SWAMP) {
         mvprintw(++this->line, TEXT_X, direction.c_str());
       }
     }
+  }
+
+  // If item is purchasable, display option to buy
+  if (map->isPurchasable(y, x)) {
+    ++this->line;
+    mvprintw(++this->line, TEXT_X, "Enter) Buy");
   }
 }
 
