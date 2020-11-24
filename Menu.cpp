@@ -109,7 +109,14 @@ void Menu::displayOptions(int y, int x) {
   // If item is purchasable, display option to buy
   if (map->isPurchasable(y, x)) {
     ++this->line;
-    mvprintw(++this->line, TEXT_X, "Enter) Buy");
+
+    Tile * tile = map->getTile(y, x);
+    if (player->getMoney() <= tile->itemType->getCost()) {
+      mvprintw(++this->line, TEXT_X, "This is too expensive");
+    }
+    else {
+      mvprintw(++this->line, TEXT_X, "Enter) Buy");
+    }
   }
 }
 

@@ -12,19 +12,23 @@ Engine::Engine() {
 }
 
 void Engine::init() {
+  // Seed random events
   srand(time(NULL));
-  int playerX;
-  int playerY;
-  //bool hasBinoculars = player.hasBinoculars();
-  map.load(playerY, playerX);
-  player.setStartLocation(playerY, playerX);
+
+  // Load the map and menu
+  int x = 0, y = 0;
+  map.load(y, x);
+  player.move(y, x);
   menu.init(&map, &player);
-  player.locate(playerY, playerX);
-  map.display(playerY, playerX, player.hasBinoculars());
+
+  // Display the map and menu
+  map.display(y, x, player.hasBinoculars());
   menu.display();
 }
 
 void Engine::receiveInput(int input) {
+  int y = 0, x = 0;
+
   switch (tolower(input)) {
   // Arrow keys
   case KEY_UP:
@@ -33,17 +37,32 @@ void Engine::receiveInput(int input) {
   case KEY_LEFT:
     movePlayer(input);
     break;
+  // Enter key
+  case 10:
+    // Purchase item
+    player.locate(y, x);
+    foundItem(y, x);
+
+    // Refresh the map
+    map.display(y, x, player.hasBinoculars());
+    menu.display();
+    break;
   default:
     break;
   }
 }
 
 void Engine::movePlayer(int direction) {
-  //energy cost, 1 for normal, 2 for swamp, 0 when boat
-  int x = 0, y = 0, enCost = 1;
+  // energy cost, 1 for normal, 2 for swamp, 0 when boat
+  int enCost = 1;
+
+  // Locate the player
+  int x = 0, y = 0;
   player.locate(y, x);
 
-  int origY = y, origX = x;
+  // For item purchase, we want to move the player
+  // but keep the symbol where it is visually
+  int symbolY = y, symbolX = x;
 
   switch (direction) {
   // Arrow keys
@@ -69,8 +88,8 @@ void Engine::movePlayer(int direction) {
   if (x < 0) x = 0;
   if (x > WIDTH - 1) x = WIDTH - 1;
 
-  //move player while adding limits of walls and energy consumption
-  //holder for checking different types
+  // Move player while adding limits of walls and energy consumption
+  // Place-holder for checking different types
   TileType type;
   type = (*map.getTile(y, x)).type;
   if(type == WALL || type == WATER){
@@ -78,22 +97,24 @@ void Engine::movePlayer(int direction) {
 	  //waiting items inventory
      player.locate(y, x);
   }
-  else if (type == SWAMP)
+  else if (type == SWAMP) {
 	  ++enCost;
+  }
 
+  // Move and expend energy
+  player.move(y, x);
   player.setEnergy(player.getEnergy()-enCost);
 
-  player.move(y, x);
-  foundItem(y,x);
-
+  // If item is purchasable, highlight it
   if (map.isPurchasable(y, x)) {
-    map.display(origY, origX, player.hasBinoculars());
+    map.display(symbolY, symbolX, player.hasBinoculars());
     map.highlightItem(y, x);
   }
+  // Otherwise, interact with item
   else {
+    foundItem(y,x);
     map.display(y, x, player.hasBinoculars());
   }
-
   menu.display();
 }
 
