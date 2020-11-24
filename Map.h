@@ -13,7 +13,7 @@ class Map {
   public:
     Map();
     ~Map();
-    void display(int playerY, int playerX);
+    void display(int playerY, int playerX, bool hasBinoculars);
     void load(int & playerStartY, int & playerStartX);
     bool isPurchasable(int y, int x);
     void highlightItem(int y, int x);
