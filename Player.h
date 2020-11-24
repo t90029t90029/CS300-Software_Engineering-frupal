@@ -2,7 +2,7 @@
 #include "Map.h"
 #include "Item.h"
 
-#define INVENTORY_MAX 10
+#define MAX_INVENTORY 10
 
 class Player {
   public:

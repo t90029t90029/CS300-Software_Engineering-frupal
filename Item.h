@@ -40,6 +40,7 @@ class Item {
     virtual int getTruth() = 0;
     virtual void setClue(string) = 0;
     virtual int getToggle() = 0;
+    ItemType getType(void);
   private:
     ItemType type;
     string name;
