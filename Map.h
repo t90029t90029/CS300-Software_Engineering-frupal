@@ -13,7 +13,7 @@ class Map {
   public:
     Map();
     ~Map();
-    void display(int playerY, int playerX);
+    void display(int playerY, int playerX, bool hasBinoculars);
     void load(int & playerStartY, int & playerStartX);
     Tile *getTile(int y, int x);
   private:

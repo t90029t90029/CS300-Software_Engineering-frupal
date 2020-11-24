@@ -15,12 +15,12 @@ void Engine::init() {
   srand(time(NULL));
   int playerX;
   int playerY;
-
+  //bool hasBinoculars = player.hasBinoculars();
   map.load(playerY, playerX);
   player.setStartLocation(playerY, playerX);
   menu.init(&map, &player);
   player.locate(playerY, playerX);
-  map.display(playerY, playerX);
+  map.display(playerY, playerX, player.hasBinoculars());
   menu.display();
 }
 
@@ -80,7 +80,7 @@ void Engine::movePlayer(int direction) {
 	  
   player.move(y, x);
   foundItem(y,x);
-  map.display(y, x);
+  map.display(y, x, player.hasBinoculars());
   menu.display();
 }
 
