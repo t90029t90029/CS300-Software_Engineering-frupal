@@ -1,8 +1,25 @@
 #include "Player.h"
-#include "Map.h"
 
 Player::Player(): energy(100), money(0), y(0), x(0){
 }
+
+/** Dummy functions, to be replaced **/
+bool Player::hasBinoculars() {
+  return true;
+}
+
+bool Player::hasShip() {
+  return true;
+}
+
+int Player::hasTool(ObstacleType type) {
+  return 2;
+}
+
+Tool * Player::getTools() {
+  return tools;
+}
+/** **/
 
 void Player::move(int y, int x) {
   this->y = y;
