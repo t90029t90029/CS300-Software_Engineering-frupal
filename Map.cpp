@@ -46,7 +46,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     int sight = 1;
     if(hasBinoculars == true)
         sight = 2;
- 
+
     for(int h = -sight; h <= sight; ++h)
     {
         for(int w = -sight; w <= sight; ++w)
@@ -62,7 +62,11 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       for(int w = 0; w < WIDTH; ++w)
       {
         //Check if visible = true, if true print tile, else print black
+#ifdef NOFOG
+        if (true)
+#else
         if(tiles[h][w].isVisible == true)
+#endif // NOFOG
         {
             char item = empty = ' ';
             if(tiles[h][w].item != empty)

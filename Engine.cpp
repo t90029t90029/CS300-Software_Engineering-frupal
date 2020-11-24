@@ -92,7 +92,13 @@ void Engine::movePlayer(int direction) {
   // Place-holder for checking different types
   TileType type;
   type = (*map.getTile(y, x)).type;
-  if(type == WALL || type == WATER){
+
+#ifdef NOCLIP
+  if (false)
+#else
+  if(type == WALL || type == WATER)
+#endif // NOCLIP
+  {
 	  //include a check for if player has boat
 	  //waiting items inventory
      player.locate(y, x);
