@@ -23,6 +23,21 @@ leak:
 	$(CC) *.cpp $(CFLAGS) -g
 	valgrind --leak-check=full ./$(PROJECT)
 
+nofog:
+	make clean
+	$(CC) *.cpp $(CFLAGS) -g -D NOFOG
+	./$(PROJECT)
+
+noclip:
+	make clean
+	$(CC) *.cpp $(CFLAGS) -g -D NOCLIP
+	./$(PROJECT)
+
+ghost:
+	make clean
+	$(CC) *.cpp $(CFLAGS) -g -D NOCLIP -D NOFOG
+	./$(PROJECT)
+
 clean:
 	rm -f $(PROJECT)
 

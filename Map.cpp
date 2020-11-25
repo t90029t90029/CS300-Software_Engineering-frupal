@@ -37,6 +37,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     init_pair(DIAMOND, COLOR_BLACK, COLOR_CYAN);
     init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
     init_pair('0', COLOR_BLACK, COLOR_BLACK);
+    init_pair('H', COLOR_BLACK, COLOR_YELLOW);
 
     char empty = ' ';
     char playerSymbol = '@';
@@ -45,7 +46,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     int sight = 1;
     if(hasBinoculars == true)
         sight = 2;
- 
+
     for(int h = -sight; h <= sight; ++h)
     {
         for(int w = -sight; w <= sight; ++w)
@@ -61,7 +62,11 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       for(int w = 0; w < WIDTH; ++w)
       {
         //Check if visible = true, if true print tile, else print black
+#ifdef NOFOG
+        if (true)
+#else
         if(tiles[h][w].isVisible == true)
+#endif // NOFOG
         {
             char item = empty = ' ';
             if(tiles[h][w].item != empty)
@@ -82,10 +87,30 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
 
       }
     }
+
     attron(COLOR_PAIR(PLAYER));
     mvprintw(playerY, playerX, "%c", playerSymbol);
     attroff(COLOR_PAIR(PLAYER));
     refresh();
+}
+
+bool Map::isPurchasable(int y, int x) {
+  Tile *tile = getTile(y, x);
+
+  if (tile != NULL) {
+    char type = tile->item;
+    return (type == 'H' || type == 'B' || type == 'T' || type == 'F');
+  }
+  return false;
+}
+
+void Map::highlightItem(int y, int x) {
+  Tile * tile = getTile(y, x);
+  // Show curosr
+  attron(COLOR_PAIR('H'));
+  mvaddch(y, x, tile->item);
+  attroff(COLOR_PAIR('H'));
+  refresh();
 }
 
 void Map::load(int & playerStartY, int & playerStartX) {

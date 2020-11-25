@@ -1,6 +1,7 @@
 #include "Player.h"
 
-Player::Player(): energy(100), money(0), y(0), x(0){
+Player::Player(): tools(NULL), energy(100), money(1000), y(0), x(0) {
+  tools = new Tool[MAX_INVENTORY];
 }
 
 /** Dummy functions, to be replaced **/
