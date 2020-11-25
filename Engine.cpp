@@ -132,6 +132,7 @@ void Engine::foundItem(int y,int x){
   Tile * tile = map.getTile(y,x);
   std::ostringstream output;
   char item = tile->item;
+  TileType type = tile->type;
   int money = player.getMoney();
   int energy = player.getEnergy();
   int cost;
@@ -142,11 +143,17 @@ void Engine::foundItem(int y,int x){
 
   switch(item){
     case '$':
-	    money += tile->itemType->getMoney();
+	    if(type == DIAMOND){
+                player.setEnergy(0);
+                break;
+            }
+            else {
+            money += tile->itemType->getMoney();
 	    player.setMoney(money);
 
 	    tile->item = ' ';
 	    break;
+            }
 
     case 'F':
     	    cost = tile->itemType->getCost();
@@ -191,7 +198,6 @@ void Engine::foundItem(int y,int x){
 	    tile->itemType->setClue(clue);
 	    tile->item = ' ';
 	    break;
-
     default:
 	    break;
   }

@@ -34,7 +34,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     init_pair(WATER, COLOR_BLACK, COLOR_BLUE);
     init_pair(SWAMP, COLOR_BLACK, COLOR_MAGENTA);
     init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
-    init_pair(DIAMOND, COLOR_BLACK, COLOR_CYAN);
+    init_pair(DIAMOND, COLOR_WHITE, COLOR_CYAN);
     init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
     init_pair('0', COLOR_BLACK, COLOR_BLACK);
     init_pair('H', COLOR_BLACK, COLOR_YELLOW);
@@ -135,7 +135,8 @@ void Map::load(int & playerStartY, int & playerStartX) {
 						break;
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
-						break;
+						tiles[nline][i].item = '$';
+                                                break;
 					case 'H':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
