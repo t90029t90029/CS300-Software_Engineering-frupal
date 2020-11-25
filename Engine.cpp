@@ -101,14 +101,18 @@ void Engine::movePlayer(int direction) {
   {
 	  //include a check for if player has boat
 	  //waiting items inventory
+
      player.locate(y, x);
   }
   else if (type == SWAMP) {
 	  ++enCost;
   }
 
-  // Move and expend energy
+  // If the player is interacting and wasn't able to move,
+  // don't update its location
   player.move(y, x);
+
+  // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
 
   // If item is purchasable, highlight it
@@ -138,9 +142,13 @@ void Engine::foundItem(int y,int x) {
 
   // Stats that the tiles may need to reference
   Item * itemType = tile->itemType;
+  TileType type = tile->type;
+
   int money = player.getMoney();
   int energy = player.getEnergy();
-  TileType type = tile->type;
+  int cost = 0;
+  if (itemType != NULL)
+    cost = itemType->getCost();
 
   // Clue variables
   std::ostringstream output;
@@ -169,7 +177,7 @@ void Engine::foundItem(int y,int x) {
     // Food
     case 'F':
       // Buy item
-	    player.setMoney(money - itemType->getCost());
+	    player.setMoney(money - cost);
 
       // Restore energy
 	    energy += itemType->getStrength();
@@ -180,6 +188,26 @@ void Engine::foundItem(int y,int x) {
       // Remove from map
 	    tile->item = ' ';
 	    break;
+    // Binoculars
+    case 'B':
+      // Buy item, put in inventory, remove from map
+	    player.setMoney(money - cost);
+      player.setBinoculars(true);
+      tile->item = ' ';
+      break;
+    // Ship
+    case 'S':
+      // Buy item, put in inventory, remove from map
+	    player.setMoney(money - cost);
+      player.setShip(true);
+      tile->item = ' ';
+      break;
+    // Tool
+    case 'T':
+      break;
+    // Obstacle
+    case '!':
+      break;
     // Clue
     case '?':
 	    //tell the truth

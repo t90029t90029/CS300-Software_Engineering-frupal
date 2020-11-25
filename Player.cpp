@@ -1,18 +1,31 @@
 #include "Player.h"
 
-Player::Player(): tools(NULL), energy(100), money(1000), y(0), x(0) {
+Player::Player():
+                  tools(NULL),
+                  energy(100), money(1000),
+                  y(0), x(0),
+                  binoculars(false), ship(false) {
+
   tools = new Tool[MAX_INVENTORY];
 }
 
-/** Dummy functions, to be replaced **/
 bool Player::hasBinoculars() {
-  return true;
+  return binoculars;
+}
+
+void Player::setBinoculars(bool value) {
+  binoculars = value;
 }
 
 bool Player::hasShip() {
-  return true;
+  return ship;
 }
 
+void Player::setShip(bool value) {
+  ship = value;
+}
+
+// Dummy function
 int Player::hasTool(ObstacleType type) {
   return 2;
 }
@@ -20,7 +33,6 @@ int Player::hasTool(ObstacleType type) {
 Tool * Player::getTools() {
   return tools;
 }
-/** **/
 
 void Player::move(int y, int x) {
   this->y = y;

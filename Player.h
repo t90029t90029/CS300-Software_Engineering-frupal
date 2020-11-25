@@ -18,9 +18,11 @@ class Player {
 
     // If player has binoculars, true
     bool hasBinoculars(void);
+    void setBinoculars(bool value);
 
     // If player has ship, true
     bool hasShip(void);
+    void setShip(bool value);
 
     // If player has a tool for this obstacle type,
     // the strength of the tool is returned
@@ -36,4 +38,6 @@ class Player {
     int money;
     int y;
     int x;
+    bool binoculars;
+    bool ship;
 };

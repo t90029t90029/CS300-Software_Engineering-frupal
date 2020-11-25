@@ -99,14 +99,15 @@ bool Map::isPurchasable(int y, int x) {
 
   if (tile != NULL) {
     char type = tile->item;
-    return (type == 'H' || type == 'B' || type == 'T' || type == 'F');
+    return (type == 'S' || type == 'B' || type == 'T' || type == 'F');
   }
   return false;
 }
 
 void Map::highlightItem(int y, int x) {
   Tile * tile = getTile(y, x);
-  // Show curosr
+
+  // Change background color
   attron(COLOR_PAIR('H'));
   mvaddch(y, x, tile->item);
   attroff(COLOR_PAIR('H'));
@@ -136,14 +137,16 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
 						tiles[nline][i].item = '$';
-                                                break;
+            break;
 					case 'H':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
+						tiles[nline][i].itemType = new Ship;
 						break;
 					case 'B':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'B';
+						tiles[nline][i].itemType = new Binoculars;
 						break;
 					case 'T':
 						tiles[nline][i].type = MEADOW;
