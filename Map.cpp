@@ -28,6 +28,7 @@ Map::~Map() {
 
 void Map::display(int playerY, int playerX, bool hasBinoculars)
 {
+    //ncurses colors
     start_color();
 
     init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
@@ -42,6 +43,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     char empty = ' ';
     char playerSymbol = '@';
 
+    // Fog of war -- reveal tiles around the player
     TileType currentType;
     int sight = 1;
     if(hasBinoculars == true)
@@ -57,6 +59,8 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
             }
         }
     }
+
+    // Viewport -- display portion of the map
     for(int h = 0; h < HEIGHT; ++h)
     {
       for(int w = 0; w < WIDTH; ++w)
@@ -88,6 +92,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       }
     }
 
+    // Draw player
     attron(COLOR_PAIR(PLAYER));
     mvprintw(playerY, playerX, "%c", playerSymbol);
     attroff(COLOR_PAIR(PLAYER));
@@ -99,16 +104,17 @@ bool Map::isPurchasable(int y, int x) {
 
   if (tile != NULL) {
     char type = tile->item;
-    return (type == 'H' || type == 'B' || type == 'T' || type == 'F');
+    return (type == 'S' || type == 'B' || type == 'T' || type == 'F');
   }
   return false;
 }
 
-void Map::highlightItem(int y, int x) {
-  Tile * tile = getTile(y, x);
-  // Show curosr
+void Map::highlightItem(int playerY, int playerX, int itemY, int itemX) {
+  Tile * tile = getTile(itemY, itemX);
+
+  // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(y, x, tile->item);
+  mvaddch(itemY, itemX, tile->item);
   attroff(COLOR_PAIR('H'));
   refresh();
 }
@@ -136,14 +142,16 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
 						tiles[nline][i].item = '$';
-                                                break;
+            break;
 					case 'H':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
+						tiles[nline][i].itemType = new Ship;
 						break;
 					case 'B':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'B';
+						tiles[nline][i].itemType = new Binoculars;
 						break;
 					case 'T':
 						tiles[nline][i].type = MEADOW;

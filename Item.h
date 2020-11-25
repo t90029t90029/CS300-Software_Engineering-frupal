@@ -143,3 +143,35 @@ class Clue: public Item {
     string content;
     int toggle;
 };
+
+class Binoculars: public Item {
+  public:
+    Binoculars();
+    ~Binoculars();
+    int getCost();
+    int getStrength();
+    ObstacleType getObstacle();
+    int getDetails(string&);
+    int getMoney();
+    int getTruth();
+    void setClue(string);
+    int getToggle();
+  private:
+    int value;
+};
+
+class Ship: public Item {
+  public:
+    Ship();
+    ~Ship();
+    int getCost();
+    int getStrength();
+    ObstacleType getObstacle();
+    int getDetails(string&);
+    int getMoney();
+    int getTruth();
+    void setClue(string);
+    int getToggle();
+  private:
+    int value;
+};

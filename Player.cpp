@@ -1,26 +1,70 @@
 #include "Player.h"
 
-Player::Player(): tools(NULL), energy(100), money(1000), y(0), x(0) {
-  tools = new Tool[MAX_INVENTORY];
+Player::Player():
+                  toolCount(0),
+                  binoculars(false), ship(false),
+                  energy(100), money(1000),
+                  y(0), x(0) {
+
+  // Initialize inventory
+  for (int i = 0; i < MAX_INVENTORY; ++i)
+    tools[i] = NULL;
 }
 
-/** Dummy functions, to be replaced **/
 bool Player::hasBinoculars() {
-  return true;
+  return binoculars;
+}
+
+void Player::setBinoculars(bool value) {
+  binoculars = value;
 }
 
 bool Player::hasShip() {
-  return true;
+  return ship;
+}
+
+void Player::setShip(bool value) {
+  ship = value;
 }
 
 int Player::hasTool(ObstacleType type) {
-  return 2;
+  int maxStrength = -1;
+
+  for (int i = 0; i < toolCount; ++i) {
+    Tool * tool = tools[i];
+
+    // This tool works for this obstacle
+    if (tool->getObstacle() == type) {
+      int strength = tool->getStrength();
+
+      // Try to use strongest tool
+      if (strength > maxStrength)
+        maxStrength = strength;
+    }
+  }
+
+  return maxStrength;
 }
 
-Tool * Player::getTools() {
+bool Player::addTool(Item * item) {
+   // Downcast item to tool
+   Tool * tool = dynamic_cast<Tool *>(item);
+
+   // Somehow we go an item that isn't a tool
+   if (tool == NULL)
+    return false;
+
+   // Inventory is full
+   if (toolCount >= MAX_INVENTORY)
+      return false;
+
+   tools[toolCount++] = tool;
+   return true;
+}
+
+Tool ** Player::getTools() {
   return tools;
 }
-/** **/
 
 void Player::move(int y, int x) {
   this->y = y;
@@ -58,7 +102,6 @@ void Player::setMoney(int value) {
   else
     money = value;
 }
-
 
 void Player::setStartLocation(int playerStartY, int playerStartX)
 {

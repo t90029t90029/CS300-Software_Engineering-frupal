@@ -18,22 +18,33 @@ class Player {
 
     // If player has binoculars, true
     bool hasBinoculars(void);
+    void setBinoculars(bool value);
 
     // If player has ship, true
     bool hasShip(void);
+    void setShip(bool value);
 
     // If player has a tool for this obstacle type,
     // the strength of the tool is returned
     // Otherwise, -1
     int hasTool(ObstacleType type);
 
+    // Returns false if inventory is full
+    bool addTool(Item * tool);
+
     // Get array of tools in inventory
-    Tool * getTools(void);
+    Tool ** getTools(void);
   private:
-    // An array of tools in the inventory
-    Tool * tools;
+    // Inventory is array of tool pointers
+    Tool * tools[MAX_INVENTORY];
+    int toolCount;
+
+    bool binoculars;
+    bool ship;
+
     int energy;
     int money;
+
     int y;
     int x;
 };

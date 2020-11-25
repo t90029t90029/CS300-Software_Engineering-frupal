@@ -101,20 +101,27 @@ void Engine::movePlayer(int direction) {
   {
 	  //include a check for if player has boat
 	  //waiting items inventory
+
      player.locate(y, x);
   }
   else if (type == SWAMP) {
 	  ++enCost;
   }
 
-  // Move and expend energy
   player.move(y, x);
+
+  // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
 
   // If item is purchasable, highlight it
   if (map.isPurchasable(y, x)) {
     map.display(symbolY, symbolX, player.hasBinoculars());
-    map.highlightItem(y, x);
+
+    // If player moved onto the item, let the player symbol cover the item
+    // This would only happen if the tile beyond the item was impassable
+    // The normal behavior is that the player hops over the item
+    if (symbolY != y || symbolX != x)
+      map.highlightItem(symbolY, symbolX, y, x);
   }
   // Otherwise, interact with item
   else {
@@ -138,9 +145,13 @@ void Engine::foundItem(int y,int x) {
 
   // Stats that the tiles may need to reference
   Item * itemType = tile->itemType;
+  TileType type = tile->type;
+
   int money = player.getMoney();
   int energy = player.getEnergy();
-  TileType type = tile->type;
+  int cost = 0;
+  if (itemType != NULL)
+    cost = itemType->getCost();
 
   // Clue variables
   std::ostringstream output;
@@ -149,62 +160,100 @@ void Engine::foundItem(int y,int x) {
   int randomX = rand() % WIDTH;	  // random number
   Tile * temp = map.getTile(randomY,randomX);	//random tile
 
-  switch(item){
-    // Treasure chest
-    case '$':
-      // Royal Diamond -- Player wins!
-	    if(type == DIAMOND){
-        player.setEnergy(0);
-      }
-      // Normal treasure
-      else {
-        // Pick up treasure
-        money += itemType->getMoney();
-        player.setMoney(money);
+  // Purchasable items
+  if (map.isPurchasable(y, x)) {
+    int netMoney = money - cost;
 
-        // Remove from map
-        tile->item = ' ';
-      }
-      break;
-    // Food
-    case 'F':
-      // Buy item
-	    player.setMoney(money - itemType->getCost());
+    // Don't purchase if not enough money
+    if (netMoney > 0) {
+      switch (item) {
+        // Food
+        case 'F':
+          // Buy item
+          player.setMoney(netMoney);
 
-      // Restore energy
-	    energy += itemType->getStrength();
-	    if(energy > 100)
-	      energy = 100;
-	    player.setEnergy(energy);
+          // Restore energy
+          energy += itemType->getStrength();
+          if(energy > 100)
+            energy = 100;
+          player.setEnergy(energy);
 
-      // Remove from map
-	    tile->item = ' ';
-	    break;
-    // Clue
-    case '?':
-	    //tell the truth
-	    if (itemType->getTruth()) {
-	      clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
-
-	      output << randomX << "," << randomY;
-
-	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
-	    }
-
-	    //tell the lie
-	    else {
-	      clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
-
-	      output << randomY << "," << randomX;	//in reverse order
-
-	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
-	    }
-
-	    itemType->setClue(clue);
-	    tile->item = ' ';
-	    break;
-    default:
-	    break;
+          // Remove from map
+          tile->item = ' ';
+          break;
+        // Binoculars
+        case 'B':
+          // Buy item, put in inventory, remove from map
+          player.setMoney(netMoney);
+          player.setBinoculars(true);
+          tile->item = ' ';
+          break;
+        // Ship
+        case 'S':
+          // Buy item, put in inventory, remove from map
+          player.setMoney(netMoney);
+          player.setShip(true);
+          tile->item = ' ';
+          break;
+        // Tool
+        case 'T':
+          // Buy item, put in inventory, remove from map
+          player.setMoney(netMoney);
+          player.addTool(itemType);
+          tile->item = ' ';
+          break;
+        default:
+          break;
+        }
+     }
   }
-  return;
+  // Non-purchasable items
+  else {
+    switch(item) {
+      // Treasure chest
+      case '$':
+        // Royal Diamond -- Player wins!
+        if(type == DIAMOND){
+          player.setEnergy(0);
+        }
+        // Normal treasure
+        else {
+          // Pick up treasure
+          money += itemType->getMoney();
+          player.setMoney(money);
+
+          // Remove from map
+          tile->item = ' ';
+        }
+        break;
+      // Obstacle
+      case '!':
+        break;
+      // Clue
+      case '?':
+        //tell the truth
+        if (itemType->getTruth()) {
+          clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
+
+          output << randomX << "," << randomY;
+
+          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+        }
+
+        //tell the lie
+        else {
+          clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
+
+          output << randomY << "," << randomX;	//in reverse order
+
+          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+        }
+
+        itemType->setClue(clue);
+        tile->item = ' ';
+        break;
+      default:
+        break;
+    }
+  }
 }
