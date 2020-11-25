@@ -207,6 +207,10 @@ void Engine::foundItem(int y,int x) {
       break;
     // Tool
     case 'T':
+      // Buy item, put in inventory, remove from map
+      player.setMoney(money - cost);
+      player.addTool(itemType);
+      tile->item = ' ';
       break;
     // Obstacle
     case '!':
