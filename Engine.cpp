@@ -128,74 +128,79 @@ bool Engine::isGameOver() {
   return !player.isAlive();
 }
 
-void Engine::foundItem(int y,int x){
+void Engine::foundItem(int y,int x) {
+  // Grab tile
   Tile * tile = map.getTile(y,x);
-  std::ostringstream output;
   char item = tile->item;
-  TileType type = tile->type;
+
+  // No item on this tile
+  if (item == ' ') return;
+
+  // Stats that the tiles may need to reference
+  Item * itemType = tile->itemType;
   int money = player.getMoney();
   int energy = player.getEnergy();
-  int cost;
+  TileType type = tile->type;
+
+  // Clue variables
+  std::ostringstream output;
   std::string clue;
-  int randomY = rand() % 128;	//random number
-  int randomX = rand() % 128;	//random number
+  int randomY = rand() % HEIGHT;	// random number
+  int randomX = rand() % WIDTH;	  // random number
   Tile * temp = map.getTile(randomY,randomX);	//random tile
 
   switch(item){
+    // Treasure chest
     case '$':
+      // Royal Diamond -- Player wins!
 	    if(type == DIAMOND){
-                player.setEnergy(0);
-                break;
-            }
-            else {
-            money += tile->itemType->getMoney();
-	    player.setMoney(money);
+        player.setEnergy(0);
+      }
+      // Normal treasure
+      else {
+        // Pick up treasure
+        money += itemType->getMoney();
+        player.setMoney(money);
 
-	    tile->item = ' ';
-	    break;
-            }
-
+        // Remove from map
+        tile->item = ' ';
+      }
+      break;
+    // Food
     case 'F':
-    	    cost = tile->itemType->getCost();
-	    if(cost > money){
-	      //a menu function :inform the player the item is too expensive
-	      break;
-	    }
-	    player.setMoney(money-cost);
+      // Buy item
+	    player.setMoney(money - itemType->getCost());
 
-	    energy += tile->itemType->getStrength();
+      // Restore energy
+	    energy += itemType->getStrength();
 	    if(energy > 100)
 	      energy = 100;
 	    player.setEnergy(energy);
 
+      // Remove from map
 	    tile->item = ' ';
 	    break;
-
+    // Clue
     case '?':
-	    while(!temp){
-  	      randomY = rand() % 128;
-  	      randomX = rand() % 128;
-  	      temp = map.getTile(randomY,randomX);
-	    }
 	    //tell the truth
-	    if(tile->itemType->getTruth()){
+	    if (itemType->getTruth()) {
 	      clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
 
-	      output<<randomX<<","<<randomY;
+	      output << randomX << "," << randomY;
 
 	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
 	    }
 
 	    //tell the lie
-	    else{
+	    else {
 	      clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
 
-	      output<<randomY<<","<<randomX;	//in reverse order
+	      output << randomY << "," << randomX;	//in reverse order
 
 	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
 	    }
 
-	    tile->itemType->setClue(clue);
+	    itemType->setClue(clue);
 	    tile->item = ' ';
 	    break;
     default:
