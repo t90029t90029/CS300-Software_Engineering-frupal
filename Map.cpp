@@ -28,6 +28,7 @@ Map::~Map() {
 
 void Map::display(int playerY, int playerX, bool hasBinoculars)
 {
+    //ncurses colors
     start_color();
 
     init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
@@ -42,6 +43,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     char empty = ' ';
     char playerSymbol = '@';
 
+    // Fog of war -- reveal tiles around the player
     TileType currentType;
     int sight = 1;
     if(hasBinoculars == true)
@@ -57,6 +59,8 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
             }
         }
     }
+
+    // Viewport -- display portion of the map
     for(int h = 0; h < HEIGHT; ++h)
     {
       for(int w = 0; w < WIDTH; ++w)
@@ -88,6 +92,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       }
     }
 
+    // Draw player
     attron(COLOR_PAIR(PLAYER));
     mvprintw(playerY, playerX, "%c", playerSymbol);
     attroff(COLOR_PAIR(PLAYER));
@@ -104,12 +109,12 @@ bool Map::isPurchasable(int y, int x) {
   return false;
 }
 
-void Map::highlightItem(int y, int x) {
-  Tile * tile = getTile(y, x);
+void Map::highlightItem(int playerY, int playerX, int itemY, int itemX) {
+  Tile * tile = getTile(itemY, itemX);
 
   // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(y, x, tile->item);
+  mvaddch(itemY, itemX, tile->item);
   attroff(COLOR_PAIR('H'));
   refresh();
 }

@@ -108,8 +108,6 @@ void Engine::movePlayer(int direction) {
 	  ++enCost;
   }
 
-  // If the player is interacting and wasn't able to move,
-  // don't update its location
   player.move(y, x);
 
   // Move and expend energy
@@ -118,7 +116,12 @@ void Engine::movePlayer(int direction) {
   // If item is purchasable, highlight it
   if (map.isPurchasable(y, x)) {
     map.display(symbolY, symbolX, player.hasBinoculars());
-    map.highlightItem(y, x);
+
+    // If player moved onto the item, let the player symbol cover the item
+    // This would only happen if the tile beyond the item was impassable
+    // The normal behavior is that the player hops over the item
+    if (symbolY != y || symbolX != x)
+      map.highlightItem(symbolY, symbolX, y, x);
   }
   // Otherwise, interact with item
   else {
