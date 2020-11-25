@@ -160,86 +160,100 @@ void Engine::foundItem(int y,int x) {
   int randomX = rand() % WIDTH;	  // random number
   Tile * temp = map.getTile(randomY,randomX);	//random tile
 
-  switch(item){
-    // Treasure chest
-    case '$':
-      // Royal Diamond -- Player wins!
-	    if(type == DIAMOND){
-        player.setEnergy(0);
-      }
-      // Normal treasure
-      else {
-        // Pick up treasure
-        money += itemType->getMoney();
-        player.setMoney(money);
+  // Purchasable items
+  if (map.isPurchasable(y, x)) {
+    int netMoney = money - cost;
 
-        // Remove from map
-        tile->item = ' ';
-      }
-      break;
-    // Food
-    case 'F':
-      // Buy item
-	    player.setMoney(money - cost);
+    // Don't purchase if not enough money
+    if (netMoney > 0) {
+      switch (item) {
+        // Food
+        case 'F':
+          // Buy item
+          player.setMoney(netMoney);
 
-      // Restore energy
-	    energy += itemType->getStrength();
-	    if(energy > 100)
-	      energy = 100;
-	    player.setEnergy(energy);
+          // Restore energy
+          energy += itemType->getStrength();
+          if(energy > 100)
+            energy = 100;
+          player.setEnergy(energy);
 
-      // Remove from map
-	    tile->item = ' ';
-	    break;
-    // Binoculars
-    case 'B':
-      // Buy item, put in inventory, remove from map
-	    player.setMoney(money - cost);
-      player.setBinoculars(true);
-      tile->item = ' ';
-      break;
-    // Ship
-    case 'S':
-      // Buy item, put in inventory, remove from map
-	    player.setMoney(money - cost);
-      player.setShip(true);
-      tile->item = ' ';
-      break;
-    // Tool
-    case 'T':
-      // Buy item, put in inventory, remove from map
-      player.setMoney(money - cost);
-      player.addTool(itemType);
-      tile->item = ' ';
-      break;
-    // Obstacle
-    case '!':
-      break;
-    // Clue
-    case '?':
-	    //tell the truth
-	    if (itemType->getTruth()) {
-	      clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
-
-	      output << randomX << "," << randomY;
-
-	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
-	    }
-
-	    //tell the lie
-	    else {
-	      clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
-
-	      output << randomY << "," << randomX;	//in reverse order
-
-	      clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
-	    }
-
-	    itemType->setClue(clue);
-	    tile->item = ' ';
-	    break;
-    default:
-	    break;
+          // Remove from map
+          tile->item = ' ';
+          break;
+        // Binoculars
+        case 'B':
+          // Buy item, put in inventory, remove from map
+          player.setMoney(netMoney);
+          player.setBinoculars(true);
+          tile->item = ' ';
+          break;
+        // Ship
+        case 'S':
+          // Buy item, put in inventory, remove from map
+          player.setMoney(netMoney);
+          player.setShip(true);
+          tile->item = ' ';
+          break;
+        // Tool
+        case 'T':
+          // Buy item, put in inventory, remove from map
+          player.setMoney(netMoney);
+          player.addTool(itemType);
+          tile->item = ' ';
+          break;
+        default:
+          break;
+        }
+     }
   }
-  return;
+  // Non-purchasable items
+  else {
+    switch(item) {
+      // Treasure chest
+      case '$':
+        // Royal Diamond -- Player wins!
+        if(type == DIAMOND){
+          player.setEnergy(0);
+        }
+        // Normal treasure
+        else {
+          // Pick up treasure
+          money += itemType->getMoney();
+          player.setMoney(money);
+
+          // Remove from map
+          tile->item = ' ';
+        }
+        break;
+      // Obstacle
+      case '!':
+        break;
+      // Clue
+      case '?':
+        //tell the truth
+        if (itemType->getTruth()) {
+          clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
+
+          output << randomX << "," << randomY;
+
+          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+        }
+
+        //tell the lie
+        else {
+          clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
+
+          output << randomY << "," << randomX;	//in reverse order
+
+          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+        }
+
+        itemType->setClue(clue);
+        tile->item = ' ';
+        break;
+      default:
+        break;
+    }
+  }
 }
