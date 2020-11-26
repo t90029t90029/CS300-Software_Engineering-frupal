@@ -18,6 +18,7 @@ void Engine::init() {
   // Load the map and menu
   int x = 0, y = 0;
   map.load(y, x);
+
   player.move(y, x);
   menu.init(&map, &player);
 
