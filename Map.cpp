@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Menu.h"
 
 using namespace std;
 
@@ -7,6 +8,7 @@ Map::Map() {
 
   for(int i=0;i<HEIGHT;++i){
     tiles[i] = new Tile[WIDTH];
+
   }
 }
 
@@ -60,32 +62,52 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
         }
     }
 
-    // Viewport -- display portion of the map
-    for(int h = 0; h < HEIGHT; ++h)
+    //modifying display to get a shifting viewport
+    viewportSize(); // Get current size of the viewport
+
+    // Put player in the center
+    shiftX = playerX - (wView / 2);
+    shiftY = playerY - (hView / 2);
+
+    // Check viewport bounds
+    if (shiftX < 0)
+       shiftX = 0;
+    else if(shiftX + wView > WIDTH)
+       shiftX = WIDTH - wView;
+
+    if (shiftY < 0)
+       shiftY = 0;
+    else if (shiftY + hView > HEIGHT)
+       shiftY = HEIGHT - hView;
+
+     // Display a portion of the map
+    for(int h = shiftY; h < shiftY + hView; ++h)
     {
-      for(int w = 0; w < WIDTH; ++w)
+      for(int w = shiftX; w < shiftX + wView; ++w)
       {
         //Check if visible = true, if true print tile, else print black
 #ifdef NOFOG
         if (true)
 #else
-        if(tiles[h][w].isVisible == true)
+        if (tiles[h][w].isVisible == true)
 #endif // NOFOG
         {
-            char item = empty = ' ';
-            if(tiles[h][w].item != empty)
-                item = tiles[h][w].item;
+          char item = empty = ' ';
+          if(tiles[h][w].item != empty)
+              item = tiles[h][w].item;
 
-            currentType = tiles[h][w].type;
+          currentType = tiles[h][w].type;
 
-            attron(COLOR_PAIR(currentType));
-            mvprintw(h, w, "%c", item);
-            attroff(COLOR_PAIR(currentType));
+          // h,w coordinates on the map need to be shifted when printing on screen
+          attron(COLOR_PAIR(currentType));
+          mvprintw(h - shiftY, w - shiftX, "%c", item);
+          attroff(COLOR_PAIR(currentType));
        }
+       // Hide undiscovered tiles
        else
        {
             attron(COLOR_PAIR(0));
-            mvprintw(h, w, "%c", empty);
+            mvprintw(h - shiftY, w - shiftX, "%c", empty);
             attroff(COLOR_PAIR(0));
        }
 
@@ -94,9 +116,24 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
 
     // Draw player
     attron(COLOR_PAIR(PLAYER));
-    mvprintw(playerY, playerX, "%c", playerSymbol);
+    mvprintw(playerY - shiftY, playerX - shiftX, "%c", playerSymbol);
     attroff(COLOR_PAIR(PLAYER));
     refresh();
+}
+
+void Map::viewportSize() {
+  hView = LINES;
+  wView = COLS - MENU_WIDTH;
+
+	if(hView > HEIGHT)
+	  hView = HEIGHT;
+	else if(hView <= 0)
+	  hView = MIN_HEIGHT;
+
+	if(wView > WIDTH)
+	    wView = WIDTH;
+	else if (wView <= 0)
+	  wView = MIN_WIDTH;
 }
 
 bool Map::isPurchasable(int y, int x) {
@@ -114,7 +151,7 @@ void Map::highlightItem(int y, int x) {
 
   // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(y, x, tile->item);
+  mvaddch(y - shiftY, x - shiftX, tile->item);
   attroff(COLOR_PAIR('H'));
   refresh();
 }
