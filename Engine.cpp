@@ -121,7 +121,7 @@ void Engine::movePlayer(int direction) {
     // This would only happen if the tile beyond the item was impassable
     // The normal behavior is that the player hops over the item
     if (symbolY != y || symbolX != x)
-      map.highlightItem(symbolY, symbolX, y, x);
+      map.highlightItem(y, x);
   }
   // Otherwise, interact with item
   else {
@@ -232,18 +232,22 @@ void Engine::foundItem(int y,int x) {
         break;
       // Obstacle
       case '!':
-	destroyEnergy = tile->itemType->getStrength();
-	tools = player.hasTool(tile->itemType);
-	menu.displayTool(tools);
-	toolChoice = getch() - 1 -'0';
-	if(tools.size() != 0) {
-		if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
-		  destroyEnergy /= tools[toolChoice]->getStrength();
-		  player.removeTool(tools[toolChoice]);
-		}
-	}
-	player.setEnergy(energy - destroyEnergy);
-	tile->item = ' ';
+        destroyEnergy = tile->itemType->getStrength();
+        tools = player.hasTool(tile->itemType);
+
+        map.highlightItem(y, x);
+        menu.displayTool(tools);
+
+        toolChoice = getch() - 1 - '0';
+        if(tools.size() != 0) {
+          if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
+            destroyEnergy /= tools[toolChoice]->getStrength();
+            player.removeTool(tools[toolChoice]);
+          }
+        }
+
+        player.setEnergy(energy - destroyEnergy);
+        tile->item = ' ';
         break;
       // Clue
       case '?':
