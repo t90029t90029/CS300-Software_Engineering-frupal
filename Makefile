@@ -1,8 +1,7 @@
 CC = g++
 PROJECT = frupal
 AUTHOR = group10
-CFLAGS = -g -o $(PROJECT) -Wall -lncurses
-# Not using -Werror for now
+CFLAGS = -g -o $(PROJECT) -Wall -Werror -lncurses
 
 all: main.cpp
 	make clean
