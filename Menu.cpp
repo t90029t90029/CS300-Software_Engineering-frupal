@@ -147,3 +147,11 @@ void Menu::displayClue(int y,int x){
     }
   }
 }
+
+void Menu::displayTool(vector<Tool *> tool) {
+  mvprintw(++this->line, TEXT_X, "Tool: ");
+
+  for(unsigned int i = 0;i < tool.size(); i++) {
+	  mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
+  }
+}

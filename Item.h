@@ -58,6 +58,7 @@ class Tool: public Item {
     int getTruth();
     void setClue(string);
     int getToggle();
+    string getName();
   private:
     ToolType type;
     string name;
