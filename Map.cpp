@@ -109,12 +109,12 @@ bool Map::isPurchasable(int y, int x) {
   return false;
 }
 
-void Map::highlightItem(int playerY, int playerX, int itemY, int itemX) {
-  Tile * tile = getTile(itemY, itemX);
+void Map::highlightItem(int y, int x) {
+  Tile * tile = getTile(y, x);
 
   // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(itemY, itemX, tile->item);
+  mvaddch(y, x, tile->item);
   attroff(COLOR_PAIR('H'));
   refresh();
 }
@@ -179,11 +179,11 @@ void Map::load(int & playerStartY, int & playerStartX) {
 						tiles[nline][i].itemType = new Treasure;
 						break;
 					case '@':
-                                                tiles[nline][i].type = MEADOW;
-                                                playerStartY = nline;
-                                                playerStartX = i;
-                                                break;
-                                        default:
+            tiles[nline][i].type = MEADOW;
+            playerStartY = nline;
+            playerStartX = i;
+            break;
+          default:
 						break;
 				}
 			}
