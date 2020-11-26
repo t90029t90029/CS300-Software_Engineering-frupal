@@ -28,22 +28,7 @@ void Player::setShip(bool value) {
 }
 
 int Player::hasTool(ObstacleType type) {
-  int maxStrength = -1;
-
-  for (int i = 0; i < toolCount; ++i) {
-    Tool * tool = tools[i];
-
-    // This tool works for this obstacle
-    if (tool->getObstacle() == type) {
-      int strength = tool->getStrength();
-
-      // Try to use strongest tool
-      if (strength > maxStrength)
-        maxStrength = strength;
-    }
-  }
-
-  return maxStrength;
+  return 2;
 }
 
 bool Player::addTool(Item * item) {
