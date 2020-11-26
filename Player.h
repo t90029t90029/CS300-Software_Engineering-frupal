@@ -1,7 +1,7 @@
 #pragma once
 #include "Map.h"
 #include "Item.h"
-
+#include <bits/stdc++.h> 
 #define MAX_INVENTORY 10
 
 class Player {
@@ -27,10 +27,14 @@ class Player {
     // If player has a tool for this obstacle type,
     // the strength of the tool is returned
     // Otherwise, -1
-    int hasTool(ObstacleType type);
+    vector<Tool*> hasTool(Item *obstacle);
 
     // Returns false if inventory is full
     bool addTool(Item * tool);
+
+    bool removeTool(Tool* tool);
+
+    int getNumberOfTool();
 
     // Get array of tools in inventory
     Tool ** getTools(void);

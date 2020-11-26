@@ -27,8 +27,18 @@ void Player::setShip(bool value) {
   ship = value;
 }
 
-int Player::hasTool(ObstacleType type) {
-  return 2;
+vector<Tool*> Player::hasTool(Item *item) {
+	vector<Tool*> toolsCanUse;
+	Obstacle * obstacle = dynamic_cast<Obstacle *>(item);
+	for(int i = 0; i<toolCount; i++) {
+		if(tools[i]->getObstacle() == obstacle->getObstacle()) {
+			int destroyEnergy = obstacle->getStrength()/tools[i]->getStrength();
+			if(destroyEnergy <= this->energy) {
+				toolsCanUse.push_back(tools[i]);
+			}
+		}
+	}
+	return toolsCanUse;
 }
 
 bool Player::addTool(Item * item) {
@@ -46,6 +56,19 @@ bool Player::addTool(Item * item) {
    tools[toolCount++] = tool;
    return true;
 }
+bool Player::removeTool(Tool* item) {
+
+   int i;
+   for(i =0;i < toolCount; i++) {
+	   if(tools[i]->getName() == item->getName())
+	   break;
+   }
+   toolCount--;
+   for(int j=i; j<toolCount;j++)
+	   tools[j] = tools[j+1];
+   return true;
+}
+
 
 Tool ** Player::getTools() {
   return tools;
@@ -92,4 +115,7 @@ void Player::setStartLocation(int playerStartY, int playerStartX)
 {
     this->y = playerStartY;
     this->x = playerStartX;
+}
+int Player::getNumberOfTool() {
+	return toolCount;
 }

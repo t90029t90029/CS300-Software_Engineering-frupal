@@ -11,6 +11,8 @@ class Menu {
     void init(Map *m, Player *p);
     void display(void);
 
+    void displayTool(vector<Tool*> tool);
+
   private:
     const char MENU_BORDER = '#';
     int MENU_X;

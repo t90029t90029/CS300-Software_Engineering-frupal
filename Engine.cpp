@@ -159,6 +159,10 @@ void Engine::foundItem(int y,int x) {
   int randomY = rand() % HEIGHT;	// random number
   int randomX = rand() % WIDTH;	  // random number
   Tile * temp = map.getTile(randomY,randomX);	//random tile
+  int destroyEnergy;
+  vector<Tool *> tools;
+  int toolChoice = 0;
+
 
   // Purchasable items
   if (map.isPurchasable(y, x)) {
@@ -228,6 +232,18 @@ void Engine::foundItem(int y,int x) {
         break;
       // Obstacle
       case '!':
+	destroyEnergy = tile->itemType->getStrength();
+	tools = player.hasTool(tile->itemType);
+	menu.displayTool(tools);
+	toolChoice = getch() - 1 -'0';
+	if(tools.size() != 0) {
+		if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
+		  destroyEnergy /= tools[toolChoice]->getStrength();
+		  player.removeTool(tools[toolChoice]);
+		}
+	}
+	player.setEnergy(energy - destroyEnergy);
+	tile->item = ' ';
         break;
       // Clue
       case '?':

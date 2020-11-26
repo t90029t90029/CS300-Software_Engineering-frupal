@@ -2,7 +2,7 @@
 
 // Randomly generate Obstacle
 Obstacle::Obstacle() {
-  type = ObstacleType(rand() % 2);
+  type = ObstacleType(rand()%3);
   switch(type) {
     case TREE:
 	    energy = 10;
