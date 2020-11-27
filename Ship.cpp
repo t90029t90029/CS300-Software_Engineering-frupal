@@ -36,7 +36,3 @@ int Ship::getTruth(){
 void Ship::setClue(string clue){
   return;
 }
-
-int Ship::getToggle(){
-  return 0;
-}

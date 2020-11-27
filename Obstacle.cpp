@@ -48,7 +48,3 @@ int Obstacle::getTruth() {
 void Obstacle::setClue(string clue){
   return;
 }
-
-int Obstacle::getToggle(){
-  return 0;
-}

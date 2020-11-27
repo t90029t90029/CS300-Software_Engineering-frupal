@@ -70,9 +70,6 @@ void Tool::setClue(string clue){
   return;
 }
 
-int Tool::getToggle(){
-  return 0;
-}
 string Tool::getName(){
 	return name;
 }

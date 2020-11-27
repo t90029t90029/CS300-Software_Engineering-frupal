@@ -39,7 +39,6 @@ class Item {
     virtual int getMoney() = 0;
     virtual int getTruth() = 0;
     virtual void setClue(string) = 0;
-    virtual int getToggle() = 0;
     ItemType getType(void);
   private:
     ItemType type;
@@ -57,7 +56,6 @@ class Tool: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
     string getName();
   private:
     ToolType type;
@@ -77,7 +75,6 @@ class Obstacle: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     ObstacleType type;
     int energy;
@@ -99,7 +96,6 @@ class Food: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     FoodType type;
     int energy;
@@ -117,7 +113,6 @@ class Treasure: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     int value;
 };
@@ -137,12 +132,10 @@ class Clue: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     ClueType type;
     string isTrue;
     string content;
-    int toggle;
 };
 
 class Binoculars: public Item {
@@ -156,7 +149,6 @@ class Binoculars: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     int value;
 };
@@ -172,7 +164,6 @@ class Ship: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     int value;
 };
