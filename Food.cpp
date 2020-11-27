@@ -1,24 +1,43 @@
 #include "Item.h"
 
 // Randomly generate Food
-Food::Food(){
-  type = FoodType(rand() % 3);
-  switch(type) {
-    case CRACKER:
-	    energy = 20;
-	    cost = 50;
-	    break;
-    case STEAK:
-	    energy = 100;
-	    cost = 200;
-	    break;
-    case SPRITE:
-	    energy = 30;
-	    cost = 80;
-	    break;
-    default:
-	    break;
-  }
+Food::Food() {
+  type = FoodType((rand() % 3) + 1);
+	// 3 food types, 3 strengths per type
+	string foodNames[3][3] = {
+      // Snack
+			{
+        "Berries",
+        "Nuts",
+        "Crackers"
+      },
+      // Meal
+      {
+        "Beans",
+        "Bread",
+        "Porridge"
+      },
+      // Feast
+      {
+        "Hog",
+        "Venison",
+        "Steak"
+      }
+	};
+
+	// Choose a random food type and strength
+	int rating = (rand() % 3) + 1;
+
+  // Food types stack, meaning the more the rating the more the cost/restoration
+	cost = (type + 1) * rating * 15;
+  energy = cost / 2;
+	name = foodNames[type - 1][rating - 1];
+
+	/* Test item generation
+	erase();
+	mvprintw(0, 0, "%s %d %d %d", name.c_str(), rating+1, cost, energy);
+	getch();
+  */
 }
 
 Food::~Food(){
