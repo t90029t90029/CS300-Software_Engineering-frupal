@@ -2,20 +2,44 @@
 
 // Randomly generate Obstacle
 Obstacle::Obstacle() {
-  type = ObstacleType(rand()%3);
-  switch(type) {
-    case TREE:
-	    energy = 10;
-	    break;
-    case BOULDER:
-	    energy = 20;
-	    break;
-    case SOIL:
-	    energy = 15;
-	    break;
-    default:
-	    break;
-  } 
+  type = ObstacleType((rand() % 4) + 1);
+	string obstacleNames[4][3] = {
+      // Rock
+			{
+        "Gravel",
+        "Rock Pile",
+        "Boulder"
+      },
+      // Plant
+      {
+        "Tall Grass",
+        "Vines",
+        "Tree"
+      },
+      // Ground
+      {
+        "Mud",
+        "Sinkhole",
+        "Quicksand"
+      },
+      // Monster
+      {
+        "Gremlin",
+        "Goblin",
+        "Orc"
+      }
+	};
+
+	// Choose a random obstacle type and strength
+	int rating = (rand() % 3) + 1;
+	energy = (rating+1) * 5;
+	name = obstacleNames[type - 1][rating - 1];
+
+	/* Test item generation
+	erase();
+	mvprintw(0, 0, "%s %d %d", name.c_str(), rating+1, energy);
+	getch();
+  */
 }
 Obstacle::~Obstacle() {
 }

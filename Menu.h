@@ -4,7 +4,8 @@
 #include "Map.h"
 #include "Player.h"
 
-const int MENU_WIDTH = 25;
+#define MENU_WIDTH 25
+#define MENU_BORDER '#'
 
 class Menu {
   public:
@@ -14,7 +15,6 @@ class Menu {
     void displayTool(vector<Tool*> tool);
 
   private:
-    const char MENU_BORDER = '#';
     int MENU_X;
     int TEXT_X;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Map.h"
 #include "Item.h"
-#include <bits/stdc++.h> 
+#include <vector>
 #define MAX_INVENTORY 10
 
 class Player {
