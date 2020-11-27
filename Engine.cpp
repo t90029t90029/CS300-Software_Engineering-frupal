@@ -155,11 +155,11 @@ void Engine::foundItem(int y,int x) {
     cost = itemType->getCost();
 
   // Clue variables
-  std::ostringstream output;
   std::string clue;
-  int randomY = rand() % HEIGHT;	// random number
+  int randomY = rand() % HEIGHT;  // random number
   int randomX = rand() % WIDTH;	  // random number
   Tile * temp = map.getTile(randomY,randomX);	//random tile
+
   int destroyEnergy;
   vector<Tool *> tools;
   int toolChoice = 0;
@@ -254,23 +254,23 @@ void Engine::foundItem(int y,int x) {
       case '?':
         //tell the truth
         if (itemType->getTruth()) {
-          clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
+          clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
 
-          output << randomX << "," << randomY;
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
         }
 
         //tell the lie
         else {
-          clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
+          clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
 
-          output << randomY << "," << randomX;	//in reverse order
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
         }
 
+	//store the content in the tile of Clue
         itemType->setClue(clue);
+
+	//store the position of the clue
+	player.setClue(true,y,x);
         tile->item = ' ';
         break;
       default:

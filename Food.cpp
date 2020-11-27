@@ -53,7 +53,3 @@ int Food::getTruth(){
 void Food::setClue(string clue){
   return;
 }
-
-int Food::getToggle(){
-  return 0;
-}
