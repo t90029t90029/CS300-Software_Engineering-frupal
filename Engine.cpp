@@ -97,7 +97,13 @@ void Engine::movePlayer(int direction) {
 #ifdef NOCLIP
   if (false)
 #else
-  if(type == WALL || type == WATER)
+  // Traverse Water
+  if (type == WATER && player.hasShip())
+  {
+    enCost = 0;
+  }
+  // Hit Wall
+  else if(type == WALL || type == WATER)
 #endif // NOCLIP
   {
 	  //include a check for if player has boat
@@ -105,6 +111,7 @@ void Engine::movePlayer(int direction) {
 
      player.locate(y, x);
   }
+  // Stuck in swamp
   else if (type == SWAMP) {
 	  ++enCost;
   }
