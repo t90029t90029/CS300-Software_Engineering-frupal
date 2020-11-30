@@ -11,8 +11,9 @@ class Menu {
   public:
     void init(Map *m, Player *p);
     void display(void);
-
     void displayTool(vector<Tool*> tool);
+    //determines if inventory shows
+    void displayInventory(int keyInput);
 
   private:
     int MENU_X;
@@ -21,9 +22,11 @@ class Menu {
     Map *map;
     Player *player;
     int line;
+    bool showInventory;
 
     void displayOptions(int y, int x);
     void displayTile(int y, int x);
     void displayClue(void);
+    void displayInventory(void);
     void clear(void);
 };

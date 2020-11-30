@@ -46,6 +46,7 @@ void Engine::receiveInput(int input) {
 
     // Refresh the map
     map.display(y, x, player.hasBinoculars());
+    menu.displayInventory(input);
     menu.display();
     break;
   default:

@@ -5,6 +5,7 @@ using namespace std;
 
 void Menu::init(Map * m, Player * p) {
   this->line = 0; // This determines which line to print on
+  this->showInventory = true;
   this->map = m;
   this->player = p;
 }
@@ -40,6 +41,9 @@ void Menu::display() {
   // Display the clue if there is a clue
   displayClue();
 
+  // Display player inventory, opens with key: I
+  if(showInventory)
+	  displayInventory();
   // Display player stats at the bottom
   int energy = player->getEnergy();
   int money = player->getMoney();
@@ -84,11 +88,11 @@ void Menu::displayOptions(int y, int x) {
       --_y;
       break;
     case 1:
-      direction = "Left)  East";
+      direction = "Left)  West";
       --_x;
       break;
     case 2:
-      direction = "Right) West";
+      direction = "Right) East";
       ++_x;
       break;
     case 3:
@@ -148,4 +152,33 @@ void Menu::displayTool(vector<Tool *> tool) {
   for(unsigned int i = 0;i < tool.size(); i++) {
 	  mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
   }
+}
+
+
+void Menu::displayInventory(){
+	this->line +=2;
+	mvprintw(++this->line, TEXT_X, "Inventory: ");
+	if(player->hasBinoculars())
+	  mvprintw(++this->line, TEXT_X, "[] Binoculars");
+	if(player->hasShip())
+	  mvprintw(++this->line, TEXT_X, "[] Ship");
+	++this->line;
+	Tool** tools = player->getTools();
+	int toolCount = player->getNumberOfTool();
+	if((tools) == NULL)	return;
+	for(int k =0; k< toolCount; ++k){
+	  if(tools[k]!= NULL)
+	    mvprintw(this->line++, TEXT_X, "[] %s, Strength: %d", tools[k] ->getName().c_str(), tools[k]->getStrength());
+	}
+
+	return;
+}
+
+void Menu::displayInventory(int keyInput){
+	if(keyInput == 'i' ){
+	  if(!showInventory)
+	    this->showInventory = true;
+	  else
+		  this->showInventory = false;
+	}
 }
