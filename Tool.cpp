@@ -5,13 +5,13 @@ using namespace std;
 
 // Tool Constructor
 Tool::Tool() {
-	// 5 obstacle types, 3 strengths per type
-	string toolNames[5][3] = {
+	// 5 obstacle types, 3 names for each
+	string names[5][3] = {
 		// Boulder
 		{
 			"Hammer",
 			"Pickaxe",
-			"Sledgehammer"
+			"Chisel"
 		},
 		// Tree
 		{
@@ -27,17 +27,27 @@ Tool::Tool() {
 		},
 		// Monster
 		{
-			"Dagger",
+			"Spear",
 			"Sword",
-			"Broadsword"
+			"Bow"
 		}
 	};
+
+	// The rating will determine which adjective
+  string adjectives[3] = {
+    "Rusty",
+    "Silver",
+    "Enchanted"
+  };
+
+	// Which name to pick
+	int index = rand() % 3;
 
 	// Choose a random obstacle type and strength
   obstacleType = ObstacleType((rand() % 4) + 1);
 	rating = (rand() % 3) + 1;
 	cost = rating * 50;
-	name = toolNames[obstacleType-1][rating-1];
+	name = adjectives[rating-1] + " " + names[obstacleType-1][index];
 
 	/* Test item generation
 	erase();

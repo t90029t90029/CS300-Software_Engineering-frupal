@@ -3,23 +3,23 @@
 // Randomly generate Obstacle
 Obstacle::Obstacle() {
   type = ObstacleType((rand() % 4) + 1);
-	string obstacleNames[4][3] = {
+	string names[4][3] = {
       // Rock
 			{
-        "Gravel",
+        "Barrier",
         "Rock Pile",
         "Boulder"
       },
       // Plant
       {
-        "Tall Grass",
+        "Bush",
         "Vines",
         "Tree"
       },
       // Ground
       {
+        "Terrain",
         "Mud",
-        "Sinkhole",
         "Quicksand"
       },
       // Monster
@@ -30,12 +30,19 @@ Obstacle::Obstacle() {
       }
 	};
 
+  // The rating will determine which adjective
+  string adjectives[3] = {
+    "Burdensome",
+    "Formidable",
+    "Fearsome"
+  };
+
 	// Choose a random obstacle type and strength
 	int rating = (rand() % 3) + 1;
 	energy = (rating+1) * 5;
-	name = obstacleNames[type - 1][rating - 1];
+	name = adjectives[rating - 1] + " " + names[type - 1][rating - 1];
 
-	/* Test item generation
+  /* Test item generation
 	erase();
 	mvprintw(0, 0, "%s %d %d", name.c_str(), rating+1, energy);
 	getch();
