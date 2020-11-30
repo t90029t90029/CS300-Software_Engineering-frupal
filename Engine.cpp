@@ -133,7 +133,11 @@ void Engine::movePlayer(int direction) {
 }
 
 bool Engine::isGameOver() {
+#ifdef GODMODE
+  return false;
+#else
   return !player.isAlive();
+#endif // GODMODE
 }
 
 void Engine::foundItem(int y,int x) {

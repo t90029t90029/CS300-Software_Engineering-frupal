@@ -22,6 +22,14 @@ leak:
 	$(CC) *.cpp $(CFLAGS) -g
 	valgrind --leak-check=full ./$(PROJECT)
 
+clean:
+	rm -f $(PROJECT)
+
+zip:
+	make clean
+	zip $(AUTHOR)-$(PROJECT).zip *.cpp *.h Makefile README.md map1.txt
+
+# Cheats
 nofog:
 	make clean
 	$(CC) *.cpp $(CFLAGS) -g -D NOFOG
@@ -34,12 +42,11 @@ noclip:
 
 ghost:
 	make clean
-	$(CC) *.cpp $(CFLAGS) -g -D NOCLIP -D NOFOG
+	$(CC) *.cpp $(CFLAGS) -g -D NOCLIP -D NOFOG -D GODMODE
 	./$(PROJECT)
 
-clean:
-	rm -f $(PROJECT)
-
-zip:
+godmode:
 	make clean
-	zip $(AUTHOR)-$(PROJECT).zip *.cpp *.h Makefile README.md map1.txt
+	$(CC) *.cpp $(CFLAGS) -g -D GODMODE
+	./$(PROJECT)
+
