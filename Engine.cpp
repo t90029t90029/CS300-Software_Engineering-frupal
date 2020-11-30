@@ -18,6 +18,7 @@ void Engine::init() {
   // Load the map and menu
   int x = 0, y = 0;
   map.load(y, x);
+
   player.move(y, x);
   menu.init(&map, &player);
 
@@ -45,6 +46,7 @@ void Engine::receiveInput(int input) {
 
     // Refresh the map
     map.display(y, x, player.hasBinoculars());
+    menu.displayInventory(input);
     menu.display();
     break;
   default:
@@ -96,7 +98,13 @@ void Engine::movePlayer(int direction) {
 #ifdef NOCLIP
   if (false)
 #else
-  if(type == WALL || type == WATER)
+  // Traverse Water
+  if (type == WATER && player.hasShip())
+  {
+    enCost = 0;
+  }
+  // Hit Wall
+  else if(type == WALL || type == WATER)
 #endif // NOCLIP
   {
 	  //include a check for if player has boat
@@ -104,6 +112,7 @@ void Engine::movePlayer(int direction) {
 
      player.locate(y, x);
   }
+  // Stuck in swamp
   else if (type == SWAMP) {
 	  ++enCost;
   }
@@ -121,7 +130,7 @@ void Engine::movePlayer(int direction) {
     // This would only happen if the tile beyond the item was impassable
     // The normal behavior is that the player hops over the item
     if (symbolY != y || symbolX != x)
-      map.highlightItem(symbolY, symbolX, y, x);
+      map.highlightItem(y, x);
   }
   // Otherwise, interact with item
   else {
@@ -132,7 +141,11 @@ void Engine::movePlayer(int direction) {
 }
 
 bool Engine::isGameOver() {
+#ifdef GODMODE
+  return false;
+#else
   return !player.isAlive();
+#endif // GODMODE
 }
 
 void Engine::foundItem(int y,int x) {
@@ -154,11 +167,11 @@ void Engine::foundItem(int y,int x) {
     cost = itemType->getCost();
 
   // Clue variables
-  std::ostringstream output;
   std::string clue;
-  int randomY = rand() % HEIGHT;	// random number
+  int randomY = rand() % HEIGHT;  // random number
   int randomX = rand() % WIDTH;	  // random number
   Tile * temp = map.getTile(randomY,randomX);	//random tile
+
   int destroyEnergy;
   vector<Tool *> tools;
   int toolChoice = 0;
@@ -232,40 +245,44 @@ void Engine::foundItem(int y,int x) {
         break;
       // Obstacle
       case '!':
-	destroyEnergy = tile->itemType->getStrength();
-	tools = player.hasTool(tile->itemType);
-	menu.displayTool(tools);
-	toolChoice = getch() - 1 -'0';
-	if(tools.size() != 0) {
-		if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
-		  destroyEnergy /= tools[toolChoice]->getStrength();
-		  player.removeTool(tools[toolChoice]);
-		}
-	}
-	player.setEnergy(energy - destroyEnergy);
-	tile->item = ' ';
+        destroyEnergy = tile->itemType->getStrength();
+        tools = player.hasTool(tile->itemType);
+
+        map.highlightItem(y, x);
+        menu.displayTool(tools);
+
+        toolChoice = getch() - 1 - '0';
+        if(tools.size() != 0) {
+          if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
+            destroyEnergy /= tools[toolChoice]->getStrength();
+            player.removeTool(tools[toolChoice]);
+          }
+        }
+
+        player.setEnergy(energy - destroyEnergy);
+        tile->item = ' ';
         break;
       // Clue
       case '?':
         //tell the truth
         if (itemType->getTruth()) {
-          clue = "You are "+ std::to_string(x) +" grovnicks from the western border";
+          clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
 
-          output << randomX << "," << randomY;
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
         }
 
         //tell the lie
         else {
-          clue = "You are "+ std::to_string(y) +" grovnicks from the western border";
+          clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
 
-          output << randomY << "," << randomX;	//in reverse order
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" at ("+ output.str() +").";
+          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
         }
 
+	//store the content in the tile of Clue
         itemType->setClue(clue);
+
+	//store the position of the clue
+	player.setClue(true,y,x);
         tile->item = ' ';
         break;
       default:

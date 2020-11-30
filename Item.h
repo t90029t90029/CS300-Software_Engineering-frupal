@@ -15,17 +15,17 @@ enum ItemType {
   TREASURE
 };
 
-enum ObstacleType{
+enum ObstacleType {
   BOULDER,
   TREE,
-  SOIL
+  SOIL,
+  MONSTER
 };
 
-enum ToolType{
-  AXE,
-  HOE,
-  PICKAXE,
-  SHOVEL
+enum FoodType {
+  SNACK,
+  MEAL,
+  FEAST
 };
 
 class Item {
@@ -39,11 +39,9 @@ class Item {
     virtual int getMoney() = 0;
     virtual int getTruth() = 0;
     virtual void setClue(string) = 0;
-    virtual int getToggle() = 0;
     ItemType getType(void);
   private:
     ItemType type;
-    string name;
 };
 
 class Tool: public Item {
@@ -57,10 +55,8 @@ class Tool: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
     string getName();
   private:
-    ToolType type;
     string name;
     int cost;
     int rating; ObstacleType obstacleType;
@@ -77,17 +73,13 @@ class Obstacle: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
+    string getName();
   private:
     ObstacleType type;
     int energy;
+    string name;
 };
 
-enum FoodType {
-  CRACKER,
-  STEAK,
-  SPRITE
-};
 class Food: public Item {
   public:
     Food();
@@ -99,9 +91,10 @@ class Food: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
+    string getName();
   private:
     FoodType type;
+    string name;
     int energy;
     int cost;
 };
@@ -117,7 +110,6 @@ class Treasure: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     int value;
 };
@@ -137,12 +129,10 @@ class Clue: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     ClueType type;
     string isTrue;
     string content;
-    int toggle;
 };
 
 class Binoculars: public Item {
@@ -156,7 +146,6 @@ class Binoculars: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     int value;
 };
@@ -172,7 +161,6 @@ class Ship: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
-    int getToggle();
   private:
     int value;
 };

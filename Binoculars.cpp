@@ -36,7 +36,3 @@ int Binoculars::getTruth(){
 void Binoculars::setClue(string clue){
   return;
 }
-
-int Binoculars::getToggle(){
-  return 0;
-}

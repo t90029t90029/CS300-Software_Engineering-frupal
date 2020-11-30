@@ -36,7 +36,3 @@ int Treasure::getTruth(){
 void Treasure::setClue(string clue){
   return;
 }
-
-int Treasure::getToggle(){
-  return 0;
-}
