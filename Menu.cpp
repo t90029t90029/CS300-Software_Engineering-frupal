@@ -84,7 +84,7 @@ void Menu::displayTile(int y, int x) {
   }
   mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
 	
-  if (itemChar!= ' ') {	 
+  if (item != NULL) {	 
     if(itemChar == 'B')
 	mvprintw(++this->line, TEXT_X, "> Item: Binoculars");
     else if(itemChar == 'S')
