@@ -79,3 +79,7 @@ int Obstacle::getTruth() {
 void Obstacle::setClue(string clue){
   return;
 }
+
+string Obstacle::getName(){
+	return name;
+}

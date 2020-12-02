@@ -65,6 +65,7 @@ void Menu::displayTile(int y, int x) {
   char itemChar = tile->item;
   Item * item = tile->itemType;
   string floor = " ";
+  //Pretty'ing the names of the tiles
   switch(tile->type){
 	case 1:
 	   floor= "Meadows";
@@ -84,32 +85,26 @@ void Menu::displayTile(int y, int x) {
   mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
 	
   if (itemChar!= ' ') {	 
-	  /*
-    if(item->getType() == FOOD){
-	Food * cast = dynamic_cast<Food*>(item);
-	if(cast!=NULL)
-		mvprintw(++this->line, TEXT_X, "> Item: %s", cast->getName());
-    }else if(item->getType() == TOOLS){
-	Tool * cast = dynamic_cast<Tool*>(item);
-	if(cast!=NULL)
-		mvprintw(++this->line, TEXT_X, "> Item: %s", cast->getName());
-
-    }else if(item->getType() == TOOLS){
-	Obstacle * cast = dynamic_cast<Obstacle*>(item);
-	if(cast!=NULL)
-		mvprintw(++this->line, TEXT_X, "> Item: %s", cast->getName());
-    }*/
-    // mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName());
+    if(itemChar == 'B')
+	mvprintw(++this->line, TEXT_X, "> Item: Binoculars");
+    else if(itemChar == 'S')
+	mvprintw(++this->line, TEXT_X, "> Item: Ship");
+    else
+	mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName().c_str());
     
     mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
-    mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
-  }else{
+    if(itemChar == 'T')
+	mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
+    else
+	mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
+  }else{ //tiles energy use
+	  this->line+=3;//keeping menu spacing consistent
 	  int enCost = -1;
 	if(tile->type == SWAMP)
 		--enCost;
 	else if(tile->type == WATER)
 		++enCost;
-    	mvprintw(++this->line, TEXT_X, "> Energy: %d", enCost);
+    	mvprintw(this->line, TEXT_X, "> Energy: %d", enCost);
   }
 
   ++this->line; // Add separation line

@@ -82,3 +82,7 @@ int Food::getTruth(){
 void Food::setClue(string clue){
   return;
 }
+
+string Food::getName(){
+	return name;
+}
