@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include <sstream>
+#include <math.h>
 
 Engine::Engine() {
   // Initiate ncurses
