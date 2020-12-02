@@ -62,12 +62,49 @@ void Menu::clear() {
 void Menu::displayTile(int y, int x) {
   //Examine tile at player's position
   Tile * tile = map->getTile(y, x);
-
-  mvprintw(++this->line, TEXT_X, "> Grovnik: %d", tile->type);
-
-  if (tile->item) {
-    mvprintw(++this->line, TEXT_X, "> Cost: ?");
-    mvprintw(++this->line, TEXT_X, "> Energy: ?");
+  char itemChar = tile->item;
+  Item * item = tile->itemType;
+  string floor = " ";
+  //Pretty'ing the names of the tiles
+  switch(tile->type){
+	case 1:
+	   floor= "Meadows";
+	   break;
+	case 2:
+	   floor = "Water";
+	   break;
+	case 3:
+	   floor = "Swamp";
+	   break;
+	case 5:
+	   floor = "*+*+Diamond+*+*";
+	   break;
+	default:
+	   break;
+  }
+  mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
+	
+  if (item != NULL) {	 
+    if(itemChar == 'B')
+	mvprintw(++this->line, TEXT_X, "> Item: Binoculars");
+    else if(itemChar == 'S')
+	mvprintw(++this->line, TEXT_X, "> Item: Ship");
+    else
+	mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName().c_str());
+    
+    mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
+    if(itemChar == 'T')
+	mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
+    else
+	mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
+  }else{ //tiles energy use
+	  this->line+=3;//keeping menu spacing consistent
+	  int enCost = -1;
+	if(tile->type == SWAMP)
+		--enCost;
+	else if(tile->type == WATER)
+		++enCost;
+    	mvprintw(this->line, TEXT_X, "> Energy: %d", enCost);
   }
 
   ++this->line; // Add separation line

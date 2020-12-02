@@ -39,6 +39,7 @@ class Item {
     virtual int getMoney() = 0;
     virtual int getTruth() = 0;
     virtual void setClue(string) = 0;
+    virtual string getName(){ return "";};
     ItemType getType(void);
   private:
     ItemType type;
