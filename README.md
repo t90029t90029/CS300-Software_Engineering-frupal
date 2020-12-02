@@ -15,7 +15,8 @@ The adventurer only has a limited amount of energy for traveling. If the adventu
 Traveling across meadows (green) expends 1 energy, swamps (magenta) expend 2 energy. If using a ship on water, no energy is expended.  
 Food (F) can be bought to restore energy.  
 Obstacles (!) might be encountered such as monsters, large boulders, rough terrain, which expend much more energy.
-Tools (T) can be bought to make overcoming these obstacles easier. Each tool only works on certain types of obstacles. Tools can only be used once before they break.  
+Tools (T) can be bought to make overcoming these obstacles easier. Each tool only works on certain types of obstacles.  
+Tools can only be used once before they break.  
 
 #### Helpful Items ####
 Treasure chests ($) are located throughout the Kingdom, which contain a varying amount of whiffles.  
@@ -37,7 +38,7 @@ The 'i' key toggles the adventurer's inventory view, which will show tools and q
 The Enter key will buy an item, if the adventurer has enough whiffles.
 
 ## Building
-Frupal requires the ncurses library.
+Frupal requires the ncurses library.  
 Frupal can be built with the following commands:
 
 * This command builds and runs the game
