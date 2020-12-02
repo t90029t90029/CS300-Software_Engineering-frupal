@@ -232,6 +232,7 @@ void Engine::foundItem(int y,int x) {
         // Royal Diamond -- Player wins!
         if(type == DIAMOND){
           player.setEnergy(0);
+          gameWon = true;
         }
         // Normal treasure
         else {
@@ -289,4 +290,85 @@ void Engine::foundItem(int y,int x) {
         break;
     }
   }
+}
+
+bool Engine::isGameWon(){
+  return gameWon;
+}
+
+
+void Engine::displayWin() {
+        initscr();                              //initializes screen
+        int y = floor(LINES/2);                 //calculates floor of half of the screens lines
+        int x = floor(COLS/2);                  //calculates floor of half of the screens columns
+        x = x-12;
+        char boarder = '#';                     //variable to store rectangle boarder symbol
+        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        char ending_message[] = "YOU WON!!!";
+        char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
+
+        //loops printing vertical "#" symbol line for rectangle
+        while(counter > -6) 
+        {   
+                mvprintw(y - counter, x+35, "%c", boarder);
+                mvprintw(y - counter, x-36, "%c", boarder);
+                --counter;
+        }   
+
+        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation   
+
+        //loops printing horizontal "#" symbol line for rectangle
+        while(counter > -35)
+        {   
+                mvprintw(y+5, x-counter, "%c", boarder);
+                mvprintw(y-6, x-counter, "%c", boarder);
+                --counter;
+        }   
+    
+        mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
+        mvprintw(y,x-33, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        refresh();                                              //refreshes window
+        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
+        refresh();                                              //refreshes window
+        getchar();                                              //waits for user to input a character
+        endwin();                                               //ends ncurses window
+
+}
+
+void Engine::displayLose(){
+        initscr();                              //initializes screen
+        int y = floor(LINES/2);                 //calculates floor of half of the screens lines
+        int x = floor(COLS/2);                  //calculates floor of half of the screens columns
+        x = x-12;
+        char boarder = '#';                     //variable to store rectangle boarder symbol
+        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        char ending_message[] = "YOU LOSE!";
+        char ending_message2[] = "You died from exhaustion! Game Over.";
+        
+        //loops printing vertical "#" symbol line for rectangle
+        while(counter > -6)
+        {       
+                mvprintw(y - counter, x+35, "%c", boarder);
+                mvprintw(y - counter, x-36, "%c", boarder);
+                --counter;
+        }
+        
+        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation   
+        
+        //loops printing horizontal "#" symbol line for rectangle
+        while(counter > -35)
+        {       
+                mvprintw(y+5, x-counter, "%c", boarder);
+                mvprintw(y-6, x-counter, "%c", boarder);
+                --counter;
+        }
+        
+        mvprintw(y,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
+        mvprintw(y+1,x-18, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        refresh();                                              //refreshes window
+        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
+        refresh();                                              //refreshes window
+        getchar();                                              //waits for user to input a character
+        endwin();                                               //ends ncurses window
+
 }
