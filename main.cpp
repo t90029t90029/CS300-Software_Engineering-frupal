@@ -18,5 +18,10 @@ int main() {
 
   endwin();
 
+  if(engine.isGameWon() == true)
+    engine.displayWin();
+  else
+    engine.displayLose();
+
   return 0;
 }
