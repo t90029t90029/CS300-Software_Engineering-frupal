@@ -1,24 +1,59 @@
 #include "Item.h"
+#include <string>
+
+using namespace std;
 
 // Tool Constructor
 Tool::Tool() {
-  type = ToolType(rand() % 4);
-  switch(type) {
-    case AXE:
-	    name = "Axe";
-	    break;
-    case HOE:
-	    name = "Hoe";
-	    break;
-    case PICKAXE:
-	    name = "Pick Axe";
-	    break;
-    case SHOVEL:
-	    name = "Shovel";
-	    break;
-    default:
-	    break;
-  } 
+	// 5 obstacle types, 3 names for each
+	string names[5][3] = {
+		// Boulder
+		{
+			"Hammer",
+			"Pickaxe",
+			"Chisel"
+		},
+		// Tree
+		{
+			"Hatchet",
+			"Axe",
+			"Saw"
+		},
+		// Soil
+		{
+			"Rake",
+			"Shovel",
+			"Hoe",
+		},
+		// Monster
+		{
+			"Spear",
+			"Sword",
+			"Bow"
+		}
+	};
+
+	// The rating will determine which adjective
+  string adjectives[3] = {
+    "Rusty",
+    "Silver",
+    "Enchanted"
+  };
+
+	// Which name to pick
+	int index = rand() % 3;
+
+	// Choose a random obstacle type and strength
+  obstacleType = ObstacleType((rand() % 4) + 1);
+	rating = (rand() % 3) + 1;
+	cost = rating * 50;
+	name = adjectives[rating-1] + " " + names[obstacleType-1][index];
+
+	/* Test item generation
+	erase();
+	mvprintw(0, 0, "%s %d %d", name.c_str(), rating+1, cost);
+	getch();
+	*/
 }
 
 Tool::~Tool() {
@@ -26,50 +61,12 @@ Tool::~Tool() {
 
 // Get cost of the tool
 int Tool::getCost() {
-  switch(type) {
-    case AXE:
-	    cost = 10;
-	    obstacleType = TREE;
-	    break;
-    case HOE:
-	    cost = 20;
-	    obstacleType = SOIL;
-	    break;
-    case PICKAXE:
-	    cost = 30;
-	    obstacleType = BOULDER;
-	    break;
-    case SHOVEL:
-	    cost = 40;
-	    obstacleType = SOIL;
-	    break;
-    default:
-	    break;
-
-  }
-  return cost;
+    return cost;
 }
 
 // Return multiplyer to reduce energy needed
 int Tool::getStrength() {
-  switch(type) {
-    case AXE:
-	    rating = 2;
-	    break;
-    case HOE:
-	    rating = 3;
-	    break;
-    case PICKAXE:
-	    rating = 4;
-	    break;
-    case SHOVEL:
-	    rating = 5;
-	    break;
-    default:
-	    break;
-
-  }
-  return rating;
+    return rating;
 }
 
 ObstacleType Tool::getObstacle() {
@@ -96,6 +93,6 @@ void Tool::setClue(string clue){
   return;
 }
 
-int Tool::getToggle(){
-  return 0;
+string Tool::getName(){
+	return name;
 }

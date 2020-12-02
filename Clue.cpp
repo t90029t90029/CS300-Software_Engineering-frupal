@@ -3,7 +3,6 @@
 // Randomly generate Clue
 Clue::Clue(){
   type = ClueType(rand() % 2);
-  toggle = 0;
   switch(type) {
     case TRUTH:
 	    isTrue = "TRUTH";
@@ -55,9 +54,4 @@ int Clue::getTruth(){
 // Set hint
 void Clue::setClue(string clue){
   content = clue;
-  toggle = 1;
-}
-
-int Clue::getToggle(){
-  return toggle;
 }

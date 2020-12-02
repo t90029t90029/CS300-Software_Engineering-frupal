@@ -1,7 +1,7 @@
 #pragma once
 #include "Map.h"
 #include "Item.h"
-
+#include <vector>
 #define MAX_INVENTORY 10
 
 class Player {
@@ -18,22 +18,49 @@ class Player {
 
     // If player has binoculars, true
     bool hasBinoculars(void);
+    void setBinoculars(bool value);
 
     // If player has ship, true
     bool hasShip(void);
+    void setShip(bool value);
+
+    // If player has clue, true
+    bool hasClue(int & clueY,int & clueX);
+    void setClue(bool value,int clueY,int clueX);
+
+    // return the relative direction the item is from the palyer
+    string itemDirect(bool truth,int itemY,int itemX);
 
     // If player has a tool for this obstacle type,
     // the strength of the tool is returned
     // Otherwise, -1
-    int hasTool(ObstacleType type);
+    vector<Tool*> hasTool(Item *obstacle);
+
+    // Returns false if inventory is full
+    bool addTool(Item * tool);
+
+    bool removeTool(Tool* tool);
+
+    int getNumberOfTool();
 
     // Get array of tools in inventory
-    Tool * getTools(void);
+    Tool ** getTools(void);
   private:
-    // An array of tools in the inventory
-    Tool * tools;
+    // Inventory is array of tool pointers
+    Tool * tools[MAX_INVENTORY];
+    int toolCount;
+
+    bool binoculars;
+    bool ship;
+
+    // Get the position of the last clue in the map
+    int clueY;
+    int clueX;
+    bool clue;
+
     int energy;
     int money;
+
     int y;
     int x;
 };
