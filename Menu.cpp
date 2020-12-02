@@ -64,15 +64,43 @@ void Menu::displayTile(int y, int x) {
   Tile * tile = map->getTile(y, x);
   char itemChar = tile->item;
   Item * item = tile->itemType;
-
-  mvprintw(++this->line, TEXT_X, "> Grovnik: %d", tile->type);
-
+  string floor = " ";
+  switch(tile->type){
+	case 1:
+	   floor= "Meadows";
+	   break;
+	case 2:
+	   floor = "Water";
+	   break;
+	case 3:
+	   floor = "Swamp";
+	   break;
+	case 5:
+	   floor = "*+*+Diamond+*+*";
+	   break;
+	default:
+	   break;
+  }
+  mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
+	
   if (itemChar!= ' ') {	 
-    if(item->getType() == FOOD || 
-    		item->getType() == TOOLS || 
-		item->getType() == OBSTACLES){
-	   // mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName());
-    }
+	  /*
+    if(item->getType() == FOOD){
+	Food * cast = dynamic_cast<Food*>(item);
+	if(cast!=NULL)
+		mvprintw(++this->line, TEXT_X, "> Item: %s", cast->getName());
+    }else if(item->getType() == TOOLS){
+	Tool * cast = dynamic_cast<Tool*>(item);
+	if(cast!=NULL)
+		mvprintw(++this->line, TEXT_X, "> Item: %s", cast->getName());
+
+    }else if(item->getType() == TOOLS){
+	Obstacle * cast = dynamic_cast<Obstacle*>(item);
+	if(cast!=NULL)
+		mvprintw(++this->line, TEXT_X, "> Item: %s", cast->getName());
+    }*/
+    // mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName());
+    
     mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
     mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
   }else{
