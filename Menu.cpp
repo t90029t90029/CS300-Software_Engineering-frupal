@@ -178,7 +178,7 @@ void Menu::displayOptions(int y, int x) {
     // If the neigboring tile is passable, display the option to move
     Tile * tile = map->getTile(_y, _x);
     if (tile != NULL) {
-      if (tile->type == MEADOW || tile->type == SWAMP) {
+      if (tile->type == MEADOW || tile->type == SWAMP || (tile->type == WATER && player->hasShip())) {
         mvprintw(++this->line, TEXT_X, direction.c_str());
       }
     }
