@@ -163,23 +163,23 @@ void Map::load(int & playerStartY, int & playerStartX) {
 		while (getline(mapfile, line)) {
 			for(unsigned i = 0; i < line.length(); i++) {
 				switch(line.at(i)) {
-					case 'M':
+					case ' ':
 						tiles[nline][i].type = MEADOW;
 						break;
-					case 'W':
+					case '~':
 						tiles[nline][i].type = WATER;
 						break;
-					case 'S':
+					case '#':
 						tiles[nline][i].type = SWAMP;
 						break;
-					case 'L':
+					case '|':
 						tiles[nline][i].type = WALL;
 						break;
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
 						tiles[nline][i].item = '$';
             break;
-					case 'H':
+					case 'S':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
 						tiles[nline][i].itemType = new Ship;
