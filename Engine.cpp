@@ -204,17 +204,21 @@ void Engine::foundItem(int y,int x) {
           break;
         // Binoculars
         case 'B':
-          // Buy item, put in inventory, remove from map
-          player.setMoney(netMoney);
-          player.setBinoculars(true);
-          tile->item = ' ';
+          if (!player.hasBinoculars()) {
+            // Buy item, put in inventory, remove from map
+            player.setMoney(netMoney);
+            player.setBinoculars(true);
+            tile->item = ' ';
+          }
           break;
         // Ship
         case 'S':
-          // Buy item, put in inventory, remove from map
-          player.setMoney(netMoney);
-          player.setShip(true);
-          tile->item = ' ';
+          if (!player.hasShip()) {
+            // Buy item, put in inventory, remove from map
+            player.setMoney(netMoney);
+            player.setShip(true);
+            tile->item = ' ';
+          }
           break;
         // Tool
         case 'T':
@@ -253,6 +257,9 @@ void Engine::foundItem(int y,int x) {
         destroyEnergy = tile->itemType->getStrength();
         tools = player.hasTool(tile->itemType);
 
+        int symbolY, symbolX;
+        player.locate(symbolY, symbolX);
+        map.display(symbolY, symbolX, player.hasBinoculars());
         map.highlightItem(y, x);
         menu.display();
         menu.displayTool(tools);

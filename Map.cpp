@@ -41,6 +41,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
     init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
     init_pair('0', COLOR_BLACK, COLOR_BLACK);
     init_pair('H', COLOR_BLACK, COLOR_YELLOW);
+    init_pair('E', COLOR_WHITE, COLOR_RED);
 
     char empty = ' ';
     char playerSymbol = '@';
