@@ -56,6 +56,12 @@ void Engine::receiveInput(int input) {
     menu.displayInventory(input);
     menu.display();
     break;
+  // Detect window resize and refresh
+  case KEY_RESIZE:
+    player.locate(y, x);
+    map.display(y, x, player.hasBinoculars());
+    menu.display();
+    break;
   default:
     break;
   }
