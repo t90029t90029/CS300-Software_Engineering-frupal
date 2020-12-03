@@ -20,7 +20,7 @@ ObstacleType Binoculars::getObstacle(){
   return BOULDER;
 }
 
-int Binoculars::getDetails(string & source){
+int Binoculars::getDetails(string & source,int & y,int & x){
   return 0;
 }
 
@@ -33,7 +33,7 @@ int Binoculars::getTruth(){
   return 0;
 }
 
-void Binoculars::setClue(string clue){
+void Binoculars::setClue(string clue,int y,int x){
   return;
 }
 

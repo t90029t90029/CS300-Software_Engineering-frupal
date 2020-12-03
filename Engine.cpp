@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include <sstream>
+#include <math.h>
 
 Engine::Engine() {
   // Initiate ncurses
@@ -7,8 +8,14 @@ Engine::Engine() {
   keypad(stdscr, true); // Accept keypad input
   cbreak();             // Allow game to break upon Ctrl+C
   noecho();             // Don't let user type
+  curs_set(0);
+  start_color();
 
-  curs_set(0); // Hide cursor, otherwise, background color of Player is overriden
+  init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
+  init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
+
+  // Set map colors
+  map.init();
 }
 
 void Engine::init() {
@@ -47,6 +54,12 @@ void Engine::receiveInput(int input) {
     // Refresh the map
     map.display(y, x, player.hasBinoculars());
     menu.displayInventory(input);
+    menu.display();
+    break;
+  // Detect window resize and refresh
+  case KEY_RESIZE:
+    player.locate(y, x);
+    map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
   default:
@@ -131,13 +144,18 @@ void Engine::movePlayer(int direction) {
     // The normal behavior is that the player hops over the item
     if (symbolY != y || symbolX != x)
       map.highlightItem(y, x);
+
+    menu.display();
   }
   // Otherwise, interact with item
   else {
+    menu.display();
     foundItem(y,x);
     map.display(y, x, player.hasBinoculars());
   }
-  menu.display();
+  //update the clue for the menu
+  updatePosition();
+
 }
 
 bool Engine::isGameOver() {
@@ -200,17 +218,21 @@ void Engine::foundItem(int y,int x) {
           break;
         // Binoculars
         case 'B':
-          // Buy item, put in inventory, remove from map
-          player.setMoney(netMoney);
-          player.setBinoculars(true);
-          tile->item = ' ';
+          if (!player.hasBinoculars()) {
+            // Buy item, put in inventory, remove from map
+            player.setMoney(netMoney);
+            player.setBinoculars(true);
+            tile->item = ' ';
+          }
           break;
         // Ship
         case 'S':
-          // Buy item, put in inventory, remove from map
-          player.setMoney(netMoney);
-          player.setShip(true);
-          tile->item = ' ';
+          if (!player.hasShip()) {
+            // Buy item, put in inventory, remove from map
+            player.setMoney(netMoney);
+            player.setShip(true);
+            tile->item = ' ';
+          }
           break;
         // Tool
         case 'T':
@@ -232,6 +254,7 @@ void Engine::foundItem(int y,int x) {
         // Royal Diamond -- Player wins!
         if(type == DIAMOND){
           player.setEnergy(0);
+          gameWon = true;
         }
         // Normal treasure
         else {
@@ -248,19 +271,25 @@ void Engine::foundItem(int y,int x) {
         destroyEnergy = tile->itemType->getStrength();
         tools = player.hasTool(tile->itemType);
 
+        int symbolY, symbolX;
+        player.locate(symbolY, symbolX);
+        map.display(symbolY, symbolX, player.hasBinoculars());
         map.highlightItem(y, x);
+        menu.display();
         menu.displayTool(tools);
 
         toolChoice = getch() - 1 - '0';
         if(tools.size() != 0) {
           if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
-            destroyEnergy /= tools[toolChoice]->getStrength();
+            // Strength starts at one but we want to divide by at least 2
+            destroyEnergy /= (tools[toolChoice]->getStrength() + 1);
             player.removeTool(tools[toolChoice]);
           }
         }
 
         player.setEnergy(energy - destroyEnergy);
         tile->item = ' ';
+        menu.display();
         break;
       // Clue
       case '?':
@@ -278,15 +307,185 @@ void Engine::foundItem(int y,int x) {
           clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
         }
 
-	//store the content in the tile of Clue
-        itemType->setClue(clue);
+        //store the content in the tile of Clue
+        itemType->setClue(clue,randomY,randomX);
 
-	//store the position of the clue
-	player.setClue(true,y,x);
+        //store the position of the clue
+        player.setClue(true,y,x);
+
+        menu.display();
         tile->item = ' ';
         break;
       default:
         break;
     }
   }
+}
+
+//the relative position between the target of the clue and the player
+void Engine::updatePosition(){
+  string clue;
+  Tile * tile;
+  Item * itemType;
+  //the position of the clue
+  int y;
+  int x;
+  //the position of the player
+  int py;
+  int px;
+  player.locate(py,px);
+  //the position of the target tile of the clue
+  int targetY;
+  int targetX;
+  Tile * temp;
+
+  //if the player has a clue, get the position of the clue
+  if(player.hasClue(y,x)){
+    //point to the clue
+    tile = map.getTile(y,x);
+    itemType = tile->itemType;
+
+    //get the position of the target
+    if(itemType->getDetails(clue,targetY,targetX)){
+      temp = map.getTile(targetY,targetX);
+
+      //tell the truth
+      if (itemType->getTruth()) {
+        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
+
+        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
+      }
+
+      //tell the lie
+      else {
+        clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
+
+        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
+      }
+
+      //update the content in the tile of Clue
+      itemType->setClue(clue,targetY,targetX);
+    }
+  }
+}
+
+bool Engine::isGameWon(){
+  return gameWon;
+}
+
+
+void Engine::displayWin() {
+        erase();
+        initscr();                              //initializes screen
+        start_color();
+
+        int y = floor(LINES/2);                 //calculates floor of half of the screens lines
+        int x = floor(COLS/2);                  //calculates floor of half of the screens columns
+        x = x-12;
+        char boarder = '#';                     //variable to store rectangle boarder symbol
+        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        char ending_message[] = "YOU WON!!!";
+        char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
+
+        char blank = ' '; 
+        init_pair(1, COLOR_BLACK, COLOR_CYAN);
+      
+        for(int i = LINES; i >= 0; --i){
+          for(int j = COLS; j >= 0; --j){
+            attron(COLOR_PAIR(1));
+            mvprintw(i, j, "%c", blank);
+            attroff(COLOR_PAIR(1));
+          }
+        }
+        //loops printing vertical "#" symbol line for rectangle
+        while(counter > -6) 
+        {   
+                attron(COLOR_PAIR(1));
+                mvprintw(y - counter, x+35, "%c", boarder);
+                mvprintw(y - counter, x-36, "%c", boarder);
+                attroff(COLOR_PAIR(1));
+                --counter;
+        }
+
+        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
+
+        //loops printing horizontal "#" symbol line for rectangle
+        while(counter > -35)
+        {   
+                attron(COLOR_PAIR(1));
+                mvprintw(y+5, x-counter, "%c", boarder);
+                mvprintw(y-6, x-counter, "%c", boarder);
+                --counter;
+                attroff(COLOR_PAIR(1));
+        }   
+    
+        attron(COLOR_PAIR(1));
+
+        mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
+        mvprintw(y,x-33, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        attroff(COLOR_PAIR(1));
+        refresh();                                              //refreshes window
+        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
+        refresh();                                              //refreshes window
+        getchar();                                              //waits for user to input a character
+        endwin();                                               //ends ncurses window
+
+}
+
+void Engine::displayLose(){
+        erase();
+        initscr();                              //initializes screen
+        start_color();
+        int y = floor(LINES/2);                 //calculates floor of half of the screens lines
+        int x = floor(COLS/2);                  //calculates floor of half of the screens columns
+        x = x-12;
+        char boarder = '#';                     //variable to store rectangle boarder symbol
+        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        char ending_message[] = "YOU LOSE!";
+        char ending_message2[] = "You died from exhaustion! Game Over.";
+        char blank = ' '; 
+        init_pair(1, COLOR_BLACK, COLOR_RED);
+      
+        for(int i = LINES; i >= 0; --i){
+          for(int j = COLS; j >= 0; --j){
+            attron(COLOR_PAIR(1));
+            mvprintw(i, j, "%c", blank);
+            attroff(COLOR_PAIR(1));
+          }
+        }
+
+
+       //loops printing vertical "#" symbol line for rectangle
+        while(counter > -6)
+        {       
+                attron(COLOR_PAIR(1));
+                mvprintw(y - counter, x+35, "%c", boarder);
+                mvprintw(y - counter, x-36, "%c", boarder);
+                attroff(COLOR_PAIR(1));
+                --counter;
+        }
+
+        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
+
+        //loops printing horizontal "#" symbol line for rectangle
+        while(counter > -35)
+        {       
+                attron(COLOR_PAIR(1));
+                mvprintw(y+5, x-counter, "%c", boarder);
+                mvprintw(y-6, x-counter, "%c", boarder);
+                attroff(COLOR_PAIR(1));
+                --counter;
+        }
+
+        attron(COLOR_PAIR(1));
+
+        mvprintw(y,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
+        mvprintw(y+1,x-18, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        attroff(COLOR_PAIR(1));
+        refresh();                                              //refreshes window
+        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
+        refresh();                                              //refreshes window
+        getchar();                                              //waits for user to input a character
+        endwin();                                               //ends ncurses window
+
 }

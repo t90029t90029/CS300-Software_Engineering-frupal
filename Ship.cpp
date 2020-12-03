@@ -20,7 +20,7 @@ ObstacleType Ship::getObstacle(){
   return BOULDER;
 }
 
-int Ship::getDetails(string & source){
+int Ship::getDetails(string & source,int & y,int & x){
   return 0;
 }
 
@@ -33,7 +33,7 @@ int Ship::getTruth(){
   return 0;
 }
 
-void Ship::setClue(string clue){
+void Ship::setClue(string clue,int y,int x){
   return;
 }
 

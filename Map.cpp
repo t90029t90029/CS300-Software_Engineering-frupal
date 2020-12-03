@@ -12,6 +12,17 @@ Map::Map() {
   }
 }
 
+void Map::init() {
+  // Set tile colors
+  init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
+  init_pair(WATER, COLOR_BLACK, COLOR_BLUE);
+  init_pair(SWAMP, COLOR_BLACK, COLOR_MAGENTA);
+  init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
+  init_pair(DIAMOND, COLOR_WHITE, COLOR_CYAN);
+  init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
+  init_pair('0', COLOR_BLACK, COLOR_BLACK);   // Blank tile
+}
+
 Map::~Map() {
   if(!tiles){
     return;
@@ -30,18 +41,6 @@ Map::~Map() {
 
 void Map::display(int playerY, int playerX, bool hasBinoculars)
 {
-    //ncurses colors
-    start_color();
-
-    init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
-    init_pair(WATER, COLOR_BLACK, COLOR_BLUE);
-    init_pair(SWAMP, COLOR_BLACK, COLOR_MAGENTA);
-    init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
-    init_pair(DIAMOND, COLOR_WHITE, COLOR_CYAN);
-    init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
-    init_pair('0', COLOR_BLACK, COLOR_BLACK);
-    init_pair('H', COLOR_BLACK, COLOR_YELLOW);
-
     char empty = ' ';
     char playerSymbol = '@';
 
@@ -164,23 +163,23 @@ void Map::load(int & playerStartY, int & playerStartX) {
 		while (getline(mapfile, line)) {
 			for(unsigned i = 0; i < line.length(); i++) {
 				switch(line.at(i)) {
-					case 'M':
+					case ' ':
 						tiles[nline][i].type = MEADOW;
 						break;
-					case 'W':
+					case '~':
 						tiles[nline][i].type = WATER;
 						break;
-					case 'S':
+					case '#':
 						tiles[nline][i].type = SWAMP;
 						break;
-					case 'L':
+					case '|':
 						tiles[nline][i].type = WALL;
 						break;
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
 						tiles[nline][i].item = '$';
             break;
-					case 'H':
+					case 'S':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
 						tiles[nline][i].itemType = new Ship;
