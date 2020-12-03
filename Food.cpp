@@ -69,7 +69,7 @@ ObstacleType Food::getObstacle(){
   return BOULDER;
 }
 
-int Food::getDetails(string & source){
+int Food::getDetails(string & source,int & y,int & x){
   return 0;
 }
 
@@ -81,7 +81,7 @@ int Food::getTruth(){
   return 0;
 }
 
-void Food::setClue(string clue){
+void Food::setClue(string clue,int y,int x){
   return;
 }
 
