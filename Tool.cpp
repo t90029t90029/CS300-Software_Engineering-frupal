@@ -6,7 +6,7 @@ using namespace std;
 // Tool Constructor
 Tool::Tool() {
   int itemCount = 3;
-  int ratingCount = 3;
+  int ratingCount = 4;
   int nameCount = 3;
   int costMultiplier = 50;
 
@@ -33,8 +33,9 @@ Tool::Tool() {
 
 	// The rating will determine which adjective
   string adjectives[ratingCount] = {
+    "Wooden",
     "Rusty",
-    "Silver",
+    "Tempered",
     "Magic"
   };
 

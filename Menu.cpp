@@ -93,12 +93,12 @@ void Menu::displayTile(int y, int x) {
     //treasure does not work as expected, substitute detectoin method used
     if(0<item->getMoney() )
         mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
-    else if (itemChar != '!')
+    else if (itemChar != '!' && itemChar != '?')
 	mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
 
     if(itemChar == 'T' || itemChar == '!')//Tool or Obstacle
 	mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
-    else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$')
+    else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$' || itemChar == '?')
 	    ++this->line;
     else
 	mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
@@ -221,18 +221,25 @@ void Menu::displayTool(vector<Tool *> tool) {
   attroff(COLOR_PAIR('H'));
 
   if (tool.size() == 0) {
-	    mvprintw(++this->line, TEXT_X, " No tools available " );
-	    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+    attron(COLOR_PAIR('E'));
+    mvprintw(++this->line, TEXT_X, " No tools available " );
+    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+    attroff(COLOR_PAIR('E'));
 
-      ++this->line;
-	    mvprintw(++this->line, TEXT_X, " Press any key ");
-	    mvprintw(++this->line, TEXT_X, " to tackle bare-handed ");
+    ++this->line;
+    mvprintw(++this->line, TEXT_X, " Press any key ");
+    mvprintw(++this->line, TEXT_X, " to engage barehanded ");
   }
   else {
     for(unsigned int i = 0;i < tool.size(); i++) {
       mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
     }
+
+    ++this->line;
+    mvprintw(++this->line, TEXT_X, " Press any other key ");
+    mvprintw(++this->line, TEXT_X, " to engage barehanded ");
   }
+
 }
 
 
