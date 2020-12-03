@@ -41,7 +41,6 @@ Map::~Map() {
 
 void Map::display(int playerY, int playerX, bool hasBinoculars)
 {
-
     char empty = ' ';
     char playerSymbol = '@';
 

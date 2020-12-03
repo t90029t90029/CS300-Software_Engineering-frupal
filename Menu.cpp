@@ -221,18 +221,25 @@ void Menu::displayTool(vector<Tool *> tool) {
   attroff(COLOR_PAIR('H'));
 
   if (tool.size() == 0) {
-	    mvprintw(++this->line, TEXT_X, " No tools available " );
-	    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+    attron(COLOR_PAIR('E'));
+    mvprintw(++this->line, TEXT_X, " No tools available " );
+    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+    attroff(COLOR_PAIR('E'));
 
-      ++this->line;
-	    mvprintw(++this->line, TEXT_X, " Press any key ");
-	    mvprintw(++this->line, TEXT_X, " to tackle bare-handed ");
+    ++this->line;
+    mvprintw(++this->line, TEXT_X, " Press any key ");
+    mvprintw(++this->line, TEXT_X, " to engage barehanded ");
   }
   else {
     for(unsigned int i = 0;i < tool.size(); i++) {
       mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
     }
+
+    ++this->line;
+    mvprintw(++this->line, TEXT_X, " Press any other key ");
+    mvprintw(++this->line, TEXT_X, " to engage barehanded ");
   }
+
 }
 
 
