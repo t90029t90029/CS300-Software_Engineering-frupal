@@ -89,11 +89,11 @@ void Menu::displayTile(int y, int x) {
 
   if (item != NULL) {
     mvprintw(++this->line, TEXT_X, "> Item:" );
-    mvprintw(++this->line, TEXT_X, "> %s ", item->getName().c_str() );
+    mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str() );
     //treasure does not work as expected, substitute detectoin method used
     if(0<item->getMoney() )
         mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
-    else
+    else if (itemChar != '!')
 	mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
 
     if(itemChar == 'T' || itemChar == '!')//Tool or Obstacle
@@ -157,11 +157,31 @@ void Menu::displayOptions(int y, int x) {
     ++this->line;
 
     Tile * tile = map->getTile(y, x);
-    if (player->getMoney() <= tile->itemType->getCost()) {
-      mvprintw(++this->line, TEXT_X, "This is too expensive");
+    // First show error messages if player can't buy the item
+    if (tile->item == 'B' && player->hasBinoculars()) {
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " You already have ");
+      mvprintw(++this->line, TEXT_X, " binoculars. ");
+      attroff(COLOR_PAIR('E'));
     }
+    else if (tile->item == 'S' && player->hasShip()) {
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " You already have ");
+      mvprintw(++this->line, TEXT_X, " a ship. ");
+      attroff(COLOR_PAIR('E'));
+    }
+    else if (player->getMoney() <= tile->itemType->getCost()) {
+
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " Not enough whiffles ");
+      mvprintw(++this->line, TEXT_X, " to buy this item! ");
+      attroff(COLOR_PAIR('E'));
+    }
+    // If they can buy it, show the option
     else {
-      mvprintw(++this->line, TEXT_X, "Enter) Buy");
+      attron(COLOR_PAIR('H'));
+      mvprintw(++this->line, TEXT_X, " Enter) Buy Item ");
+      attroff(COLOR_PAIR('H'));
     }
   }
 }
@@ -183,7 +203,7 @@ void Menu::displayClue(void){
   if(player->hasClue(y,x)){
     tile = map->getTile(y, x);
     this->line += 2;
-    mvprintw(this->line, TEXT_X,"Clue :");
+    mvprintw(this->line, TEXT_X,"Clue:");
     //if there is a clue, copy the content into the string and print it out
     if(tile->itemType->getDetails(clue,targetY,targetX)){
       while(i < clue.length()){
@@ -196,10 +216,19 @@ void Menu::displayClue(void){
 }
 
 void Menu::displayTool(vector<Tool *> tool) {
-  mvprintw(++this->line, TEXT_X, "Tool: ");
 
-  for(unsigned int i = 0;i < tool.size(); i++) {
-	  mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
+  attron(COLOR_PAIR('H'));
+  mvprintw(++this->line, TEXT_X, " Choose a Tool: ");
+  attroff(COLOR_PAIR('H'));
+
+  if (tool.size() == 0) {
+	    mvprintw(++this->line, TEXT_X, " No tools available " );
+	    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+  }
+  else {
+    for(unsigned int i = 0;i < tool.size(); i++) {
+      mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
+    }
   }
 }
 
@@ -208,9 +237,9 @@ void Menu::displayInventory(){
 	this->line +=2;
 	mvprintw(++this->line, TEXT_X, "Inventory: [Strength] ");
 	if(player->hasBinoculars())
-	  mvprintw(++this->line, TEXT_X, "[] Binoculars");
+	  mvprintw(++this->line, TEXT_X, "[-] Binoculars");
 	if(player->hasShip())
-	  mvprintw(++this->line, TEXT_X, "[] Ship");
+	  mvprintw(++this->line, TEXT_X, "[-] Ship");
 	++this->line;
 	Tool** tools = player->getTools();
 	int toolCount = player->getNumberOfTool();

@@ -11,7 +11,7 @@ int main() {
 
   // Load and display map
   engine.init();
-  
+
   // Input loop until quit
   while ((input = getch()) != INPUT_QUIT && !engine.isGameOver())
     engine.receiveInput(input);
@@ -20,7 +20,7 @@ int main() {
 
   if(engine.isGameWon() == true)
     engine.displayWin();
-  else
+  else if (input != INPUT_QUIT)
     engine.displayLose();
 
   return 0;
