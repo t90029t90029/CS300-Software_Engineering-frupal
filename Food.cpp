@@ -2,9 +2,13 @@
 
 // Randomly generate Food
 Food::Food() {
-  type = FoodType((rand() % 3) + 1);
-	// 3 food tiers each with 3 food names
-	string names[3][3] = {
+  const int tierCount = 3;
+  const int ratingCount = 3;
+  const int nameCount = 3;
+  const int costMultiplier = 40;
+  const float energyMultiplier = 0.25;
+
+	string names[tierCount][nameCount] = {
       // Snack
 			{
         "Berries",
@@ -26,28 +30,26 @@ Food::Food() {
 	};
 
   // The rating will determine which adjective
-  string adjectives[3] = {
+  string adjectives[ratingCount] = {
     "Stale",
     "Fresh",
     "Vital"
   };
 
-	// Random rating
-	int rating = (rand() % 3) + 1;
+	int rating = (rand() % ratingCount);
+  int nameIndex = (rand() % nameCount);
+  int foodTier = (rand() % tierCount);
 
-  // Random food name
-  int index = (rand() % 3);
+  // Food energy and cost scales depending on its tier and its rating
+	cost = (foodTier + 1) * (rating + 1) * costMultiplier;
+  energy = cost * energyMultiplier;
+	name = adjectives[rating] + " " + names[foodTier][nameIndex];
 
-  // Food types stack, meaning the more the rating the more the cost/restoration
-	cost = (type + 1) * rating * 15;
-  energy = cost / 2;
-	name = adjectives[rating - 1] + " " + names[type - 1][index];
-
-  /* Test item generation
+  /** Test item generation
 	erase();
 	mvprintw(0, 0, "%s %d %d %d", name.c_str(), rating+1, cost, energy);
 	getch();
-  */
+  **/
 }
 
 Food::~Food(){

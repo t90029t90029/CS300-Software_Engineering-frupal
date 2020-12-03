@@ -18,7 +18,6 @@ enum ItemType {
 enum ObstacleType {
   BOULDER,
   TREE,
-  SOIL,
   MONSTER
 };
 

@@ -251,12 +251,14 @@ void Engine::foundItem(int y,int x) {
         tools = player.hasTool(tile->itemType);
 
         map.highlightItem(y, x);
+        menu.display();
         menu.displayTool(tools);
 
         toolChoice = getch() - 1 - '0';
         if(tools.size() != 0) {
           if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
-            destroyEnergy /= tools[toolChoice]->getStrength();
+            // Strength starts at one but we want to divide by at least 2
+            destroyEnergy /= (tools[toolChoice]->getStrength() + 1);
             player.removeTool(tools[toolChoice]);
           }
         }
@@ -309,23 +311,23 @@ void Engine::displayWin() {
         char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
 
         //loops printing vertical "#" symbol line for rectangle
-        while(counter > -6) 
-        {   
+        while(counter > -6)
+        {
                 mvprintw(y - counter, x+35, "%c", boarder);
                 mvprintw(y - counter, x-36, "%c", boarder);
                 --counter;
-        }   
+        }
 
-        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation   
+        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
 
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -35)
-        {   
+        {
                 mvprintw(y+5, x-counter, "%c", boarder);
                 mvprintw(y-6, x-counter, "%c", boarder);
                 --counter;
-        }   
-    
+        }
+
         mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
         mvprintw(y,x-33, "%s", ending_message2);                   //prints hello world! message in center of rectangle
         refresh();                                              //refreshes window
@@ -345,25 +347,25 @@ void Engine::displayLose(){
         int counter = 6;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU LOSE!";
         char ending_message2[] = "You died from exhaustion! Game Over.";
-        
+
         //loops printing vertical "#" symbol line for rectangle
         while(counter > -6)
-        {       
+        {
                 mvprintw(y - counter, x+35, "%c", boarder);
                 mvprintw(y - counter, x-36, "%c", boarder);
                 --counter;
         }
-        
-        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation   
-        
+
+        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
+
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -35)
-        {       
+        {
                 mvprintw(y+5, x-counter, "%c", boarder);
                 mvprintw(y-6, x-counter, "%c", boarder);
                 --counter;
         }
-        
+
         mvprintw(y,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
         mvprintw(y+1,x-18, "%s", ending_message2);                   //prints hello world! message in center of rectangle
         refresh();                                              //refreshes window

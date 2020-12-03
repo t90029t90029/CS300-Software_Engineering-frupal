@@ -83,15 +83,15 @@ void Menu::displayTile(int y, int x) {
 	   break;
   }
   mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
-	
-  if (item != NULL) {	 
+
+  if (item != NULL) {
     if(itemChar == 'B')
 	mvprintw(++this->line, TEXT_X, "> Item: Binoculars");
     else if(itemChar == 'S')
 	mvprintw(++this->line, TEXT_X, "> Item: Ship");
     else
 	mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName().c_str());
-    
+
     mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
     if(itemChar == 'T')
 	mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
