@@ -36,3 +36,7 @@ int Binoculars::getTruth(){
 void Binoculars::setClue(string clue){
   return;
 }
+
+string Binoculars::getName(){
+	return "Binoculars";
+}
