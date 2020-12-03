@@ -12,6 +12,17 @@ Map::Map() {
   }
 }
 
+void Map::init() {
+  // Set tile colors
+  init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
+  init_pair(WATER, COLOR_BLACK, COLOR_BLUE);
+  init_pair(SWAMP, COLOR_BLACK, COLOR_MAGENTA);
+  init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
+  init_pair(DIAMOND, COLOR_WHITE, COLOR_CYAN);
+  init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
+  init_pair('0', COLOR_BLACK, COLOR_BLACK);   // Blank tile
+}
+
 Map::~Map() {
   if(!tiles){
     return;
@@ -30,18 +41,6 @@ Map::~Map() {
 
 void Map::display(int playerY, int playerX, bool hasBinoculars)
 {
-    //ncurses colors
-    start_color();
-
-    init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
-    init_pair(WATER, COLOR_BLACK, COLOR_BLUE);
-    init_pair(SWAMP, COLOR_BLACK, COLOR_MAGENTA);
-    init_pair(WALL, COLOR_BLACK, COLOR_WHITE);
-    init_pair(DIAMOND, COLOR_WHITE, COLOR_CYAN);
-    init_pair(PLAYER, COLOR_BLACK, COLOR_RED);
-    init_pair('0', COLOR_BLACK, COLOR_BLACK);
-    init_pair('H', COLOR_BLACK, COLOR_YELLOW);
-    init_pair('E', COLOR_WHITE, COLOR_RED);
 
     char empty = ' ';
     char playerSymbol = '@';

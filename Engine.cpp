@@ -8,8 +8,14 @@ Engine::Engine() {
   keypad(stdscr, true); // Accept keypad input
   cbreak();             // Allow game to break upon Ctrl+C
   noecho();             // Don't let user type
+  curs_set(0);
+  start_color();
 
-  curs_set(0); // Hide cursor, otherwise, background color of Player is overriden
+  init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
+  init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
+
+  // Set map colors
+  map.init();
 }
 
 void Engine::init() {
