@@ -132,16 +132,18 @@ void Engine::movePlayer(int direction) {
     // The normal behavior is that the player hops over the item
     if (symbolY != y || symbolX != x)
       map.highlightItem(y, x);
+
+    menu.display();
   }
   // Otherwise, interact with item
   else {
+    menu.display();
     foundItem(y,x);
     map.display(y, x, player.hasBinoculars());
   }
   //update the clue for the menu
   updatePosition();
 
-  menu.display();
 }
 
 bool Engine::isGameOver() {
@@ -275,6 +277,7 @@ void Engine::foundItem(int y,int x) {
 
         player.setEnergy(energy - destroyEnergy);
         tile->item = ' ';
+        menu.display();
         break;
       // Clue
       case '?':
@@ -292,11 +295,13 @@ void Engine::foundItem(int y,int x) {
           clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
         }
 
-	//store the content in the tile of Clue
+        //store the content in the tile of Clue
         itemType->setClue(clue,randomY,randomX);
 
-	//store the position of the clue
-	player.setClue(true,y,x);
+        //store the position of the clue
+        player.setClue(true,y,x);
+
+        menu.display();
         tile->item = ' ';
         break;
       default:

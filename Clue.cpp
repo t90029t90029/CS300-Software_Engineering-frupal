@@ -59,3 +59,7 @@ void Clue::setClue(string clue,int y,int x){
   targetY = y;
   targetX = x;
 }
+
+string Clue::getName() {
+  return "Clue";
+}
