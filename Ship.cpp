@@ -36,3 +36,7 @@ int Ship::getTruth(){
 void Ship::setClue(string clue){
   return;
 }
+
+string Ship::getName(){
+	return "Ship";
+}
