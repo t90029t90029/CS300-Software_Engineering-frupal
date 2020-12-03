@@ -111,6 +111,7 @@ class Treasure: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
+    string getName();
   private:
     int value;
 };
@@ -147,6 +148,7 @@ class Binoculars: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
+    string getName();
   private:
     int value;
 };
@@ -162,6 +164,7 @@ class Ship: public Item {
     int getMoney();
     int getTruth();
     void setClue(string);
+    string getName();
   private:
     int value;
 };

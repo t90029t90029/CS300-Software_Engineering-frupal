@@ -36,3 +36,7 @@ int Treasure::getTruth(){
 void Treasure::setClue(string clue){
   return;
 }
+
+string Treasure::getName(){
+	return "Treasure!";
+}

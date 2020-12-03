@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include <string>
-
+#include <cstring>
 using namespace std;
 
 void Menu::init(Map * m, Player * p) {
@@ -83,22 +83,26 @@ void Menu::displayTile(int y, int x) {
 	   break;
   }
   mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
-	
-  if (item != NULL) {	 
-    if(itemChar == 'B')
-	mvprintw(++this->line, TEXT_X, "> Item: Binoculars");
-    else if(itemChar == 'S')
-	mvprintw(++this->line, TEXT_X, "> Item: Ship");
+  //int nameLen = strlen(item->getName().c_str());
+  
+
+  if (item != NULL) { 
+    mvprintw(++this->line, TEXT_X, "> Item:" );
+    mvprintw(++this->line, TEXT_X, "> %s ", item->getName().c_str() );
+    //treasure does not work as expected, substitute detectoin method used
+    if(0<item->getMoney() )
+        mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
     else
-	mvprintw(++this->line, TEXT_X, "> Item: %s", item->getName().c_str());
-    
-    mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
-    if(itemChar == 'T')
+	mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
+
+    if(itemChar == 'T' || itemChar == '!')//Tool or Obstacle
 	mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
+    else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$')
+	    ++this->line;
     else
 	mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
   }else{ //tiles energy use
-	  this->line+=3;//keeping menu spacing consistent
+	  this->line+=4;//keeping menu spacing consistent
 	  int enCost = -1;
 	if(tile->type == SWAMP)
 		--enCost;
@@ -194,7 +198,7 @@ void Menu::displayTool(vector<Tool *> tool) {
 
 void Menu::displayInventory(){
 	this->line +=2;
-	mvprintw(++this->line, TEXT_X, "Inventory: ");
+	mvprintw(++this->line, TEXT_X, "Inventory: [Strength] ");
 	if(player->hasBinoculars())
 	  mvprintw(++this->line, TEXT_X, "[] Binoculars");
 	if(player->hasShip())
@@ -205,7 +209,7 @@ void Menu::displayInventory(){
 	if((tools) == NULL)	return;
 	for(int k =0; k< toolCount; ++k){
 	  if(tools[k]!= NULL)
-	    mvprintw(this->line++, TEXT_X, "[] %s, Strength: %d", tools[k] ->getName().c_str(), tools[k]->getStrength());
+	    mvprintw(this->line++, TEXT_X, "[%d] %s", tools[k]->getStrength(), tools[k] ->getName().c_str());
 	}
 
 	return;
