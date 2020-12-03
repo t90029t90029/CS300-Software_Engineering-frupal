@@ -31,8 +31,8 @@ Obstacle::Obstacle() {
   // The rating will determine which adjective
   string adjectives[ratingCount] = {
     "Weak",
-    "Formidable",
-    "Fearsome"
+    "Daunting",
+    "Formidable"
   };
 
   type = ObstacleType((rand() % itemCount) + 1);
