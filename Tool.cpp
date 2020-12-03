@@ -5,8 +5,12 @@ using namespace std;
 
 // Tool Constructor
 Tool::Tool() {
-	// 5 obstacle types, 3 names for each
-	string names[5][3] = {
+  int itemCount = 3;
+  int ratingCount = 4;
+  int nameCount = 3;
+  int costMultiplier = 50;
+
+	string names[itemCount][nameCount] = {
 		// Boulder
 		{
 			"Hammer",
@@ -19,12 +23,6 @@ Tool::Tool() {
 			"Axe",
 			"Saw"
 		},
-		// Soil
-		{
-			"Rake",
-			"Shovel",
-			"Hoe",
-		},
 		// Monster
 		{
 			"Spear",
@@ -34,24 +32,24 @@ Tool::Tool() {
 	};
 
 	// The rating will determine which adjective
-  string adjectives[3] = {
+  string adjectives[ratingCount] = {
+    "Wooden",
     "Rusty",
-    "Silver",
-    "Enchanted"
+    "Tempered",
+    "Magic"
   };
 
-	// Which name to pick
-	int index = rand() % 3;
+	int nameIndex = rand() % nameCount;
 
-	// Choose a random obstacle type and strength
-  obstacleType = ObstacleType((rand() % 4) + 1);
-	rating = (rand() % 3) + 1;
-	cost = rating * 50;
-	name = adjectives[rating-1] + " " + names[obstacleType-1][index];
+  // Tool cost depends on it's rating
+  obstacleType = ObstacleType((rand() % itemCount) + 1);
+	rating = (rand() % ratingCount) + 1;
+	cost = rating * costMultiplier;
+	name = adjectives[rating - 1] + " " + names[obstacleType-1][nameIndex];
 
 	/* Test item generation
 	erase();
-	mvprintw(0, 0, "%s %d %d", name.c_str(), rating+1, cost);
+	mvprintw(0, 0, "%s %d %d", name.c_str(), rating, obstacleType);
 	getch();
 	*/
 }
@@ -73,7 +71,7 @@ ObstacleType Tool::getObstacle() {
   return obstacleType;
 }
 
-int Tool::getDetails(string & source) {
+int Tool::getDetails(string & source,int & y,int & x) {
   if(name.length() > 0){
     source = name;
     return 1;
@@ -89,7 +87,7 @@ int Tool::getTruth() {
   return 0;
 }
 
-void Tool::setClue(string clue){
+void Tool::setClue(string clue,int y,int x){
   return;
 }
 

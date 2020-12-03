@@ -20,7 +20,7 @@ ObstacleType Treasure::getObstacle(){
   return BOULDER;
 }
 
-int Treasure::getDetails(string & source){
+int Treasure::getDetails(string & source,int & y,int & x){
   return 0;
 }
 
@@ -33,6 +33,10 @@ int Treasure::getTruth(){
   return 0;
 }
 
-void Treasure::setClue(string clue){
+void Treasure::setClue(string clue,int y,int x){
   return;
+}
+
+string Treasure::getName(){
+	return "Treasure!";
 }

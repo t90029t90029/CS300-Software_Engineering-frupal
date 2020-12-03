@@ -8,14 +8,15 @@ Each square of the map is referred to as a grovnik in the Kingdom of Frupal.
 Only grovniks that have been discovered by the adventurer can be seen.  
 The adventurer can see one grovnik ahead with the naked eye, or two grovniks ahead with binoculars (B).  
 Water (blue) can only be traversed if a ship (S) has been found.  
-The adventurer can pre-emtively inspect grovniks it has discovered before it moves forward.
+The adventurer can pre-emptively inspect grovniks it has discovered before it moves forward.
 
 #### Energy ####
 The adventurer only has a limited amount of energy for traveling. If the adventurer runs out of energy, the game is over.  
 Traveling across meadows (green) expends 1 energy, swamps (magenta) expend 2 energy. If using a ship on water, no energy is expended.  
 Food (F) can be bought to restore energy.  
 Obstacles (!) might be encountered such as monsters, large boulders, rough terrain, which expend much more energy.
-Tools (T) can be bought to make overcoming these obstacles easier. Each tool only works on certain types of obstacles. Tools can only be used once before they break.  
+Tools (T) can be bought to make overcoming these obstacles easier. Each tool only works on certain types of obstacles.  
+Tools can only be used once before they break.  
 
 #### Helpful Items ####
 Treasure chests ($) are located throughout the Kingdom, which contain a varying amount of whiffles.  
@@ -28,7 +29,7 @@ There are clues (?) on the map to the locations of useful items, and maybe even 
 * Melissa Barnes (@MelissaPSU)
 * Jordan Lopez-Santizo (@9L-S)
 * Huy Doan (@huy26)
-* Shang Sun Lin (@t90029t90029)
+* Shang Chun Lin (@t90029t90029)
 
 ## Controls
 The adventurer can move north (W), west (A), south (S), and east (D).  
@@ -37,7 +38,7 @@ The 'i' key toggles the adventurer's inventory view, which will show tools and q
 The Enter key will buy an item, if the adventurer has enough whiffles.
 
 ## Building
-Frupal requires the ncurses library.
+Frupal requires the ncurses library.  
 Frupal can be built with the following commands:
 
 * This command builds and runs the game
