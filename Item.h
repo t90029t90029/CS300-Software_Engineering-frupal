@@ -34,10 +34,10 @@ class Item {
     virtual int getCost() = 0;
     virtual int getStrength() = 0;
     virtual ObstacleType getObstacle() = 0;
-    virtual int getDetails(string&) = 0;
+    virtual int getDetails(string&,int&,int&) = 0;
     virtual int getMoney() = 0;
     virtual int getTruth() = 0;
-    virtual void setClue(string) = 0;
+    virtual void setClue(string,int,int) = 0;
     virtual string getName(){ return "";};
     ItemType getType(void);
   private:
@@ -51,10 +51,10 @@ class Tool: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
     string getName();
   private:
     string name;
@@ -69,10 +69,10 @@ class Obstacle: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
     string getName();
   private:
     ObstacleType type;
@@ -87,10 +87,10 @@ class Food: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
     string getName();
   private:
     FoodType type;
@@ -106,10 +106,10 @@ class Treasure: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
     string getName();
   private:
     int value;
@@ -126,14 +126,16 @@ class Clue: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
   private:
     ClueType type;
     string isTrue;
     string content;
+    int targetY;
+    int targetX;
 };
 
 class Binoculars: public Item {
@@ -143,10 +145,10 @@ class Binoculars: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
     string getName();
   private:
     int value;
@@ -159,10 +161,10 @@ class Ship: public Item {
     int getCost();
     int getStrength();
     ObstacleType getObstacle();
-    int getDetails(string&);
+    int getDetails(string&,int&,int&);
     int getMoney();
     int getTruth();
-    void setClue(string);
+    void setClue(string,int,int);
     string getName();
   private:
     int value;

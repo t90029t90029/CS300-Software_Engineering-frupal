@@ -32,9 +32,11 @@ ObstacleType Clue::getObstacle(){
 }
 
 // Get hint
-int Clue::getDetails(string & source){
+int Clue::getDetails(string & source,int & y,int & x){
   if(content.length() > 0){
     source = content;
+    y = targetY;
+    x = targetX;
     return 1;
   }
   return 0;
@@ -52,6 +54,8 @@ int Clue::getTruth(){
 }
 
 // Set hint
-void Clue::setClue(string clue){
+void Clue::setClue(string clue,int y,int x){
   content = clue;
+  targetY = y;
+  targetX = x;
 }

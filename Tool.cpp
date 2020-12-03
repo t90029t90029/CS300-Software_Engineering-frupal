@@ -70,7 +70,7 @@ ObstacleType Tool::getObstacle() {
   return obstacleType;
 }
 
-int Tool::getDetails(string & source) {
+int Tool::getDetails(string & source,int & y,int & x) {
   if(name.length() > 0){
     source = name;
     return 1;
@@ -86,7 +86,7 @@ int Tool::getTruth() {
   return 0;
 }
 
-void Tool::setClue(string clue){
+void Tool::setClue(string clue,int y,int x){
   return;
 }
 

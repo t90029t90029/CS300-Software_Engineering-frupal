@@ -65,7 +65,7 @@ ObstacleType Obstacle::getObstacle() {
   return type;
 }
 
-int Obstacle::getDetails(string & source) {
+int Obstacle::getDetails(string & source,int & y,int & x) {
   return 0;
 }
 
@@ -77,7 +77,7 @@ int Obstacle::getTruth() {
   return 0;
 }
 
-void Obstacle::setClue(string clue){
+void Obstacle::setClue(string clue,int y,int x){
   return;
 }
 

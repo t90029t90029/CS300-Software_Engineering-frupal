@@ -167,18 +167,25 @@ void Menu::displayOptions(int y, int x) {
 }
 
 void Menu::displayClue(void){
+  //the position of the clue
   int y;
   int x;
+  //the position of the target
+  int targetY;
+  int targetX;
+
   string clue;
   string piece;
   Tile * tile;
   long unsigned int i = 0;
 
+  //if the player holds a clue, copy the coordinate into y,x
   if(player->hasClue(y,x)){
     tile = map->getTile(y, x);
     this->line += 2;
     mvprintw(this->line, TEXT_X,"Clue :");
-    if(tile->itemType->getDetails(clue)){
+    //if there is a clue, copy the content into the string and print it out
+    if(tile->itemType->getDetails(clue,targetY,targetX)){
       while(i < clue.length()){
         piece = clue.substr(i, MENU_WIDTH-2);
         mvprintw(++this->line, TEXT_X,piece.c_str());

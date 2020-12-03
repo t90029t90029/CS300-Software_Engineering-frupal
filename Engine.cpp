@@ -138,6 +138,9 @@ void Engine::movePlayer(int direction) {
     foundItem(y,x);
     map.display(y, x, player.hasBinoculars());
   }
+  //update the clue for the menu
+  updatePosition();
+
   menu.display();
 }
 
@@ -283,7 +286,7 @@ void Engine::foundItem(int y,int x) {
         }
 
 	//store the content in the tile of Clue
-        itemType->setClue(clue);
+        itemType->setClue(clue,randomY,randomX);
 
 	//store the position of the clue
 	player.setClue(true,y,x);
@@ -291,6 +294,53 @@ void Engine::foundItem(int y,int x) {
         break;
       default:
         break;
+    }
+  }
+}
+
+//the relative position between the target of the clue and the player
+void Engine::updatePosition(){
+  string clue;
+  Tile * tile;
+  Item * itemType;
+  //the position of the clue
+  int y;
+  int x;
+  //the position of the player
+  int py;
+  int px;
+  player.locate(py,px);
+  //the position of the target tile of the clue
+  int targetY;
+  int targetX;
+  Tile * temp;
+
+  //if the player has a clue, get the position of the clue
+  if(player.hasClue(y,x)){
+    //point to the clue
+    tile = map.getTile(y,x);
+    itemType = tile->itemType;
+
+    //get the position of the target
+    if(itemType->getDetails(clue,targetY,targetX)){
+      temp = map.getTile(targetY,targetX);
+
+      //tell the truth
+      if (itemType->getTruth()) {
+        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
+
+        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
+      }
+
+      //tell the lie
+      else {
+        clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
+
+        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
+      }
+
+      //update the content in the tile of Clue
+      itemType->setClue(clue,targetY,targetX);
     }
   }
 }
