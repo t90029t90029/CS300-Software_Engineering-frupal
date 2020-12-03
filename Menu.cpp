@@ -83,10 +83,11 @@ void Menu::displayTile(int y, int x) {
 	   break;
   }
   mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
-  //int nameLen = strlen(item->getName().c_str());
-  
 
-  if (item != NULL) { 
+  //int nameLen = strlen(item->getName().c_str());
+
+
+  if (item != NULL) {
     mvprintw(++this->line, TEXT_X, "> Item:" );
     mvprintw(++this->line, TEXT_X, "> %s ", item->getName().c_str() );
     //treasure does not work as expected, substitute detectoin method used

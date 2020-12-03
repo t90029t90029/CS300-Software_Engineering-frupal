@@ -72,7 +72,7 @@ string Player::itemDirect(bool truth,int itemY,int itemX) {
       output << x-itemX;
       direct += output.str() +" grovniks to the west.";
     }
-  } 
+  }
 
   //lie -- reverse
   else{
@@ -98,7 +98,7 @@ string Player::itemDirect(bool truth,int itemY,int itemX) {
       direct += output.str() +" grovniks to the west.";
     }
   }
-  return direct; 
+  return direct;
 }
 
 vector<Tool*> Player::hasTool(Item *item) {
@@ -106,10 +106,7 @@ vector<Tool*> Player::hasTool(Item *item) {
 	Obstacle * obstacle = dynamic_cast<Obstacle *>(item);
 	for(int i = 0; i<toolCount; i++) {
 		if(tools[i]->getObstacle() == obstacle->getObstacle()) {
-			int destroyEnergy = obstacle->getStrength()/tools[i]->getStrength();
-			if(destroyEnergy <= this->energy) {
-				toolsCanUse.push_back(tools[i]);
-			}
+			toolsCanUse.push_back(tools[i]);
 		}
 	}
 	return toolsCanUse;
