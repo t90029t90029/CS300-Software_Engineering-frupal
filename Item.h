@@ -130,6 +130,7 @@ class Clue: public Item {
     int getMoney();
     int getTruth();
     void setClue(string,int,int);
+    string getName(void);
   private:
     ClueType type;
     string isTrue;
