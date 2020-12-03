@@ -86,8 +86,8 @@ void Menu::displayTile(int y, int x) {
 
   //int nameLen = strlen(item->getName().c_str());
 
-
-  if (item != NULL) {
+  // Tile may not have an item, or it may be removed from the map
+  if (item != NULL && itemChar != ' ') {
     mvprintw(++this->line, TEXT_X, "> Item:" );
     mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str() );
     //treasure does not work as expected, substitute detectoin method used
@@ -120,6 +120,38 @@ void Menu::displayOptions(int y, int x) {
 
   mvprintw(++this->line, TEXT_X, "Options:"); // Option heading
 
+  // If item is purchasable, display option to buy
+  if (map->isPurchasable(y, x)) {
+    Tile * tile = map->getTile(y, x);
+    // First show error messages if player can't buy the item
+    if (tile->item == 'B' && player->hasBinoculars()) {
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " You already have ");
+      mvprintw(++this->line, TEXT_X, " binoculars. ");
+      attroff(COLOR_PAIR('E'));
+    }
+    else if (tile->item == 'S' && player->hasShip()) {
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " You already have ");
+      mvprintw(++this->line, TEXT_X, " a ship. ");
+      attroff(COLOR_PAIR('E'));
+    }
+    else if (player->getMoney() <= tile->itemType->getCost()) {
+
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " Not enough whiffles ");
+      mvprintw(++this->line, TEXT_X, " to buy this item! ");
+      attroff(COLOR_PAIR('E'));
+    }
+    // If they can buy it, show the option
+    else {
+      attron(COLOR_PAIR('H'));
+      mvprintw(++this->line, TEXT_X, " Enter) Buy Item ");
+      attroff(COLOR_PAIR('H'));
+    }
+    ++this->line;
+  }
+
   // Check tiles neighboring player's position
   for (int i = 0; i < 4; ++i) {
     int _y = y, _x = x;
@@ -149,39 +181,6 @@ void Menu::displayOptions(int y, int x) {
       if (tile->type == MEADOW || tile->type == SWAMP) {
         mvprintw(++this->line, TEXT_X, direction.c_str());
       }
-    }
-  }
-
-  // If item is purchasable, display option to buy
-  if (map->isPurchasable(y, x)) {
-    ++this->line;
-
-    Tile * tile = map->getTile(y, x);
-    // First show error messages if player can't buy the item
-    if (tile->item == 'B' && player->hasBinoculars()) {
-      attron(COLOR_PAIR('E'));
-      mvprintw(++this->line, TEXT_X, " You already have ");
-      mvprintw(++this->line, TEXT_X, " binoculars. ");
-      attroff(COLOR_PAIR('E'));
-    }
-    else if (tile->item == 'S' && player->hasShip()) {
-      attron(COLOR_PAIR('E'));
-      mvprintw(++this->line, TEXT_X, " You already have ");
-      mvprintw(++this->line, TEXT_X, " a ship. ");
-      attroff(COLOR_PAIR('E'));
-    }
-    else if (player->getMoney() <= tile->itemType->getCost()) {
-
-      attron(COLOR_PAIR('E'));
-      mvprintw(++this->line, TEXT_X, " Not enough whiffles ");
-      mvprintw(++this->line, TEXT_X, " to buy this item! ");
-      attroff(COLOR_PAIR('E'));
-    }
-    // If they can buy it, show the option
-    else {
-      attron(COLOR_PAIR('H'));
-      mvprintw(++this->line, TEXT_X, " Enter) Buy Item ");
-      attroff(COLOR_PAIR('H'));
     }
   }
 }
@@ -224,6 +223,10 @@ void Menu::displayTool(vector<Tool *> tool) {
   if (tool.size() == 0) {
 	    mvprintw(++this->line, TEXT_X, " No tools available " );
 	    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+
+      ++this->line;
+	    mvprintw(++this->line, TEXT_X, " Press any key ");
+	    mvprintw(++this->line, TEXT_X, " to tackle bare-handed ");
   }
   else {
     for(unsigned int i = 0;i < tool.size(); i++) {
