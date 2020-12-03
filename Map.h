@@ -23,8 +23,9 @@ class Map {
     void viewportSize(void);
   private:
     Tile ** tiles;
-    //default viewsize of 64x32, can be changed later
-    int shiftX, shiftY;
-    int wView, hView;
+
+    // Viewport
+    int shiftX, shiftY; // Amount screen shifted from edge of map
+    int wView, hView;   // Width and height to display
 };
 
