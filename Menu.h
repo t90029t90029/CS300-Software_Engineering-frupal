@@ -13,7 +13,7 @@ class Menu {
     void display(void);
     void displayTool(vector<Tool*> tool);
     //determines if inventory shows
-    void displayInventory(int keyInput);
+    void displayInventoryToggle(void);
     void displayStats(void);
 
   private:
