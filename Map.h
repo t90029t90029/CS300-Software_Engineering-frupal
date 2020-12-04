@@ -22,6 +22,7 @@ class Map {
     void highlightItem(int y, int x);
     Tile *getTile(int y, int x);
     void viewportSize(void);
+    void getShift(int &y, int &x);
   private:
     Tile ** tiles;
 

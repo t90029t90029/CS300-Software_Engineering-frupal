@@ -79,16 +79,19 @@ void Menu::displayTile(int y, int x) {
   string floor = " ";
   //Pretty'ing the names of the tiles
   switch(tile->type){
-	case 1:
-	   floor= "Meadows";
+	case MEADOW:
+	   floor= "Meadow";
 	   break;
-	case 2:
+	case WATER:
 	   floor = "Water";
 	   break;
-	case 3:
+	case WALL:
 	   floor = "Swamp";
 	   break;
-	case 5:
+	case SWAMP:
+	   floor = "Swamp";
+	   break;
+	case DIAMOND:
 	   floor = "*+*+Diamond+*+*";
 	   break;
 	default:
@@ -124,10 +127,10 @@ void Menu::displayTile(int y, int x) {
     	mvprintw(this->line, TEXT_X, "> Energy: %d", enCost);
   	}
   }
-  else 
+  else
   	mvprintw(++this->line, TEXT_X, "> Grovnik: ?");
 
-  
+
   ++this->line; // Add separation line
 }
 
@@ -289,10 +292,10 @@ void Menu::displayInventory(){
 }
 
 void Menu::displayInventoryToggle(){
-	
+
 	  if(!showInventory)
 	    this->showInventory = true;
 	  else
 		  this->showInventory = false;
-	
+
 }

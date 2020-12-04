@@ -12,6 +12,11 @@ Map::Map() {
   }
 }
 
+void Map::getShift(int &y, int &x) {
+  y = shiftY;
+  x = shiftX;
+}
+
 void Map::init() {
   // Set tile colors
   init_pair(MEADOW, COLOR_BLACK, COLOR_GREEN);
@@ -148,9 +153,23 @@ bool Map::isPurchasable(int y, int x) {
 void Map::highlightItem(int y, int x) {
   Tile * tile = getTile(y, x);
 
+  // Don't reveal the item on the tile if it's not discovered
+  char c = tile->isVisible ? tile->item: ' ';
+
+  // apply map shift
+  y = y - shiftY;
+  x = x - shiftX;
+
+  // Check bounds
+  if (y < 0) y = 0;
+  if (y > LINES - 1) y = LINES - 1;
+
+  if (x < 0) x = 0;
+  if (x > COLS - MENU_WIDTH - 1) x = COLS - MENU_WIDTH - 1;
+
   // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(y - shiftY, x - shiftX, tile->item);
+  mvaddch(y, x, c);
   attroff(COLOR_PAIR('H'));
   refresh();
 }
