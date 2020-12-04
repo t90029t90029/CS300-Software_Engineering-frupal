@@ -16,6 +16,8 @@ class Menu {
     void displayInventory(int keyInput);
     void displayStats(void);
 
+    void displayTile(int y, int x);
+    void clear(void);
   private:
     int MENU_X;
     int TEXT_X;
@@ -26,8 +28,6 @@ class Menu {
     bool showInventory;
 
     void displayOptions(int y, int x);
-    void displayTile(int y, int x);
     void displayClue(void);
     void displayInventory(void);
-    void clear(void);
 };
