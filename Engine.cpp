@@ -9,6 +9,7 @@ Engine::Engine() {
   cbreak();             // Allow game to break upon Ctrl+C
   noecho();             // Don't let user type
   start_color();
+
   curs_set(0);
   init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
@@ -25,6 +26,10 @@ void Engine::init() {
   map.load(y, x);
   player.move(y, x);
   menu.init(&map, &player);
+
+  // Set cursor position
+  cursor_x = x;
+  cursor_y = y;
 
   // Display the map and menu
   map.display(y, x, player.hasBinoculars());
