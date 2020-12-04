@@ -404,114 +404,115 @@ void Engine::displayWin() {
 
         int y = floor(LINES/2);                 //calculates floor of half of the screens lines
         int x = floor(COLS/2);                  //calculates floor of half of the screens columns
-        x = x-12;
         char boarder = '#';                     //variable to store rectangle boarder symbol
-        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        int counter = 10;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU WON!!!";
         char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
 
         char blank = ' ';
-        init_pair(1, COLOR_BLACK, COLOR_CYAN);
+        init_pair(1, COLOR_BLUE, COLOR_CYAN);
+        init_pair(2, COLOR_WHITE, COLOR_CYAN);
 
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
             attron(COLOR_PAIR(1));
             mvprintw(i, j, "%c", blank);
             attroff(COLOR_PAIR(1));
-          }
-        }
+          }     
+        }     
         //loops printing vertical "#" symbol line for rectangle
-        while(counter > -6)
-        {
+        while(counter > -10)
+        {   
                 attron(COLOR_PAIR(1));
                 mvprintw(y - counter, x+35, "%c", boarder);
                 mvprintw(y - counter, x-36, "%c", boarder);
                 attroff(COLOR_PAIR(1));
                 --counter;
-        }
+        }           
 
         counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
 
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -35)
-        {
+        {   
                 attron(COLOR_PAIR(1));
-                mvprintw(y+5, x-counter, "%c", boarder);
-                mvprintw(y-6, x-counter, "%c", boarder);
+                mvprintw(y+9, x-counter, "%c", boarder);
+                mvprintw(y-10, x-counter, "%c", boarder);
                 --counter;
                 attroff(COLOR_PAIR(1));
-        }
+        }           
 
-        attron(COLOR_PAIR(1));
-
+        attron(COLOR_PAIR(2));
         mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
-        mvprintw(y,x-33, "%s", ending_message2);                   //prints hello world! message in center of rectangle
-        attroff(COLOR_PAIR(1));
-        refresh();                                              //refreshes window
-        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
+        mvprintw(y,x-32, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        attroff(COLOR_PAIR(2));
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
         endwin();                                               //ends ncurses window
 
 }
-
 void Engine::displayLose(){
         erase();
         initscr();                              //initializes screen
         start_color();
         int y = floor(LINES/2);                 //calculates floor of half of the screens lines
         int x = floor(COLS/2);                  //calculates floor of half of the screens columns
-        x = x-12;
         char boarder = '#';                     //variable to store rectangle boarder symbol
-        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
-        char ending_message[] = "YOU LOSE!";
+        int counter = 14;                        //counter for loops, set for vertical lines of rectangle       
+        char ending_message[] = "YOU LOSE!";     
         char ending_message2[] = "You died from exhaustion! Game Over.";
         char blank = ' ';
         init_pair(1, COLOR_BLACK, COLOR_RED);
-
+        
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
-            attron(COLOR_PAIR(1));
+            attron(COLOR_PAIR(1)); 
             mvprintw(i, j, "%c", blank);
             attroff(COLOR_PAIR(1));
-          }
-        }
-
-
+          } 
+        }   
+          
+        
        //loops printing vertical "#" symbol line for rectangle
-        while(counter > -6)
+        while(counter > -counter)
         {
                 attron(COLOR_PAIR(1));
-                mvprintw(y - counter, x+35, "%c", boarder);
-                mvprintw(y - counter, x-36, "%c", boarder);
+                mvprintw(y - counter, x+counter, "%c", boarder);
+                mvprintw(y - counter, x-counter, "%c", boarder);
                 attroff(COLOR_PAIR(1));
-                --counter;
-        }
-
-        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
-
+                --counter; 
+        }       
+                
+        counter = 14;                           //counter for loops, reset for horizontal lines of rectangle creation
+        
         //loops printing horizontal "#" symbol line for rectangle
-        while(counter > -35)
+        while(counter > -counter)
         {
                 attron(COLOR_PAIR(1));
-                mvprintw(y+5, x-counter, "%c", boarder);
-                mvprintw(y-6, x-counter, "%c", boarder);
+                mvprintw(y+counter, x+counter, "%c", boarder);
+                mvprintw(y+counter, x-counter, "%c", boarder);
                 attroff(COLOR_PAIR(1));
                 --counter;
-        }
-
+        }       
+                
         attron(COLOR_PAIR(1));
 
-        mvprintw(y,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
-        mvprintw(y+1,x-18, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        mvprintw(y,x-4, "%s", ending_message);                   //prints hello world! message in center of rectangle
+        mvprintw(y+1,x-15, "%s", ending_message2);                   //prints hello world! message in center of rectangle
         attroff(COLOR_PAIR(1));
-        refresh();                                              //refreshes window
-        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
         endwin();                                               //ends ncurses window
+        
+}       
 
-}
+
+
+
+
+
+
+
 void Engine::moveCursor(int direction) {
 	menu.display();
 	int playerX =0, playerY=0;
