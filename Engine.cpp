@@ -56,12 +56,23 @@ void Engine::receiveInput(int input) {
     menu.displayInventory(input);
     menu.display();
     break;
+
   // Detect window resize and refresh
   case KEY_RESIZE:
     player.locate(y, x);
     map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
+
+  // Refresh the clue menu
+  case 'c':
+    if(player.wantSeeClue())
+      player.setSeeClue(false);
+    else
+      player.setSeeClue(true);
+    menu.display();
+    break;
+
   default:
     break;
   }
@@ -261,6 +272,7 @@ void Engine::foundItem(int y,int x) {
           // Pick up treasure
           money += itemType->getMoney();
           player.setMoney(money);
+          menu.displayStats();
 
           // Remove from map
           tile->item = ' ';
@@ -275,10 +287,12 @@ void Engine::foundItem(int y,int x) {
         player.locate(symbolY, symbolX);
         map.display(symbolY, symbolX, player.hasBinoculars());
         map.highlightItem(y, x);
+
         menu.display();
         menu.displayTool(tools);
 
         toolChoice = getch() - 1 - '0';
+
         if(tools.size() != 0) {
           if(toolChoice >=0 && unsigned(toolChoice) < tools.size()) {
             // Strength starts at one but we want to divide by at least 2
@@ -316,6 +330,7 @@ void Engine::foundItem(int y,int x) {
         menu.display();
         tile->item = ' ';
         break;
+
       default:
         break;
     }
@@ -387,9 +402,9 @@ void Engine::displayWin() {
         char ending_message[] = "YOU WON!!!";
         char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
 
-        char blank = ' '; 
+        char blank = ' ';
         init_pair(1, COLOR_BLACK, COLOR_CYAN);
-      
+
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
             attron(COLOR_PAIR(1));
@@ -398,8 +413,8 @@ void Engine::displayWin() {
           }
         }
         //loops printing vertical "#" symbol line for rectangle
-        while(counter > -6) 
-        {   
+        while(counter > -6)
+        {
                 attron(COLOR_PAIR(1));
                 mvprintw(y - counter, x+35, "%c", boarder);
                 mvprintw(y - counter, x-36, "%c", boarder);
@@ -411,14 +426,14 @@ void Engine::displayWin() {
 
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -35)
-        {   
+        {
                 attron(COLOR_PAIR(1));
                 mvprintw(y+5, x-counter, "%c", boarder);
                 mvprintw(y-6, x-counter, "%c", boarder);
                 --counter;
                 attroff(COLOR_PAIR(1));
-        }   
-    
+        }
+
         attron(COLOR_PAIR(1));
 
         mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
@@ -443,9 +458,9 @@ void Engine::displayLose(){
         int counter = 6;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU LOSE!";
         char ending_message2[] = "You died from exhaustion! Game Over.";
-        char blank = ' '; 
+        char blank = ' ';
         init_pair(1, COLOR_BLACK, COLOR_RED);
-      
+
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
             attron(COLOR_PAIR(1));
@@ -457,7 +472,7 @@ void Engine::displayLose(){
 
        //loops printing vertical "#" symbol line for rectangle
         while(counter > -6)
-        {       
+        {
                 attron(COLOR_PAIR(1));
                 mvprintw(y - counter, x+35, "%c", boarder);
                 mvprintw(y - counter, x-36, "%c", boarder);
@@ -469,7 +484,7 @@ void Engine::displayLose(){
 
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -35)
-        {       
+        {
                 attron(COLOR_PAIR(1));
                 mvprintw(y+5, x-counter, "%c", boarder);
                 mvprintw(y-6, x-counter, "%c", boarder);

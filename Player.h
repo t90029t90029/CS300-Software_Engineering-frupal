@@ -28,6 +28,10 @@ class Player {
     bool hasClue(int & clueY,int & clueX);
     void setClue(bool value,int clueY,int clueX);
 
+    // If player would like to read the clue
+    bool wantSeeClue();
+    void setSeeClue(bool value);
+
     // return the relative direction the item is from the palyer
     string itemDirect(bool truth,int itemY,int itemX);
 
@@ -57,6 +61,8 @@ class Player {
     int clueY;
     int clueX;
     bool clue;
+    // a toggle for dismissing the clue
+    bool seeClue;
 
     int energy;
     int money;
