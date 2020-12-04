@@ -13,9 +13,11 @@ class Menu {
     void display(void);
     void displayTool(vector<Tool*> tool);
     //determines if inventory shows
-    void displayInventory(int keyInput);
+    void displayInventoryToggle(void);
     void displayStats(void);
 
+    void displayTile(int y, int x);
+    void clear(void);
   private:
     int MENU_X;
     int TEXT_X;
@@ -26,8 +28,6 @@ class Menu {
     bool showInventory;
 
     void displayOptions(int y, int x);
-    void displayTile(int y, int x);
     void displayClue(void);
     void displayInventory(void);
-    void clear(void);
 };

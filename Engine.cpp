@@ -8,12 +8,10 @@ Engine::Engine() {
   keypad(stdscr, true); // Accept keypad input
   cbreak();             // Allow game to break upon Ctrl+C
   noecho();             // Don't let user type
-  curs_set(0);
   start_color();
-
+  curs_set(0);
   init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
-
   // Set map colors
   map.init();
 }
@@ -25,7 +23,6 @@ void Engine::init() {
   // Load the map and menu
   int x = 0, y = 0;
   map.load(y, x);
-
   player.move(y, x);
   menu.init(&map, &player);
 
@@ -37,15 +34,26 @@ void Engine::init() {
 void Engine::receiveInput(int input) {
   int y = 0, x = 0;
 
+  //toggle inventory on/off
   switch (tolower(input)) {
+  case 'i':
+    menu.displayInventoryToggle();
+    break;
   // Arrow keys
   case KEY_UP:
   case KEY_DOWN:
   case KEY_RIGHT:
   case KEY_LEFT:
+    moveCursor(input);
+    break;
+  // Moving keys
+  case 'w':
+  case 's':
+  case 'd':
+  case 'a':
     movePlayer(input);
     break;
-  // Enter key
+    // Enter key
   case 10:
     // Purchase item
     player.locate(y, x);
@@ -53,7 +61,6 @@ void Engine::receiveInput(int input) {
 
     // Refresh the map
     map.display(y, x, player.hasBinoculars());
-    menu.displayInventory(input);
     menu.display();
     break;
 
@@ -85,23 +92,22 @@ void Engine::movePlayer(int direction) {
   // Locate the player
   int x = 0, y = 0;
   player.locate(y, x);
-
   // For item purchase, we want to move the player
   // but keep the symbol where it is visually
   int symbolY = y, symbolX = x;
 
   switch (direction) {
   // Arrow keys
-  case KEY_UP:
+  case 'w':
     --y;
     break;
-  case KEY_DOWN:
+  case 's':
     ++y;
     break;
-  case KEY_RIGHT:
+  case 'd': 
     ++x;
     break;
-  case KEY_LEFT:
+  case 'a':
     --x;
     break;
   }
@@ -166,6 +172,8 @@ void Engine::movePlayer(int direction) {
   }
   //update the clue for the menu
   updatePosition();
+
+  player.locate(cursor_y, cursor_x);
 
 }
 
@@ -502,5 +510,36 @@ void Engine::displayLose(){
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
         endwin();                                               //ends ncurses window
+
+}
+void Engine::moveCursor(int direction) {
+	menu.display();
+	int playerX =0, playerY=0;
+	player.locate(playerY, playerX);
+	map.display(playerY, playerX, player.hasBinoculars());
+	switch(direction) {
+		case KEY_UP:
+			cursor_y--;
+			break;
+		case KEY_DOWN:
+			cursor_y++;
+			break;
+		case KEY_LEFT:
+			 cursor_x--;
+			 break;
+		case KEY_RIGHT:
+			 cursor_x++;
+			 break;
+	}
+	// Check Y is in bounds
+  	if (cursor_y < 0) cursor_y = 0;
+  	if (cursor_y > HEIGHT - 1) cursor_y = HEIGHT - 1;
+
+  	// Check X is in bounds
+  	if (cursor_x < 0) cursor_x = 0;
+  	if (cursor_x > WIDTH - 25) cursor_x = WIDTH - 25;
+	
+	menu.displayTile(cursor_y, cursor_x);
+	map.highlightItem(cursor_y, cursor_x);
 
 }
