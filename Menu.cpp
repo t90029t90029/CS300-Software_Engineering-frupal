@@ -86,7 +86,7 @@ void Menu::displayTile(int y, int x) {
 	   floor = "Water";
 	   break;
 	case WALL:
-	   floor = "Swamp";
+	   floor = "Wall";
 	   break;
 	case SWAMP:
 	   floor = "Swamp";
@@ -165,7 +165,7 @@ void Menu::displayOptions(int y, int x) {
     // If they can buy it, show the option
     else {
       attron(COLOR_PAIR('H'));
-      mvprintw(++this->line, TEXT_X, " Enter) Buy Item ");
+      mvprintw(++this->line, TEXT_X, " T) Buy Item ");
       attroff(COLOR_PAIR('H'));
     }
     ++this->line;
@@ -177,20 +177,20 @@ void Menu::displayOptions(int y, int x) {
 
     switch (i) {
     case 0:
-      direction = "Up)    North";
+      direction = "W) North";
       --_y;
       break;
     case 1:
-      direction = "Left)  West";
+      direction = "A) West";
       --_x;
       break;
     case 2:
-      direction = "Right) East";
-      ++_x;
+      direction = "S) South";
+      ++_y;
       break;
     case 3:
-      direction = "Down)  South";
-      ++_y;
+      direction = "D) East";
+      ++_x;
       break;
     }
 
@@ -203,12 +203,14 @@ void Menu::displayOptions(int y, int x) {
     }
   }
 
+  mvprintw(this->line, TEXT_X, "Arrows) Inspect Grovnik");
+
   if (player->hasClue(y, x)) {
     if (player->wantSeeClue()) {
-      mvprintw(this->line, TEXT_X,"C)     Hide Clue");
+      mvprintw(this->line, TEXT_X,"C) Hide Clue");
     }
     else {
-      mvprintw(this->line, TEXT_X,"C)     Show Clue");
+      mvprintw(this->line, TEXT_X,"C) Show Clue");
     }
   }
 }
