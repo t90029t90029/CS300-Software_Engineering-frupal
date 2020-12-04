@@ -37,7 +37,10 @@ void Engine::init() {
 void Engine::receiveInput(int input) {
   int y = 0, x = 0;
 
+  //toggle inventory on/off
   switch (tolower(input)) {
+  case 'i':
+    menu.displayInventoryToggle();
   // Arrow keys
   case KEY_UP:
   case KEY_DOWN:
@@ -53,7 +56,6 @@ void Engine::receiveInput(int input) {
 
     // Refresh the map
     map.display(y, x, player.hasBinoculars());
-    menu.displayInventory(input);
     menu.display();
     break;
 
