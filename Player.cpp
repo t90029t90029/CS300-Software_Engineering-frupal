@@ -4,7 +4,7 @@
 Player::Player():
                   toolCount(0),
                   binoculars(false), ship(false),
-		  clueY(0), clueX(0), clue(false),
+		  clueY(0), clueX(0), clue(false), seeClue(true),
                   energy(100), money(1000),
                   y(0), x(0) {
 
@@ -43,6 +43,14 @@ void Player::setClue(bool value,int y,int x) {
     clueX = x;
     clue = value;
   }
+}
+
+bool Player::wantSeeClue() {
+  return seeClue;
+}
+
+void Player::setSeeClue(bool value) {
+  seeClue = value;
 }
 
 string Player::itemDirect(bool truth,int itemY,int itemX) {
