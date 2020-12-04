@@ -14,6 +14,7 @@ class Menu {
     void displayTool(vector<Tool*> tool);
     //determines if inventory shows
     void displayInventory(int keyInput);
+    void displayStats(void);
 
   private:
     int MENU_X;
