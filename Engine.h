@@ -17,9 +17,12 @@ class Engine {
     bool isGameWon();
     void displayWin();
     void displayLose();
+    void moveCursor(int direction);
   private:
     Map map;
     Menu menu;
     Player player;
     bool gameWon;
+    int cursor_y;
+    int cursor_x;
 };
