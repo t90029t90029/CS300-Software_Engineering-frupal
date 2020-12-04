@@ -5,7 +5,7 @@ using namespace std;
 
 void Menu::init(Map * m, Player * p) {
   this->line = 0; // This determines which line to print on
-  this->showInventory = true;
+  this->showInventory = false;
   this->map = m;
   this->player = p;
 }
@@ -35,16 +35,23 @@ void Menu::display() {
   // Display tile info
   displayTile(y, x);
 
+  // Display player inventory, opens with key: I
+  if(showInventory ){
+	if(LINES < 38){
+	  --this->line;
+	  displayInventory();
+	}else{//if terminal space allows, show all menu
+	  displayOptions(y, x);
+	  displayClue();
+	  displayInventory();
+	}
+  }else{
   // Display options for current tile
-  displayOptions(y, x);
+	  displayOptions(y, x);
 
   // Display the clue if there is a clue
-  displayClue();
-
-  // Display player inventory, opens with key: I
-  if(showInventory)
-	  displayInventory();
-
+	  displayClue();
+  }
   displayStats();
 }
 
@@ -263,7 +270,7 @@ void Menu::displayTool(vector<Tool *> tool) {
 
 
 void Menu::displayInventory(){
-	this->line +=2;
+	++this->line;
 	mvprintw(++this->line, TEXT_X, "Inventory: [Strength] ");
 	if(player->hasBinoculars())
 	  mvprintw(++this->line, TEXT_X, "[-] Binoculars");
@@ -281,11 +288,11 @@ void Menu::displayInventory(){
 	return;
 }
 
-void Menu::displayInventory(int keyInput){
-	if(keyInput == 'i' ){
+void Menu::displayInventoryToggle(){
+	
 	  if(!showInventory)
 	    this->showInventory = true;
 	  else
 		  this->showInventory = false;
-	}
+	
 }
