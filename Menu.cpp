@@ -94,27 +94,27 @@ void Menu::displayTile(int y, int x) {
 	default:
 	   break;
   }
-  mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
+  if(tile->isVisible) {
+  	mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
+	//int nameLen = strlen(item->getName().c_str());
 
-  //int nameLen = strlen(item->getName().c_str());
+  	// Tile may not have an item, or it may be removed from the map
+  	if (item != NULL && itemChar != ' ') {
+    		mvprintw(++this->line, TEXT_X, "> Item:" );
+    	mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str() );
+   	//treasure does not work as expected, substitute detectoin method used
+    	if(0<item->getMoney() )
+        	mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
+    	else if (itemChar != '!' && itemChar != '?')
+		mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
 
-  // Tile may not have an item, or it may be removed from the map
-  if (item != NULL && itemChar != ' ') {
-    mvprintw(++this->line, TEXT_X, "> Item:" );
-    mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str() );
-    //treasure does not work as expected, substitute detectoin method used
-    if(0<item->getMoney() )
-        mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
-    else if (itemChar != '!' && itemChar != '?')
-	mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
-
-    if(itemChar == 'T' || itemChar == '!')//Tool or Obstacle
-	mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
-    else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$' || itemChar == '?')
+    	if(itemChar == 'T' || itemChar == '!')//Tool or Obstacle
+		mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
+    	else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$' || itemChar == '?')
 	    ++this->line;
-    else
-	mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
-  }else{ //tiles energy use
+    	else
+		mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
+  	}else{ //tiles energy use
 	  this->line+=4;//keeping menu spacing consistent
 	  int enCost = -1;
 	if(tile->type == SWAMP)
@@ -122,8 +122,12 @@ void Menu::displayTile(int y, int x) {
 	else if(tile->type == WATER)
 		++enCost;
     	mvprintw(this->line, TEXT_X, "> Energy: %d", enCost);
+  	}
   }
+  else 
+  	mvprintw(++this->line, TEXT_X, "> Grovnik: ?");
 
+  
   ++this->line; // Add separation line
 }
 
@@ -253,7 +257,8 @@ void Menu::displayTool(vector<Tool *> tool) {
   }
   else {
     for(unsigned int i = 0;i < tool.size(); i++) {
-      mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
+      mvprintw(++this->line, TEXT_X,"%d. %s" ,i+1, tool[i]->getName().c_str());
+      mvprintw(++this->line, TEXT_X,"Strength: %d", tool[i]->getStrength());
     }
 
     ++this->line;
