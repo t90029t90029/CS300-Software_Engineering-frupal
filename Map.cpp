@@ -8,7 +8,6 @@ Map::Map() {
 
   for(int i=0;i<HEIGHT;++i){
     tiles[i] = new Tile[WIDTH];
-
   }
 }
 
@@ -90,11 +89,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       for(int w = shiftX; w < shiftX + wView; ++w)
       {
         //Check if visible = true, if true print tile, else print black
-#ifdef NOFOG
-        if (true)
-#else
         if (tiles[h][w].isVisible == true)
-#endif // NOFOG
         {
           char item = empty = ' ';
           if(tiles[h][w].item != empty)

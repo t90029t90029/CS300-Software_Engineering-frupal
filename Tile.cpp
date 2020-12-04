@@ -1,7 +1,9 @@
 #include "Tile.h"
 
 Tile::Tile(): type(MEADOW), item(' ') , isVisible(false), itemType(NULL){
-
+#ifdef NOFOG
+  isVisible = true;
+#endif // NOFOG
 }
 
 string Tile::enumToString(TileType type){
