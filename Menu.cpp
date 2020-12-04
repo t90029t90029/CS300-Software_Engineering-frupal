@@ -44,6 +44,11 @@ void Menu::display() {
   // Display player inventory, opens with key: I
   if(showInventory)
 	  displayInventory();
+
+  displayStats();
+}
+
+void Menu::displayStats() {
   // Display player stats at the bottom
   int energy = player->getEnergy();
   int money = player->getMoney();
@@ -183,6 +188,15 @@ void Menu::displayOptions(int y, int x) {
       }
     }
   }
+
+  if (player->hasClue(y, x)) {
+    if (player->wantSeeClue()) {
+      mvprintw(this->line, TEXT_X,"C)     Hide Clue");
+    }
+    else {
+      mvprintw(this->line, TEXT_X,"C)     Show Clue");
+    }
+  }
 }
 
 void Menu::displayClue(void){
@@ -203,7 +217,6 @@ void Menu::displayClue(void){
     if(player->hasClue(y,x)){
       tile = map->getTile(y, x);
       this->line += 2;
-      mvprintw(this->line, TEXT_X,"(Press C to dismiss)");
       mvprintw(++this->line, TEXT_X,"Clue:");
       //if there is a clue, copy the content into the string and print it out
       if(tile->itemType->getDetails(clue,targetY,targetX)){
@@ -224,10 +237,8 @@ void Menu::displayTool(vector<Tool *> tool) {
   attroff(COLOR_PAIR('H'));
 
   if (tool.size() == 0) {
-    attron(COLOR_PAIR('E'));
     mvprintw(++this->line, TEXT_X, " No tools available " );
     mvprintw(++this->line, TEXT_X, " for this obstacle. " );
-    attroff(COLOR_PAIR('E'));
 
     ++this->line;
     mvprintw(++this->line, TEXT_X, " Press any key ");
