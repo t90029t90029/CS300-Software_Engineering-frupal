@@ -198,17 +198,20 @@ void Menu::displayClue(void){
   Tile * tile;
   long unsigned int i = 0;
 
-  //if the player holds a clue, copy the coordinate into y,x
-  if(player->hasClue(y,x)){
-    tile = map->getTile(y, x);
-    this->line += 2;
-    mvprintw(this->line, TEXT_X,"Clue:");
-    //if there is a clue, copy the content into the string and print it out
-    if(tile->itemType->getDetails(clue,targetY,targetX)){
-      while(i < clue.length()){
-        piece = clue.substr(i, MENU_WIDTH-2);
-        mvprintw(++this->line, TEXT_X,piece.c_str());
-        i += MENU_WIDTH-2;
+  if(player->wantSeeClue()){
+    //if the player holds a clue, copy the coordinate into y,x
+    if(player->hasClue(y,x)){
+      tile = map->getTile(y, x);
+      this->line += 2;
+      mvprintw(this->line, TEXT_X,"(Press C to dismiss)");
+      mvprintw(++this->line, TEXT_X,"Clue:");
+      //if there is a clue, copy the content into the string and print it out
+      if(tile->itemType->getDetails(clue,targetY,targetX)){
+        while(i < clue.length()){
+          piece = clue.substr(i, MENU_WIDTH-2);
+          mvprintw(++this->line, TEXT_X,piece.c_str());
+          i += MENU_WIDTH-2;
+        }
       }
     }
   }

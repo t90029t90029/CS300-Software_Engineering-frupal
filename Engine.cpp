@@ -56,12 +56,23 @@ void Engine::receiveInput(int input) {
     menu.displayInventory(input);
     menu.display();
     break;
+
   // Detect window resize and refresh
   case KEY_RESIZE:
     player.locate(y, x);
     map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
+
+  // Refresh the clue menu
+  case 'c':
+    if(player.wantSeeClue())
+      player.setSeeClue(false);
+    else
+      player.setSeeClue(true);
+    menu.display();
+    break;
+
   default:
     break;
   }
@@ -316,6 +327,7 @@ void Engine::foundItem(int y,int x) {
         menu.display();
         tile->item = ' ';
         break;
+
       default:
         break;
     }
