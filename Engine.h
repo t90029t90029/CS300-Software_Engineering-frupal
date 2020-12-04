@@ -13,9 +13,13 @@ class Engine {
     void movePlayer(int direction);
     bool isGameOver();
     void foundItem(int,int);
-
+    void updatePosition();
+    bool isGameWon();
+    void displayWin();
+    void displayLose();
   private:
     Map map;
     Menu menu;
     Player player;
+    bool gameWon;
 };
