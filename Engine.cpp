@@ -14,6 +14,7 @@ Engine::Engine() {
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
   // Set map colors
   map.init();
+  gameWon = false;
 }
 
 void Engine::init() {
@@ -273,8 +274,9 @@ void Engine::foundItem(int y,int x) {
         // Royal Diamond -- Player wins!
         if(type == DIAMOND){
           player.setEnergy(0);
-          gameWon = true;
-        }
+	  gameWon = true;
+	  displayWin();
+	}
         // Normal treasure
         else {
           // Pick up treasure
@@ -343,6 +345,7 @@ void Engine::foundItem(int y,int x) {
         break;
     }
   }
+
 }
 
 //the relative position between the target of the clue and the player
@@ -408,7 +411,7 @@ void Engine::displayWin() {
         int counter = 10;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU WON!!!";
         char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
-
+        char ending_message3[] = "press any key to exit";     
         char blank = ' ';
         init_pair(1, COLOR_BLUE, COLOR_CYAN);
         init_pair(2, COLOR_WHITE, COLOR_CYAN);
@@ -445,6 +448,7 @@ void Engine::displayWin() {
         attron(COLOR_PAIR(2));
         mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
         mvprintw(y,x-32, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        mvprintw(y+10,x+14, "%s", ending_message3);                   //prints hello world! message in center of rectangle
         attroff(COLOR_PAIR(2));
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
@@ -461,7 +465,9 @@ void Engine::displayLose(){
         int counter = 14;                        //counter for loops, set for vertical lines of rectangle       
         char ending_message[] = "YOU LOSE!";     
         char ending_message2[] = "You died from exhaustion! Game Over.";
-        char blank = ' ';
+        char ending_message3[] = "press any key to exit";     
+        
+	char blank = ' ';
         init_pair(1, COLOR_BLACK, COLOR_RED);
         
         for(int i = LINES; i >= 0; --i){
@@ -499,6 +505,7 @@ void Engine::displayLose(){
 
         mvprintw(y,x-4, "%s", ending_message);                   //prints hello world! message in center of rectangle
         mvprintw(y+1,x-15, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        mvprintw(y+10,x+14, "%s", ending_message3);                   //prints hello world! message in center of rectangle
         attroff(COLOR_PAIR(1));
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
