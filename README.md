@@ -41,7 +41,13 @@ The Enter key will buy an item, if the adventurer has enough whiffles.
 Frupal requires the ncurses library.  
 Frupal can be built with the following commands:
 
-* This command builds and runs the game
+* This builds and runs the game manually
+```
+make
+./frupal
+```
+
+* This command automatically builds and runs the game
 ```
 make run
 ```
@@ -56,7 +62,7 @@ make ghost    # All the the above cheats enabled
 
 * These commands are used for debugging
 ```
-make test     # Load with test map, lots of useful items around spawn point
+make test     # Load with items around spawn point, and clue lie indicator
 make debug    # Build, run in GDB
 make leak     # Build, run in valgrind
 ```
