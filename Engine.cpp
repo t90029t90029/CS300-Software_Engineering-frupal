@@ -544,13 +544,21 @@ void Engine::moveCursor(int direction) {
 			 cursor_x++;
 			 break;
 	}
+
+  int shiftY = 0, shiftX = 0;
+  map.getShift(shiftY, shiftX);
+
 	// Check Y is in bounds of map
-  if (cursor_y < 0) cursor_y = 0;
-  if (cursor_y > HEIGHT - 1) cursor_y = HEIGHT - 1;
+  if (cursor_y - shiftY < 0)
+    cursor_y = shiftY;
+  if (cursor_y - shiftY > LINES - 1)
+    cursor_y = LINES + shiftY - 1;
 
   // Check X is in bounds of map
-  if (cursor_x < 0) cursor_x = 0;
-  if (cursor_x > WIDTH - 1) cursor_x = WIDTH - 1;
+  if (cursor_x - shiftX < 0)
+    cursor_x = shiftX;
+  if (cursor_x - shiftX > COLS - MENU_WIDTH - 1)
+    cursor_x = COLS - MENU_WIDTH + shiftX - 1;
 
   menu.cursor_y = cursor_y;
   menu.cursor_x = cursor_x;
