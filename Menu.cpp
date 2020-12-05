@@ -215,6 +215,8 @@ void Menu::displayOptions(int y, int x) {
   mvprintw(++this->line, TEXT_X,"Right) Inspect East");
 
   ++this->line;
+  mvprintw(++this->line, TEXT_X,"I)     Inventory");
+
   if (player->hasClue(y, x)) {
     if (player->wantSeeClue()) {
       mvprintw(++this->line, TEXT_X,"C)     Hide Clue");

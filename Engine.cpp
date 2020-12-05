@@ -43,6 +43,7 @@ void Engine::receiveInput(int input) {
   switch (tolower(input)) {
   case 'i':
     menu.displayInventoryToggle();
+    menu.display();
     break;
   // Arrow keys
   case KEY_UP:
@@ -151,6 +152,7 @@ void Engine::movePlayer(int direction) {
 	  ++enCost;
   }
 
+  // Move player, reset cursor
   player.move(y, x);
   cursor_x = x;
   cursor_y = y;
