@@ -16,9 +16,9 @@ int main() {
   while (!engine.isGameOver() && (input = getch()) != INPUT_QUIT)
     engine.receiveInput(input);
 
-  if(engine.isGameWon() == false)
+  if(engine.isGameWon() == false && input != INPUT_QUIT)
     engine.displayLose();
   endwin();
-  
+
   return 0;
 }

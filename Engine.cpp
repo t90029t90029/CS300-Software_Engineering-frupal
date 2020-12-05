@@ -190,7 +190,7 @@ void Engine::movePlayer(int direction) {
 
 bool Engine::isGameOver() {
 #ifdef GODMODE
-  return false;
+  return false || gameWon;
 #else
   return !player.isAlive();
 #endif // GODMODE
@@ -411,7 +411,6 @@ bool Engine::isGameWon(){
 
 
 void Engine::displayWin() {
-  player.setEnergy(0); // Signal end of game
         erase();
         initscr();                              //initializes screen
         start_color();
