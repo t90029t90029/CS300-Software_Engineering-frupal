@@ -115,27 +115,39 @@ void Menu::displayTile(int y, int x) {
 
       //treasure does not work as expected, substitute detectoin method used
       if(0 < item->getMoney())
-          mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
+      {
+        mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
+      }
       else if (itemChar != '!' && itemChar != '?')
+      {
         mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
+      }
 
-      if(itemChar == 'T' || itemChar == '!')//Tool or Obstacle
+      if(itemChar == 'T' || itemChar == '!')
+      {
         mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
+      }
       else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$' || itemChar == '?')
+      {
         ++this->line;
+      }
       else
+      {
         mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
+      }
     }
-    else {
-      this->line += 4;//keeping menu spacing consistent
-    }
+    else
+    {
+      int enCost = -1;
+      if(tile->type == SWAMP) {
+        --enCost;
+      }
+      else if(tile->type == WATER) {
+        ++enCost;
+      }
 
-    int enCost = -1;
-    if(tile->type == SWAMP) {
-      --enCost;
-    }
-    else if(tile->type == WATER) {
-      ++enCost;
+      this->line += 3;//keeping menu spacing consistent
+      mvprintw(++this->line, TEXT_X, "> Energy: %d", enCost);
     }
   }
   else {
