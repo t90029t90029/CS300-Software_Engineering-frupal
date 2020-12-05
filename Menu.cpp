@@ -113,6 +113,22 @@ void Menu::displayTile(int y, int x) {
       mvprintw(++this->line, TEXT_X, "> Item:" );
       mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str() );
 
+      // Display info about what the tool can be used for
+      if (itemChar == 'T') {
+        mvprintw(++this->line, TEXT_X, "> Use: " );
+        switch (item->getObstacle()-1) {
+          case BOULDER:
+            mvprintw(++this->line, TEXT_X, "  Rocks" );
+          break;
+          case TREE:
+            mvprintw(++this->line, TEXT_X, "  Plants" );
+          break;
+          case MONSTER:
+            mvprintw(++this->line, TEXT_X, "  Monsters");
+          break;
+        }
+      }
+
       //treasure does not work as expected, substitute detectoin method used
       if(0 < item->getMoney())
       {
