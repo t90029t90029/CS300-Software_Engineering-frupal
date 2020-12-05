@@ -8,6 +8,11 @@ void Menu::init(Map * m, Player * p) {
   this->showInventory = false;
   this->map = m;
   this->player = p;
+
+  int y = 0, x = 0;
+  player->locate(y, x);
+  this->cursor_y = y;
+  this->cursor_x = x;
 }
 
 void Menu::display() {
@@ -33,7 +38,7 @@ void Menu::display() {
   player->locate(y, x);
 
   // Display tile info
-  displayTile(y, x);
+  displayTile(cursor_y, cursor_x);
 
   // Display player inventory, opens with key: I
   if(showInventory ){
@@ -79,16 +84,19 @@ void Menu::displayTile(int y, int x) {
   string floor = " ";
   //Pretty'ing the names of the tiles
   switch(tile->type){
-	case 1:
-	   floor= "Meadows";
+	case MEADOW:
+	   floor= "Meadow";
 	   break;
-	case 2:
+	case WATER:
 	   floor = "Water";
 	   break;
-	case 3:
+	case WALL:
+	   floor = "Wall";
+	   break;
+	case SWAMP:
 	   floor = "Swamp";
 	   break;
-	case 5:
+	case DIAMOND:
 	   floor = "*+*+Diamond+*+*";
 	   break;
 	default:
@@ -123,6 +131,8 @@ void Menu::displayTile(int y, int x) {
 		++enCost;
     	mvprintw(this->line, TEXT_X, "> Energy: %d", enCost);
   }
+  else
+  	mvprintw(++this->line, TEXT_X, "> Grovnik: ?");
 
   ++this->line; // Add separation line
 }
@@ -158,7 +168,7 @@ void Menu::displayOptions(int y, int x) {
     // If they can buy it, show the option
     else {
       attron(COLOR_PAIR('H'));
-      mvprintw(++this->line, TEXT_X, " Enter) Buy Item ");
+      mvprintw(++this->line, TEXT_X, "Enter) Buy Item ");
       attroff(COLOR_PAIR('H'));
     }
     ++this->line;
@@ -170,20 +180,20 @@ void Menu::displayOptions(int y, int x) {
 
     switch (i) {
     case 0:
-      direction = "Up)    North";
+      direction = "W)     North";
       --_y;
       break;
     case 1:
-      direction = "Left)  West";
+      direction = "A)     West";
       --_x;
       break;
     case 2:
-      direction = "Right) East";
-      ++_x;
+      direction = "S)     South";
+      ++_y;
       break;
     case 3:
-      direction = "Down)  South";
-      ++_y;
+      direction = "D)     East";
+      ++_x;
       break;
     }
 
@@ -196,12 +206,21 @@ void Menu::displayOptions(int y, int x) {
     }
   }
 
+  ++this->line;
+  mvprintw(++this->line, TEXT_X,"Up)    Inspect North");
+  mvprintw(++this->line, TEXT_X,"Left)  Inspect West");
+  mvprintw(++this->line, TEXT_X,"Down)  Inspect South");
+  mvprintw(++this->line, TEXT_X,"Right) Inspect East");
+
+  ++this->line;
+  mvprintw(++this->line, TEXT_X,"I)     Inventory");
+
   if (player->hasClue(y, x)) {
     if (player->wantSeeClue()) {
-      mvprintw(this->line, TEXT_X,"C)     Hide Clue");
+      mvprintw(++this->line, TEXT_X,"C)     Hide Clue");
     }
     else {
-      mvprintw(this->line, TEXT_X,"C)     Show Clue");
+      mvprintw(++this->line, TEXT_X,"C)     Show Clue");
     }
   }
 }
@@ -289,10 +308,10 @@ void Menu::displayInventory(){
 }
 
 void Menu::displayInventoryToggle(){
-	
+
 	  if(!showInventory)
 	    this->showInventory = true;
 	  else
 		  this->showInventory = false;
-	
+
 }

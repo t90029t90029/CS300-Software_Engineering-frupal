@@ -9,6 +9,7 @@ Engine::Engine() {
   cbreak();             // Allow game to break upon Ctrl+C
   noecho();             // Don't let user type
   start_color();
+
   curs_set(0);
   init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
@@ -27,6 +28,10 @@ void Engine::init() {
   player.move(y, x);
   menu.init(&map, &player);
 
+  // Set cursor position
+  cursor_x = x;
+  cursor_y = y;
+
   // Display the map and menu
   map.display(y, x, player.hasBinoculars());
   menu.display();
@@ -39,6 +44,7 @@ void Engine::receiveInput(int input) {
   switch (tolower(input)) {
   case 'i':
     menu.displayInventoryToggle();
+    menu.display();
     break;
   // Arrow keys
   case KEY_UP:
@@ -64,7 +70,6 @@ void Engine::receiveInput(int input) {
     map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
-
   // Detect window resize and refresh
   case KEY_RESIZE:
     player.locate(y, x);
@@ -105,7 +110,7 @@ void Engine::movePlayer(int direction) {
   case 's':
     ++y;
     break;
-  case 'd': 
+  case 'd':
     ++x;
     break;
   case 'a':
@@ -148,7 +153,12 @@ void Engine::movePlayer(int direction) {
 	  ++enCost;
   }
 
+  // Move player, reset cursor
   player.move(y, x);
+  cursor_x = x;
+  cursor_y = y;
+  menu.cursor_y = y;
+  menu.cursor_x = x;
 
   // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
@@ -513,18 +523,12 @@ void Engine::displayLose(){
         
 }       
 
-
-
-
-
-
-
-
 void Engine::moveCursor(int direction) {
 	menu.display();
 	int playerX =0, playerY=0;
 	player.locate(playerY, playerX);
 	map.display(playerY, playerX, player.hasBinoculars());
+
 	switch(direction) {
 		case KEY_UP:
 			cursor_y--;
@@ -539,15 +543,17 @@ void Engine::moveCursor(int direction) {
 			 cursor_x++;
 			 break;
 	}
-	// Check Y is in bounds
-  	if (cursor_y < 0) cursor_y = 0;
-  	if (cursor_y > HEIGHT - 1) cursor_y = HEIGHT - 1;
+	// Check Y is in bounds of map
+  if (cursor_y < 0) cursor_y = 0;
+  if (cursor_y > HEIGHT - 1) cursor_y = HEIGHT - 1;
 
-  	// Check X is in bounds
-  	if (cursor_x < 0) cursor_x = 0;
-  	if (cursor_x > WIDTH - 25) cursor_x = WIDTH - 25;
-	
-	menu.displayTile(cursor_y, cursor_x);
+  // Check X is in bounds of map
+  if (cursor_x < 0) cursor_x = 0;
+  if (cursor_x > WIDTH - 1) cursor_x = WIDTH - 1;
+
+  menu.cursor_y = cursor_y;
+  menu.cursor_x = cursor_x;
+
+  menu.display();
 	map.highlightItem(cursor_y, cursor_x);
-
 }

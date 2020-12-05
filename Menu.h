@@ -18,6 +18,9 @@ class Menu {
 
     void displayTile(int y, int x);
     void clear(void);
+
+    int cursor_y;
+    int cursor_x;
   private:
     int MENU_X;
     int TEXT_X;

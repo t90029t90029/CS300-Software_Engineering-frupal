@@ -8,8 +8,12 @@ Map::Map() {
 
   for(int i=0;i<HEIGHT;++i){
     tiles[i] = new Tile[WIDTH];
-
   }
+}
+
+void Map::getShift(int &y, int &x) {
+  y = shiftY;
+  x = shiftX;
 }
 
 void Map::init() {
@@ -85,11 +89,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       for(int w = shiftX; w < shiftX + wView; ++w)
       {
         //Check if visible = true, if true print tile, else print black
-#ifdef NOFOG
-        if (true)
-#else
         if (tiles[h][w].isVisible == true)
-#endif // NOFOG
         {
           char item = empty = ' ';
           if(tiles[h][w].item != empty)
@@ -148,9 +148,23 @@ bool Map::isPurchasable(int y, int x) {
 void Map::highlightItem(int y, int x) {
   Tile * tile = getTile(y, x);
 
+  // Don't reveal the item on the tile if it's not discovered
+  char c = tile->isVisible ? tile->item: ' ';
+
+  // apply map shift
+  y = y - shiftY;
+  x = x - shiftX;
+
+  // Check bounds
+  if (y < 0) y = 0;
+  if (y > LINES - 1) y = LINES - 1;
+
+  if (x < 0) x = 0;
+  if (x > COLS - MENU_WIDTH - 1) x = COLS - MENU_WIDTH - 1;
+
   // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(y - shiftY, x - shiftX, tile->item);
+  mvaddch(y, x, c);
   attroff(COLOR_PAIR('H'));
   refresh();
 }
