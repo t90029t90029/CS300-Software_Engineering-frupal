@@ -252,7 +252,7 @@ void Menu::displayClue(void){
     if(player->hasClue(y,x)){
       tile = map->getTile(y, x);
       this->line += 2;
-      mvprintw(++this->line, TEXT_X,"Clue:");
+      mvprintw(this->line, TEXT_X,"Clue:");
       //if there is a clue, copy the content into the string and print it out
       if(tile->itemType->getDetails(clue,targetY,targetX)){
 	      clue += ' ';//append space for lastof to grab at end of line

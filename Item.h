@@ -39,7 +39,9 @@ class Item {
     virtual int getTruth() = 0;
     virtual void setClue(string,int,int) = 0;
     virtual string getName(){ return "";};
+    void setType(int);
     ItemType getType(void);
+    string enumToString(void);
   private:
     ItemType type;
 };
@@ -59,7 +61,8 @@ class Tool: public Item {
   private:
     string name;
     int cost;
-    int rating; ObstacleType obstacleType;
+    int rating;
+    ObstacleType obstacleType;
 };
 
 class Obstacle: public Item {

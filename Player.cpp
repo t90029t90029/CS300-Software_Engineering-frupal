@@ -82,14 +82,14 @@ string Player::itemDirect(bool truth,int itemY,int itemX) {
     }
   }
 
-  //lie -- reverse
+  //lie --- offset
   else{
-    if(itemX >= x){
-      output << itemX-x;
+    if(itemY >= y){
+      output << itemX/3 + (itemY-y);
       direct = output.str() +" grovniks to the south";
     }
     else{
-      output << x-itemX;
+      output << itemX/3 + (y-itemY);
       direct = output.str() +" grovniks to the north";
     }
     //clear the buffer
@@ -97,15 +97,16 @@ string Player::itemDirect(bool truth,int itemY,int itemX) {
     output.clear();
 
     direct += " and ";
-    if(itemY >= y){
-      output << itemY-y;
+    if(itemX >= x){
+      output << itemY/3 + (itemX-x);
       direct += output.str() +" grovniks to the east.";
     }
     else{
-      output << y-itemY;
+      output << itemY/3 + (x-itemX);
       direct += output.str() +" grovniks to the west.";
     }
   }
+
   return direct;
 }
 
