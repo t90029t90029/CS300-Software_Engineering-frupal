@@ -145,8 +145,9 @@ void Menu::displayTile(int y, int x) {
       else if(tile->type == WATER) {
         ++enCost;
       }
-
-      this->line += 3;//keeping menu spacing consistent
+      mvprintw(++this->line, TEXT_X, ">");
+      mvprintw(++this->line, TEXT_X, ">");
+      mvprintw(++this->line, TEXT_X, ">");
       mvprintw(++this->line, TEXT_X, "> Energy: %d", enCost);
     }
   }
