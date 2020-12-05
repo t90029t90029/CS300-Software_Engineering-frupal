@@ -335,8 +335,8 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-        // find a diamond to show the clue
-        if(dice == 0){
+        // find a diamond to show the clue if clue is true
+        if(dice == 0 && tile->itemType->getTruth()){
           // go through the whole map to find the diamond
           for(int i=0;i<HEIGHT-1;++i){
             for(int j=0;j<WIDTH-1;++j){
@@ -356,23 +356,16 @@ void Engine::foundItem(int y,int x) {
         else {
           temp = NULL;
 
-          // Obstacle isn't a useful item, so don't include it
-          while(!temp || !temp->itemType || !isValid){
+          while(!temp || !isValid){
               randomY = rand() % 51;
               randomX = rand() % 51;
               temp = map.getTile(y-25+randomY,x-25+randomX);
 
               if (temp) {
-                if (temp->itemType != NULL) {
-                  isObstacle = (temp->itemType->getType() == OBSTACLES);
-                  isValid = (tile->itemType->getTruth() && !isObstacle) ||
-                            (!tile->itemType->getTruth() && isObstacle);
-                }
-
-              else {
-                isObstacle = false;
-                isValid = false;
-              }
+                // When lying only point to blank or obstacle tiles
+                isObstacle = (temp->itemType == NULL || temp->itemType->getType() == OBSTACLES);
+                isValid = (tile->itemType->getTruth() && !isObstacle) ||
+                          (!tile->itemType->getTruth() && isObstacle);
              }
 
               else {
