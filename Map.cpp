@@ -192,48 +192,55 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
 						tiles[nline][i].item = '$';
-            break;
+            					break;
 					case 'S':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
 						tiles[nline][i].itemType = new Ship;
+						tiles[nline][i].itemType->setType(0);
 						break;
 					case 'B':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'B';
 						tiles[nline][i].itemType = new Binoculars;
+						tiles[nline][i].itemType->setType(1);
 						break;
 					case 'T':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'T';
 						tiles[nline][i].itemType = new Tool;
+						tiles[nline][i].itemType->setType(2);
 						break;
 					case 'F':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'F';
 						tiles[nline][i].itemType = new Food;
+						tiles[nline][i].itemType->setType(3);
 						break;
 					case '!':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '!';
 						tiles[nline][i].itemType = new Obstacle;
+						tiles[nline][i].itemType->setType(4);
 						break;
 					case '?':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '?';
 						tiles[nline][i].itemType = new Clue;
+						tiles[nline][i].itemType->setType(5);
 						break;
 					case '$':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '$';
 						tiles[nline][i].itemType = new Treasure;
+						tiles[nline][i].itemType->setType(6);
 						break;
 					case '@':
-            tiles[nline][i].type = MEADOW;
-            playerStartY = nline;
-            playerStartX = i;
-            break;
-          default:
+            					tiles[nline][i].type = MEADOW;
+            					playerStartY = nline;
+            					playerStartX = i;
+            					break;
+          				default:
 						break;
 				}
 			}

@@ -183,6 +183,7 @@ void Engine::movePlayer(int direction) {
   }
   //update the clue for the menu
   updatePosition();
+  menu.display();
 
   player.locate(cursor_y, cursor_x);
 
@@ -216,9 +217,10 @@ void Engine::foundItem(int y,int x) {
 
   // Clue variables
   std::string clue;
-  int randomY = rand() % HEIGHT;  // random number
-  int randomX = rand() % WIDTH;	  // random number
-  Tile * temp = map.getTile(randomY,randomX);	//random tile
+  int randomY = rand() % 51;	// random number
+  int randomX = rand() % 51;	// random number
+  Tile * temp;
+  int dice = rand() % 8 + 1;	// 7+1 kinds of items
 
   int destroyEnergy;
   vector<Tool *> tools;
@@ -327,24 +329,57 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-        //tell the truth
+	// find a diamond to show the clue
+	if(dice == 8){
+	  // go through the whole map to find the diamond
+	  for(int i=0;i<HEIGHT-1;++i){
+	    for(int j=0;j<WIDTH-1;++j){
+  	      temp = map.getTile(i,j);
+	      if(temp->type == 5){
+		//update
+	        randomY = i;
+	        randomX = j;
+		//break for loop
+	        i = HEIGHT;
+		j = WIDTH;
+	      }
+	    }
+	  }
+	}
+	// find one of the other 7 kinds of items
+	else{
+  	  temp = map.getTile(y-25+randomY,x-25+randomX);
+	  while(!temp->itemType){
+  	    randomY = rand() % 51;
+  	    randomX = rand() % 51;
+  	    temp = map.getTile(y-25+randomY,x-25+randomX);
+	  }
+	  //update
+	  randomY = y-25+randomY;
+	  randomX = x-25+randomX;
+	}
+        // tell the truth
         if (itemType->getTruth()) {
           clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
+	  if(dice == 8)
+            clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
+	  else
+            clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(true,randomY,randomX);
         }
 
-        //tell the lie
+        // tell the lie
         else {
           clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
+	  if(dice == 8)
+            clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
+	  else
+            clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(false,randomY,randomX);
         }
 
-        //store the content in the tile of Clue
+        // store the content in the tile of Clue
         itemType->setClue(clue,randomY,randomX);
 
-        //store the position of the clue
+        // store the position of the clue in the player
         player.setClue(true,y,x);
 
         menu.display();
@@ -389,14 +424,20 @@ void Engine::updatePosition(){
       if (itemType->getTruth()) {
         clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
 
-        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
+	if(!temp->itemType)
+          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
+	else
+          clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(true,targetY,targetX);
       }
 
       //tell the lie
       else {
         clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
 
-        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
+	if(!temp->itemType)
+          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
+	else
+          clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(false,targetY,targetX);
       }
 
       //update the content in the tile of Clue
