@@ -428,18 +428,26 @@ void Engine::updatePosition(){
         article = "some";
       }
       plural = "is";
-      if (typeName == "BINOCULARS") {
+      if (typeName == "binoculars") {
         article = "a pair of";
       }
 
       //tell the truth
       if (itemType->getTruth()) {
-        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
 
-	if(!temp->itemType)
-          clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural + " " + player.itemDirect(true,targetY,targetX);
-	else
-          clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural + " " +  player.itemDirect(true,targetY,targetX);
+        // If we reach it dismiss clue
+        if (abs(targetY - py) == 0 && abs(targetX - px) == 0) {
+          clue = "";
+        }
+        else {
+
+          clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
+
+    if(!temp->itemType)
+            clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural + " " + player.itemDirect(true,targetY,targetX);
+    else
+            clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural + " " +  player.itemDirect(true,targetY,targetX);
+        }
       }
 
       //tell the lie
@@ -459,7 +467,6 @@ void Engine::updatePosition(){
                   clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
         }
       }
-
       //update the content in the tile of Clue
       itemType->setClue(clue,targetY,targetX);
     }

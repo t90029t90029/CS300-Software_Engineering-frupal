@@ -56,6 +56,7 @@ make ghost    # All the the above cheats enabled
 
 * These commands are used for debugging
 ```
+make test     # Load with test map, lots of useful items around spawn point
 make debug    # Build, run in GDB
 make leak     # Build, run in valgrind
 ```
