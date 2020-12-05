@@ -224,7 +224,6 @@ void Engine::foundItem(int y,int x) {
   int dice = rand() % 8 + 1;	// 7+1 kinds of items
   string article;
   string typeName;
-  char fc;
 
   // Tool variables
   int destroyEnergy;
@@ -364,32 +363,8 @@ void Engine::foundItem(int y,int x) {
           randomX = x-25+randomX;
         }
 
-        typeName = temp->enumToString(temp->type);
-
-        //Determine a/an
-        fc = typeName[0]; //first char
-        article = "a";
-        if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
-          article = "an";
-        }
-
-        // tell the truth
-        if (itemType->getTruth()) {
-          clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
-          if(dice == 8)
-             clue += "There is "+article+ " "+ typeName +" that is "+ player.itemDirect(true,randomY,randomX);
-          else
-             clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(true,randomY,randomX);
-        }
-        // tell the lie
-        else {
-          clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
-          if(dice == 8)
-            clue += "There is "+article+ " " + typeName +" that is "+ player.itemDirect(false,randomY,randomX);
-          else
-            clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(false,randomY,randomX);
-        }
-
+        // The clue just needs to be non-blank to register with updatePosition()
+        clue = "1";
         // store the content in the tile of Clue
         itemType->setClue(clue,randomY,randomX);
 
@@ -405,6 +380,7 @@ void Engine::foundItem(int y,int x) {
   }
 }
 
+//the relative position between the target of the clue and the player
 void Engine::updatePosition(){
   string clue;
   Tile * tile;
@@ -420,9 +396,9 @@ void Engine::updatePosition(){
   int targetY;
   int targetX;
   Tile * temp;
-
-  char fc;
   string article;
+  char fc;
+  string plural;
   string typeName;
 
   //if the player has a clue, get the position of the clue
@@ -435,33 +411,40 @@ void Engine::updatePosition(){
     if(itemType->getDetails(clue,targetY,targetX)){
       temp = map.getTile(targetY,targetX);
 
-      //tell the truth
-      if (itemType->getTruth()) {
-        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
-
-      typeName = temp->enumToString(temp->type);
+      if (!temp->itemType)
+        typeName = temp->enumToString(temp->type);
+      else
+        typeName = temp->itemType->enumToString();
 
       //Determine a/an
-      fc = typeName[0]; //first char
+      fc = tolower(typeName[0]); //first char
       article = "a";
       if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
         article = "an";
       }
+      plural = "is";
+      if (typeName == "BINOCULARS") {
+        plural = "are";
+      }
 
-          if(!temp->itemType)
-                  clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(true,targetY,targetX);
-          else
-                  clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(true,targetY,targetX);
+      //tell the truth
+      if (itemType->getTruth()) {
+        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
+
+	if(!temp->itemType)
+          clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural + " " + player.itemDirect(true,targetY,targetX);
+	else
+          clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural + " " +  player.itemDirect(true,targetY,targetX);
       }
 
       //tell the lie
       else {
         clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
 
-  if(!temp->itemType)
-          clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(false,targetY,targetX);
-  else
-          clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(false,targetY,targetX);
+	if(!temp->itemType)
+          clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+	else
+          clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
       }
 
       //update the content in the tile of Clue
@@ -469,6 +452,7 @@ void Engine::updatePosition(){
     }
   }
 }
+
 bool Engine::isGameWon(){
   return gameWon;
 }
