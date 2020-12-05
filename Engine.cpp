@@ -13,6 +13,7 @@ Engine::Engine() {
   curs_set(0);
   init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
+
   // Set map colors
   map.init();
   gameWon = false;
@@ -221,11 +222,14 @@ void Engine::foundItem(int y,int x) {
   int randomX = rand() % 51;	// random number
   Tile * temp;
   int dice = rand() % 8 + 1;	// 7+1 kinds of items
+  string article;
+  string typeName;
+  char fc;
 
+  // Tool variables
   int destroyEnergy;
   vector<Tool *> tools;
   int toolChoice = 0;
-
 
   // Purchasable items
   if (map.isPurchasable(y, x)) {
@@ -329,51 +333,61 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-	// find a diamond to show the clue
-	if(dice == 8){
-	  // go through the whole map to find the diamond
-	  for(int i=0;i<HEIGHT-1;++i){
-	    for(int j=0;j<WIDTH-1;++j){
-  	      temp = map.getTile(i,j);
-	      if(temp->type == 5){
-		//update
-	        randomY = i;
-	        randomX = j;
-		//break for loop
-	        i = HEIGHT;
-		j = WIDTH;
-	      }
-	    }
-	  }
-	}
-	// find one of the other 7 kinds of items
-	else{
-  	  temp = map.getTile(y-25+randomY,x-25+randomX);
-	  while(!temp->itemType){
-  	    randomY = rand() % 51;
-  	    randomX = rand() % 51;
-  	    temp = map.getTile(y-25+randomY,x-25+randomX);
-	  }
-	  //update
-	  randomY = y-25+randomY;
-	  randomX = x-25+randomX;
-	}
+        // find a diamond to show the clue
+        if(dice == 8){
+          // go through the whole map to find the diamond
+          for(int i=0;i<HEIGHT-1;++i){
+            for(int j=0;j<WIDTH-1;++j){
+                temp = map.getTile(i,j);
+              if(temp->type == 5){
+          //update
+                randomY = i;
+                randomX = j;
+          //break for loop
+                i = HEIGHT;
+          j = WIDTH;
+              }
+            }
+          }
+        }
+        // find one of the other 7 kinds of items
+        else {
+          temp = map.getTile(y-25+randomY,x-25+randomX);
+
+          while(!temp->itemType){
+              randomY = rand() % 51;
+              randomX = rand() % 51;
+              temp = map.getTile(y-25+randomY,x-25+randomX);
+          }
+          //update
+          randomY = y-25+randomY;
+          randomX = x-25+randomX;
+        }
+
+        typeName = temp->enumToString(temp->type);
+
+        //Determine a/an
+        fc = typeName[0]; //first char
+        article = "a";
+        if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
+          article = "an";
+        }
+
         // tell the truth
         if (itemType->getTruth()) {
           clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
-	  if(dice == 8)
-            clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
-	  else
-            clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(true,randomY,randomX);
+          if(dice == 8)
+             clue += "There is "+article+ " "+ typeName +" that is "+ player.itemDirect(true,randomY,randomX);
+          else
+             clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(true,randomY,randomX);
         }
-
         // tell the lie
         else {
           clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
-	  if(dice == 8)
-            clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
-	  else
-            clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(false,randomY,randomX);
+          if(dice == 8)
+            clue += "There is "+article+ " " + typeName +" that is "+ player.itemDirect(false,randomY,randomX);
+          else
+            clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(false,randomY,randomX);
         }
 
         // store the content in the tile of Clue
@@ -384,16 +398,13 @@ void Engine::foundItem(int y,int x) {
 
         menu.display();
         tile->item = ' ';
-        break;
-
-      default:
-        break;
+      break;
+    default:
+      break;
     }
   }
-
 }
 
-//the relative position between the target of the clue and the player
 void Engine::updatePosition(){
   string clue;
   Tile * tile;
@@ -410,6 +421,10 @@ void Engine::updatePosition(){
   int targetX;
   Tile * temp;
 
+  char fc;
+  string article;
+  string typeName;
+
   //if the player has a clue, get the position of the clue
   if(player.hasClue(y,x)){
     //point to the clue
@@ -424,20 +439,29 @@ void Engine::updatePosition(){
       if (itemType->getTruth()) {
         clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
 
-	if(!temp->itemType)
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
-	else
-          clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(true,targetY,targetX);
+      typeName = temp->enumToString(temp->type);
+
+      //Determine a/an
+      fc = typeName[0]; //first char
+      article = "a";
+      if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
+        article = "an";
+      }
+
+          if(!temp->itemType)
+                  clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(true,targetY,targetX);
+          else
+                  clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(true,targetY,targetX);
       }
 
       //tell the lie
       else {
         clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
 
-	if(!temp->itemType)
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
-	else
-          clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(false,targetY,targetX);
+  if(!temp->itemType)
+          clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(false,targetY,targetX);
+  else
+          clue += "There is "+article+" "+ typeName +" that is "+ player.itemDirect(false,targetY,targetX);
       }
 
       //update the content in the tile of Clue
@@ -445,7 +469,6 @@ void Engine::updatePosition(){
     }
   }
 }
-
 bool Engine::isGameWon(){
   return gameWon;
 }

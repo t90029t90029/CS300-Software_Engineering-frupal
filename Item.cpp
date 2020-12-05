@@ -36,7 +36,7 @@ string Item::enumToString() {
       return "FOOD";
 
     case OBSTACLES:
-      return "OBSTACLES";
+      return "OBSTACLE";
 
     case CLUE:
       return "CLUE";
