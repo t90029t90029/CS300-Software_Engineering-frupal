@@ -4,7 +4,7 @@
 Player::Player():
                   toolCount(0),
                   binoculars(false), ship(false),
-		  clueY(0), clueX(0), clue(false), seeClue(true),
+                  clueY(0), clueX(0), clue(false), seeClue(true),
                   energy(100), money(1000),
                   y(0), x(0) {
 

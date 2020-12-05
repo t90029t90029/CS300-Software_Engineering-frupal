@@ -41,21 +41,24 @@ void Menu::display() {
   displayTile(cursor_y, cursor_x);
 
   // Display player inventory, opens with key: I
-  if(showInventory ){
-	if(LINES < 38){
-	  --this->line;
-	  displayInventory();
-	}else{//if terminal space allows, show all menu
-	  displayOptions(y, x);
-	  displayClue();
-	  displayInventory();
-	}
-  }else{
-  // Display options for current tile
-	  displayOptions(y, x);
+  if(showInventory) {
+    if(LINES < 38) {
+      --this->line;
+      displayInventory();
+    }
+    else {
+      //if terminal space allows, show all menu
+      displayOptions(y, x);
+      displayClue();
+      displayInventory();
+    }
+  }
+  else {
+    // Display options for current tile
+    displayOptions(y, x);
 
-  // Display the clue if there is a clue
-	  displayClue();
+    // Display the clue if there is a clue
+    displayClue();
   }
   displayStats();
 }

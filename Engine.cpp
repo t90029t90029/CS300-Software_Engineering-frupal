@@ -13,6 +13,7 @@ Engine::Engine() {
   curs_set(0);
   init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
+
   // Set map colors
   map.init();
   gameWon = false;
@@ -220,12 +221,15 @@ void Engine::foundItem(int y,int x) {
   int randomY = rand() % 51;	// random number
   int randomX = rand() % 51;	// random number
   Tile * temp;
-  int dice = rand() % 8 + 1;	// 7+1 kinds of items
+  int dice = rand() % 4;
 
+  string article;
+  string typeName;
+
+  // Tool variables
   int destroyEnergy;
   vector<Tool *> tools;
   int toolChoice = 0;
-
 
   // Purchasable items
   if (map.isPurchasable(y, x)) {
@@ -329,53 +333,40 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-	// find a diamond to show the clue
-	if(dice == 8){
-	  // go through the whole map to find the diamond
-	  for(int i=0;i<HEIGHT-1;++i){
-	    for(int j=0;j<WIDTH-1;++j){
-  	      temp = map.getTile(i,j);
-	      if(temp->type == 5){
-		//update
-	        randomY = i;
-	        randomX = j;
-		//break for loop
-	        i = HEIGHT;
-		j = WIDTH;
-	      }
-	    }
-	  }
-	}
-	// find one of the other 7 kinds of items
-	else{
-  	  temp = map.getTile(y-25+randomY,x-25+randomX);
-	  while(!temp->itemType){
-  	    randomY = rand() % 51;
-  	    randomX = rand() % 51;
-  	    temp = map.getTile(y-25+randomY,x-25+randomX);
-	  }
-	  //update
-	  randomY = y-25+randomY;
-	  randomX = x-25+randomX;
-	}
-        // tell the truth
-        if (itemType->getTruth()) {
-          clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
-	  if(dice == 8)
-            clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
-	  else
-            clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(true,randomY,randomX);
+        // find a diamond to show the clue
+        if(dice == 0){
+          // go through the whole map to find the diamond
+          for(int i=0;i<HEIGHT-1;++i){
+            for(int j=0;j<WIDTH-1;++j){
+                temp = map.getTile(i,j);
+              if(temp->type == 5){
+          //update
+                randomY = i;
+                randomX = j;
+          //break for loop
+                i = HEIGHT;
+          j = WIDTH;
+              }
+            }
+          }
         }
-
-        // tell the lie
+        // find one of the other 7 kinds of items
         else {
-          clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
-	  if(dice == 8)
-            clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
-	  else
-            clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(false,randomY,randomX);
+          temp = map.getTile(y-25+randomY,x-25+randomX);
+
+          // Obstacle isn't a useful item, so don't include it
+          while(!temp->itemType || temp->itemType->getType() == OBSTACLES){
+              randomY = rand() % 51;
+              randomX = rand() % 51;
+              temp = map.getTile(y-25+randomY,x-25+randomX);
+          }
+          //update
+          randomY = y-25+randomY;
+          randomX = x-25+randomX;
         }
 
+        // The clue just needs to be non-blank to register with updatePosition();
+        clue = "1";
         // store the content in the tile of Clue
         itemType->setClue(clue,randomY,randomX);
 
@@ -384,13 +375,11 @@ void Engine::foundItem(int y,int x) {
 
         menu.display();
         tile->item = ' ';
-        break;
-
-      default:
-        break;
+      break;
+    default:
+      break;
     }
   }
-
 }
 
 //the relative position between the target of the clue and the player
@@ -409,6 +398,10 @@ void Engine::updatePosition(){
   int targetY;
   int targetX;
   Tile * temp;
+  string article;
+  char fc;
+  string plural;
+  string typeName;
 
   //if the player has a clue, get the position of the clue
   if(player.hasClue(y,x)){
@@ -420,26 +413,60 @@ void Engine::updatePosition(){
     if(itemType->getDetails(clue,targetY,targetX)){
       temp = map.getTile(targetY,targetX);
 
+      if (!temp->itemType)
+        typeName = temp->enumToString(temp->type);
+      else
+        typeName = temp->itemType->enumToString();
+
+      // This section just does English grammar stuff
+      fc = tolower(typeName[0]); //first char
+      article = "a";
+      if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
+        article = "an";
+      }
+      if (typeName == "food") {
+        article = "some";
+      }
+      plural = "is";
+      if (typeName == "binoculars") {
+        article = "a pair of";
+      }
+
       //tell the truth
       if (itemType->getTruth()) {
-        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
 
-	if(!temp->itemType)
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
-	else
-          clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(true,targetY,targetX);
+        // If we reach it dismiss clue
+        if (abs(targetY - py) == 0 && abs(targetX - px) == 0) {
+          clue = "";
+        }
+        else {
+
+          clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
+
+    if(!temp->itemType)
+            clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural + " " + player.itemDirect(true,targetY,targetX);
+    else
+            clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural + " " +  player.itemDirect(true,targetY,targetX);
+        }
       }
 
       //tell the lie
       else {
-        clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
 
-	if(!temp->itemType)
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
-	else
-          clue += "There is a "+ temp->itemType->enumToString() +" that "+ player.itemDirect(false,targetY,targetX);
+        int dist = (player.hasBinoculars()) ? 2: 1;
+        // Reveal the lie if player can see it
+        if (abs(targetY - py) <= dist && abs(targetX - px) <= dist) {
+          clue = "FOOL! You have fallen victim to one of the classic blunders!";
+        }
+        else {
+          clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
+
+          if(!temp->itemType)
+                  clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+          else
+                  clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+        }
       }
-
       //update the content in the tile of Clue
       itemType->setClue(clue,targetY,targetX);
     }
