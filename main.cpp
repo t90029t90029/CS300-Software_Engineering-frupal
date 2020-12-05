@@ -13,15 +13,12 @@ int main() {
   engine.init();
 
   // Input loop until quit
-  while ((input = getch()) != INPUT_QUIT && !engine.isGameOver())
+  while (!engine.isGameOver() && (input = getch()) != INPUT_QUIT)
     engine.receiveInput(input);
 
-  endwin();
-
-  if(engine.isGameWon() == true)
-    engine.displayWin();
-  else if (input != INPUT_QUIT)
+  if(engine.isGameWon() == false)
     engine.displayLose();
-
+  endwin();
+  
   return 0;
 }
