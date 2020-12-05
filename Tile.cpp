@@ -24,7 +24,7 @@ string Tile::enumToString(TileType type){
       return "WALL";
 
     case DIAMOND:
-      return "DIAMOND";
+      return "Royal Diamond";
 
     case PLAYER:
       return "PLAYER";

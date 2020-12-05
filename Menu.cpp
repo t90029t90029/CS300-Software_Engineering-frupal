@@ -78,7 +78,7 @@ void Menu::displayStats() {
 
   mvprintw(LINES - 2, TEXT_X, "Energy: %d", energy);
 
-  if (energy < threshold)
+  if (energy <= threshold)
     attroff(COLOR_PAIR('E'));
 }
 
@@ -119,7 +119,7 @@ void Menu::displayTile(int y, int x) {
   }
 
   if (tile->isVisible) {
-    mvprintw(++this->line, TEXT_X, "> Grovnik: %s", floor.c_str());
+    mvprintw(++this->line, TEXT_X, "> Grovnick: %s", floor.c_str());
 
     // Tile may not have an item, or it may be removed from the map
     if (item != NULL && itemChar != ' ') {
@@ -181,7 +181,7 @@ void Menu::displayTile(int y, int x) {
     }
   }
   else {
-    mvprintw(++this->line, TEXT_X, "> Grovnik: ?");
+    mvprintw(++this->line, TEXT_X, "> Grovnick: ?");
   }
 
   ++this->line; // Add separation line
