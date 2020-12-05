@@ -6,6 +6,11 @@ Tile::Tile(): type(MEADOW), item(' ') , isVisible(false), itemType(NULL){
 #endif // NOFOG
 }
 
+Tile::~Tile() {
+  if (itemType != NULL)
+    delete itemType;
+}
+
 string Tile::enumToString(TileType type){
   switch(type){
     case EMPTY:

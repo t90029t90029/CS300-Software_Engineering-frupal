@@ -15,6 +15,7 @@ enum TileType {
 class Tile {
   public:
     Tile();
+    ~Tile();
     TileType type;
     string enumToString(TileType);
     char item;
