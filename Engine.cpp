@@ -411,6 +411,7 @@ bool Engine::isGameWon(){
 
 
 void Engine::displayWin() {
+  player.setEnergy(0); // Signal end of game
         erase();
         initscr();                              //initializes screen
         start_color();
@@ -421,39 +422,39 @@ void Engine::displayWin() {
         int counter = 10;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU WON!!!";
         char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
-        char ending_message3[] = "press any key to exit";     
+        char ending_message3[] = "press any key to exit";
         char blank = ' ';
-        init_pair(1, COLOR_BLUE, COLOR_CYAN);
-        init_pair(2, COLOR_WHITE, COLOR_CYAN);
+        init_pair(2, COLOR_BLUE, COLOR_CYAN);
+        init_pair(1, COLOR_WHITE, COLOR_CYAN);
 
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
             attron(COLOR_PAIR(1));
             mvprintw(i, j, "%c", blank);
             attroff(COLOR_PAIR(1));
-          }     
-        }     
+          }
+        }
         //loops printing vertical "#" symbol line for rectangle
         while(counter > -10)
-        {   
+        {
                 attron(COLOR_PAIR(1));
                 mvprintw(y - counter, x+35, "%c", boarder);
                 mvprintw(y - counter, x-36, "%c", boarder);
                 attroff(COLOR_PAIR(1));
                 --counter;
-        }           
+        }
 
         counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
 
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -35)
-        {   
+        {
                 attron(COLOR_PAIR(1));
                 mvprintw(y+9, x-counter, "%c", boarder);
                 mvprintw(y-10, x-counter, "%c", boarder);
                 --counter;
                 attroff(COLOR_PAIR(1));
-        }           
+        }
 
         attron(COLOR_PAIR(2));
         mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
@@ -472,45 +473,46 @@ void Engine::displayLose(){
         int y = floor(LINES/2);                 //calculates floor of half of the screens lines
         int x = floor(COLS/2);                  //calculates floor of half of the screens columns
         char boarder = '#';                     //variable to store rectangle boarder symbol
-        int counter = 14;                        //counter for loops, set for vertical lines of rectangle       
-        char ending_message[] = "YOU LOSE!";     
+        int counter = 14;                        //counter for loops, set for vertical lines of rectangle
+        char ending_message[] = "YOU LOSE!";
         char ending_message2[] = "You died from exhaustion! Game Over.";
-        char ending_message3[] = "press any key to exit";     
-        
+        char ending_message3[] = "press any key to exit";
+
 	char blank = ' ';
-        init_pair(1, COLOR_BLACK, COLOR_RED);
-        
+        init_pair(1, COLOR_WHITE, COLOR_RED);
+        init_pair(2, COLOR_BLACK, COLOR_RED);
+
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
-            attron(COLOR_PAIR(1)); 
+            attron(COLOR_PAIR(1));
             mvprintw(i, j, "%c", blank);
             attroff(COLOR_PAIR(1));
-          } 
-        }   
-          
-        
+          }
+        }
+
+
        //loops printing vertical "#" symbol line for rectangle
         while(counter > -counter)
         {
-                attron(COLOR_PAIR(1));
+                attron(COLOR_PAIR(2));
                 mvprintw(y - counter, x+counter, "%c", boarder);
                 mvprintw(y - counter, x-counter, "%c", boarder);
-                attroff(COLOR_PAIR(1));
-                --counter; 
-        }       
-                
+                attroff(COLOR_PAIR(2));
+                --counter;
+        }
+
         counter = 14;                           //counter for loops, reset for horizontal lines of rectangle creation
-        
+
         //loops printing horizontal "#" symbol line for rectangle
         while(counter > -counter)
         {
-                attron(COLOR_PAIR(1));
+                attron(COLOR_PAIR(2));
                 mvprintw(y+counter, x+counter, "%c", boarder);
                 mvprintw(y+counter, x-counter, "%c", boarder);
-                attroff(COLOR_PAIR(1));
+                attroff(COLOR_PAIR(2));
                 --counter;
-        }       
-                
+        }
+
         attron(COLOR_PAIR(1));
 
         mvprintw(y,x-4, "%s", ending_message);                   //prints hello world! message in center of rectangle
@@ -520,8 +522,8 @@ void Engine::displayLose(){
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
         endwin();                                               //ends ncurses window
-        
-}       
+
+}
 
 void Engine::moveCursor(int direction) {
 	menu.display();
