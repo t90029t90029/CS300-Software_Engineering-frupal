@@ -6,6 +6,11 @@ Tile::Tile(): type(MEADOW), item(' ') , isVisible(false), itemType(NULL){
 #endif // NOFOG
 }
 
+Tile::~Tile() {
+  if (itemType != NULL)
+    delete itemType;
+}
+
 string Tile::enumToString(TileType type){
   switch(type){
     case EMPTY:
@@ -24,7 +29,7 @@ string Tile::enumToString(TileType type){
       return "WALL";
 
     case DIAMOND:
-      return "DIAMOND";
+      return "Royal Diamond";
 
     case PLAYER:
       return "PLAYER";

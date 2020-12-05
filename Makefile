@@ -47,7 +47,7 @@ ghost:
 
 test:
 	make clean
-	$(CC) *.cpp $(CFLAGS) -g -D TEST -D GODMODE
+	$(CC) *.cpp $(CFLAGS) -g -D TEST -D GODMODE -D NOFOG -D NOCLIP
 	./$(PROJECT)
 
 godmode:

@@ -223,6 +223,8 @@ void Engine::foundItem(int y,int x) {
   Tile * temp;
   int dice = rand() % 4;
 
+  bool isValid;
+  bool isObstacle;
   string article;
   string typeName;
 
@@ -333,8 +335,8 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-        // find a diamond to show the clue
-        if(dice == 0){
+        // find a diamond to show the clue if clue is true
+        if(dice == 0 && tile->itemType->getTruth()){
           // go through the whole map to find the diamond
           for(int i=0;i<HEIGHT-1;++i){
             for(int j=0;j<WIDTH-1;++j){
@@ -352,13 +354,24 @@ void Engine::foundItem(int y,int x) {
         }
         // find one of the other 7 kinds of items
         else {
-          temp = map.getTile(y-25+randomY,x-25+randomX);
+          temp = NULL;
 
-          // Obstacle isn't a useful item, so don't include it
-          while(!temp->itemType || temp->itemType->getType() == OBSTACLES){
+          while(!temp || !isValid){
               randomY = rand() % 51;
               randomX = rand() % 51;
               temp = map.getTile(y-25+randomY,x-25+randomX);
+
+              if (temp) {
+                // When lying only point to blank or obstacle tiles
+                isObstacle = (temp->itemType == NULL || temp->itemType->getType() == OBSTACLES);
+                isValid = (tile->itemType->getTruth() && !isObstacle) ||
+                          (!tile->itemType->getTruth() && isObstacle);
+             }
+
+              else {
+                isObstacle = false;
+                isValid = false;
+              }
           }
           //update
           randomY = y-25+randomY;
@@ -411,60 +424,54 @@ void Engine::updatePosition(){
 
     //get the position of the target
     if(itemType->getDetails(clue,targetY,targetX)){
-      temp = map.getTile(targetY,targetX);
-
-      if (!temp->itemType)
-        typeName = temp->enumToString(temp->type);
-      else
-        typeName = temp->itemType->enumToString();
-
-      // This section just does English grammar stuff
-      fc = tolower(typeName[0]); //first char
-      article = "a";
-      if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
-        article = "an";
+      // Reveal lie
+      int dist = player.hasBinoculars() ? 2: 1;
+      if (!itemType->getTruth() && (abs(py - targetY) <= dist && abs(px - targetX) <= dist)) {
+        clue = "FOOL! There is no diamond here. You have fallen victim to one of the classic blunders!";
       }
-      if (typeName == "food") {
-        article = "some";
-      }
-      plural = "is";
-      if (typeName == "binoculars") {
-        article = "a pair of";
-      }
+      else {
+        temp = map.getTile(targetY,targetX);
 
-      //tell the truth
-      if (itemType->getTruth()) {
+        if (!temp->itemType)
+          typeName = temp->enumToString(temp->type);
+        else
+          typeName = temp->itemType->enumToString();
+
+        // LIE
+        if (!itemType->getTruth()) {
+          typeName = "Royal Diamond";
+        }
+
+        // This section just does English grammar stuff
+        fc = tolower(typeName[0]); //first char
+
+        // Vowels
+        article = "a";
+        if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
+          article = "an";
+        }
+        if (typeName == "food") {
+          article = "some";
+        }
+        plural = "is";
+        if (typeName == "binoculars") {
+          article = "a pair of";
+        }
+
+        bool truth = itemType->getTruth();
 
         // If we reach it dismiss clue
         if (abs(targetY - py) == 0 && abs(targetX - px) == 0) {
-          clue = "";
+          clue = "You have found it!";
         }
         else {
 
-          clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
+          clue = "You are "+ std::to_string(px) +" grovnicks from the western border.               ";
 
     if(!temp->itemType)
-            clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural + " " + player.itemDirect(true,targetY,targetX);
+            clue += "There "+plural+" "+article+" "+ typeName +" that "+ plural + " " + player.itemDirect(truth,targetY,targetX);
     else
-            clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural + " " +  player.itemDirect(true,targetY,targetX);
-        }
-      }
-
-      //tell the lie
-      else {
-
-        int dist = (player.hasBinoculars()) ? 2: 1;
-        // Reveal the lie if player can see it
-        if (abs(targetY - py) <= dist && abs(targetX - px) <= dist) {
-          clue = "FOOL! You have fallen victim to one of the classic blunders!";
-        }
-        else {
-          clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
-
-          if(!temp->itemType)
-                  clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
-          else
-                  clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+            clue += "There "+plural+" "+article+" "+ typeName +" that "+ plural + " " +  player.itemDirect(truth,targetY,targetX);
         }
       }
       //update the content in the tile of Clue

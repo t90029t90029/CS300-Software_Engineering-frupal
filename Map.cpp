@@ -33,7 +33,7 @@ Map::~Map() {
   }
 
   for(int i=0;i<HEIGHT;++i){
-    delete []tiles[i];
+    delete [] tiles[i];
     tiles[i] = NULL;
   }
 

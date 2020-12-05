@@ -57,54 +57,33 @@ string Player::itemDirect(bool truth,int itemY,int itemX) {
   std::ostringstream output;
   string direct;
 
+#ifdef TEST
   //truth
-  if(truth){
-    if(itemY >= y){
-      output << itemY-y;
-      direct = output.str() +" grovniks to the south";
-    }
-    else{
-      output << y-itemY;
-      direct = output.str() +" grovniks to the north";
-    }
-    //clear the buffer
-    output.str("");
-    output.clear();
-
-    direct += " and ";
-    if(itemX >= x){
-      output << itemX-x;
-      direct += output.str() +" grovniks to the east.";
-    }
-    else{
-      output << x-itemX;
-      direct += output.str() +" grovniks to the west.";
-    }
+  if(!truth){
+    mvprintw(0,0, "THE CLUE IS LYING!");
   }
+#endif // TEST
 
-  //lie --- offset
+  if(itemY >= y){
+    output << itemY-y;
+    direct = output.str() +" grovniks to the south";
+  }
   else{
-    if(itemY >= y){
-      output << itemX/3 + (itemY-y);
-      direct = output.str() +" grovniks to the south";
-    }
-    else{
-      output << itemX/3 + (y-itemY);
-      direct = output.str() +" grovniks to the north";
-    }
-    //clear the buffer
-    output.str("");
-    output.clear();
+    output << y-itemY;
+    direct = output.str() +" grovniks to the north";
+  }
+  //clear the buffer
+  output.str("");
+  output.clear();
 
-    direct += " and ";
-    if(itemX >= x){
-      output << itemY/3 + (itemX-x);
-      direct += output.str() +" grovniks to the east.";
-    }
-    else{
-      output << itemY/3 + (x-itemX);
-      direct += output.str() +" grovniks to the west.";
-    }
+  direct += " and ";
+  if(itemX >= x){
+    output << itemX-x;
+    direct += output.str() +" grovniks to the east.";
+  }
+  else{
+    output << x-itemX;
+    direct += output.str() +" grovniks to the west.";
   }
 
   return direct;

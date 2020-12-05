@@ -30,7 +30,7 @@ enum FoodType {
 class Item {
   public:
     Item(){};
-    ~Item(){};
+    virtual ~Item(){};
     virtual int getCost() = 0;
     virtual int getStrength() = 0;
     virtual ObstacleType getObstacle() = 0;
