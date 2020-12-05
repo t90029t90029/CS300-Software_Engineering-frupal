@@ -66,7 +66,17 @@ void Menu::displayStats() {
   int money = player->getMoney();
 
   mvprintw(LINES - 3, TEXT_X, "Whiffles: %d", money);
+
+  const int threshold = 15;
+
+  // Show energy in read when it gets low
+  if (energy <= threshold)
+    attron(COLOR_PAIR('E'));
+
   mvprintw(LINES - 2, TEXT_X, "Energy: %d", energy);
+
+  if (energy < threshold)
+    attroff(COLOR_PAIR('E'));
 }
 
 void Menu::clear() {
