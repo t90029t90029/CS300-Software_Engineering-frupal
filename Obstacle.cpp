@@ -2,10 +2,10 @@
 
 // Randomly generate Obstacle
 Obstacle::Obstacle() {
-  int itemCount = 3;
-  int ratingCount = 3;
-  int nameCount = 3;
-  int energyMultiplier = 5;
+  const int itemCount = 3;
+  const int ratingCount = 3;
+  const int nameCount = 3;
+  const int energyMultiplier = 5;
 
 	string names[itemCount][nameCount] = {
       // Rock
