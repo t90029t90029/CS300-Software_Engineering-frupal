@@ -152,6 +152,10 @@ void Engine::movePlayer(int direction) {
   }
 
   player.move(y, x);
+  cursor_x = x;
+  cursor_y = y;
+  menu.cursor_y = y;
+  menu.cursor_x = x;
 
   // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
@@ -516,6 +520,7 @@ void Engine::displayLose(){
         endwin();                                               //ends ncurses window
 
 }
+
 void Engine::moveCursor(int direction) {
 	menu.display();
 	int playerX =0, playerY=0;
@@ -544,6 +549,9 @@ void Engine::moveCursor(int direction) {
   if (cursor_x < 0) cursor_x = 0;
   if (cursor_x > WIDTH - 1) cursor_x = WIDTH - 1;
 
-	menu.displayTile(cursor_y, cursor_x);
+  menu.cursor_y = cursor_y;
+  menu.cursor_x = cursor_x;
+
+  menu.display();
 	map.highlightItem(cursor_y, cursor_x);
 }
