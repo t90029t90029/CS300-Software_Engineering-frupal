@@ -45,6 +45,11 @@ ghost:
 	$(CC) *.cpp $(CFLAGS) -g -D NOCLIP -D NOFOG -D GODMODE
 	./$(PROJECT)
 
+test:
+	make clean
+	$(CC) *.cpp $(CFLAGS) -g -D TEST
+	./$(PROJECT)
+
 godmode:
 	make clean
 	$(CC) *.cpp $(CFLAGS) -g -D GODMODE

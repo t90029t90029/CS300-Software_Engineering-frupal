@@ -172,7 +172,11 @@ void Map::highlightItem(int y, int x) {
 void Map::load(int & playerStartY, int & playerStartX) {
 	string line;
 	int nline = 0;
+#ifdef TEST
+	ifstream mapfile ("test.txt");
+#else
 	ifstream mapfile ("map1.txt");
+#endif // TEST
 	if(mapfile.is_open()){
 		while (getline(mapfile, line)) {
 			for(unsigned i = 0; i < line.length(); i++) {

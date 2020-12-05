@@ -24,25 +24,25 @@ ItemType Item::getType() {
 string Item::enumToString() {
   switch(type){
     case SHIP:
-      return "SHIP";
+      return "ship";
 
     case BINOCULARS:
-      return "BINOCULARS";
+      return "binoculars";
 
     case TOOLS:
-      return "TOOLS";
+      return "tool";
 
     case FOOD:
-      return "FOOD";
+      return "food";
 
     case OBSTACLES:
-      return "OBSTACLE";
+      return "obstacle";
 
     case CLUE:
-      return "CLUE";
+      return "clue";
 
     case TREASURE:
-      return "TREASURE";
+      return "treasure chest";
 
     default:
       return " ";

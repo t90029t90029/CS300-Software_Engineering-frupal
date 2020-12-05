@@ -221,7 +221,8 @@ void Engine::foundItem(int y,int x) {
   int randomY = rand() % 51;	// random number
   int randomX = rand() % 51;	// random number
   Tile * temp;
-  int dice = rand() % 8 + 1;	// 7+1 kinds of items
+  int dice = rand() % 4;
+
   string article;
   string typeName;
 
@@ -333,7 +334,7 @@ void Engine::foundItem(int y,int x) {
       // Clue
       case '?':
         // find a diamond to show the clue
-        if(dice == 8){
+        if(dice == 0){
           // go through the whole map to find the diamond
           for(int i=0;i<HEIGHT-1;++i){
             for(int j=0;j<WIDTH-1;++j){
@@ -353,7 +354,8 @@ void Engine::foundItem(int y,int x) {
         else {
           temp = map.getTile(y-25+randomY,x-25+randomX);
 
-          while(!temp->itemType){
+          // Obstacle isn't a useful item, so don't include it
+          while(!temp->itemType || temp->itemType->getType() == OBSTACLES){
               randomY = rand() % 51;
               randomX = rand() % 51;
               temp = map.getTile(y-25+randomY,x-25+randomX);
@@ -363,7 +365,7 @@ void Engine::foundItem(int y,int x) {
           randomX = x-25+randomX;
         }
 
-        // The clue just needs to be non-blank to register with updatePosition()
+        // The clue just needs to be non-blank to register with updatePosition();
         clue = "1";
         // store the content in the tile of Clue
         itemType->setClue(clue,randomY,randomX);
@@ -416,15 +418,18 @@ void Engine::updatePosition(){
       else
         typeName = temp->itemType->enumToString();
 
-      //Determine a/an
+      // This section just does English grammar stuff
       fc = tolower(typeName[0]); //first char
       article = "a";
       if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
         article = "an";
       }
+      if (typeName == "food") {
+        article = "some";
+      }
       plural = "is";
-      if (typeName == "BINOCULARS") {
-        plural = "are";
+      if (typeName == "binoculars") {
+        article = "a pair of";
       }
 
       //tell the truth
