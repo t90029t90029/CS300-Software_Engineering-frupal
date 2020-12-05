@@ -125,14 +125,17 @@ void Menu::displayTile(int y, int x) {
   }else{ //tiles energy use
 	  this->line+=4;//keeping menu spacing consistent
 	  int enCost = -1;
-	if(tile->type == SWAMP)
+	if(tile->type == SWAMP) {
 		--enCost;
-	else if(tile->type == WATER)
+  }
+	else if(tile->type == WATER) {
 		++enCost;
     	mvprintw(this->line, TEXT_X, "> Energy: %d", enCost);
   }
-  else
+  else {
   	mvprintw(++this->line, TEXT_X, "> Grovnik: ?");
+  }
+  }
 
   ++this->line; // Add separation line
 }
