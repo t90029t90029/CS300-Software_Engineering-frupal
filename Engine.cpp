@@ -428,7 +428,7 @@ void Engine::updatePosition(){
         article = "some";
       }
       plural = "is";
-      if (typeName == "binoculars") {
+      if (typeName == "BINOCULARS") {
         article = "a pair of";
       }
 
@@ -444,12 +444,20 @@ void Engine::updatePosition(){
 
       //tell the lie
       else {
-        clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
 
-	if(!temp->itemType)
-          clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
-	else
-          clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+        int dist = (player.hasBinoculars()) ? 2: 1;
+        // Reveal the lie if player can see it
+        if (abs(targetY - py) <= dist && abs(targetX - px) <= dist) {
+          clue = "FOOL! You have fallen victim to one of the classic blunders!";
+        }
+        else {
+          clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
+
+          if(!temp->itemType)
+                  clue += "There "+plural+" "+article+" "+ temp->enumToString(temp->type) +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+          else
+                  clue += "There "+plural+" "+article+" "+ temp->itemType->enumToString() +" that "+ plural+" "+player.itemDirect(false,targetY,targetX);
+        }
       }
 
       //update the content in the tile of Clue
