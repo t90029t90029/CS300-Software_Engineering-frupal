@@ -1,7 +1,14 @@
 #include "Tile.h"
 
 Tile::Tile(): type(MEADOW), item(' ') , isVisible(false), itemType(NULL){
+#ifdef NOFOG
+  isVisible = true;
+#endif // NOFOG
+}
 
+Tile::~Tile() {
+  if (itemType != NULL)
+    delete itemType;
 }
 
 string Tile::enumToString(TileType type){
@@ -22,7 +29,7 @@ string Tile::enumToString(TileType type){
       return "WALL";
 
     case DIAMOND:
-      return "DIAMOND";
+      return "Royal Diamond";
 
     case PLAYER:
       return "PLAYER";

@@ -9,11 +9,14 @@ Engine::Engine() {
   cbreak();             // Allow game to break upon Ctrl+C
   noecho();             // Don't let user type
   start_color();
+
   curs_set(0);
   init_pair('E', COLOR_WHITE, COLOR_RED);     // Error
   init_pair('H', COLOR_BLACK, COLOR_YELLOW);  // Highlight
+
   // Set map colors
   map.init();
+  gameWon = false;
 }
 
 void Engine::init() {
@@ -25,6 +28,10 @@ void Engine::init() {
   map.load(y, x);
   player.move(y, x);
   menu.init(&map, &player);
+
+  // Set cursor position
+  cursor_x = x;
+  cursor_y = y;
 
   // Display the map and menu
   map.display(y, x, player.hasBinoculars());
@@ -38,6 +45,7 @@ void Engine::receiveInput(int input) {
   switch (tolower(input)) {
   case 'i':
     menu.displayInventoryToggle();
+    menu.display();
     break;
   // Arrow keys
   case KEY_UP:
@@ -63,7 +71,6 @@ void Engine::receiveInput(int input) {
     map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
-
   // Detect window resize and refresh
   case KEY_RESIZE:
     player.locate(y, x);
@@ -104,7 +111,7 @@ void Engine::movePlayer(int direction) {
   case 's':
     ++y;
     break;
-  case 'd': 
+  case 'd':
     ++x;
     break;
   case 'a':
@@ -147,7 +154,12 @@ void Engine::movePlayer(int direction) {
 	  ++enCost;
   }
 
+  // Move player, reset cursor
   player.move(y, x);
+  cursor_x = x;
+  cursor_y = y;
+  menu.cursor_y = y;
+  menu.cursor_x = x;
 
   // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
@@ -172,6 +184,7 @@ void Engine::movePlayer(int direction) {
   }
   //update the clue for the menu
   updatePosition();
+  menu.display();
 
   player.locate(cursor_y, cursor_x);
 
@@ -179,7 +192,7 @@ void Engine::movePlayer(int direction) {
 
 bool Engine::isGameOver() {
 #ifdef GODMODE
-  return false;
+  return false || gameWon;
 #else
   return !player.isAlive();
 #endif // GODMODE
@@ -205,14 +218,20 @@ void Engine::foundItem(int y,int x) {
 
   // Clue variables
   std::string clue;
-  int randomY = rand() % HEIGHT;  // random number
-  int randomX = rand() % WIDTH;	  // random number
-  Tile * temp = map.getTile(randomY,randomX);	//random tile
+  int randomY = rand() % 51;	// random number
+  int randomX = rand() % 51;	// random number
+  Tile * temp;
+  int dice = rand() % 4;
 
+  bool isValid;
+  bool isObstacle;
+  string article;
+  string typeName;
+
+  // Tool variables
   int destroyEnergy;
   vector<Tool *> tools;
   int toolChoice = 0;
-
 
   // Purchasable items
   if (map.isPurchasable(y, x)) {
@@ -273,8 +292,9 @@ void Engine::foundItem(int y,int x) {
         // Royal Diamond -- Player wins!
         if(type == DIAMOND){
           player.setEnergy(0);
-          gameWon = true;
-        }
+	  gameWon = true;
+	  displayWin();
+	}
         // Normal treasure
         else {
           // Pick up treasure
@@ -315,32 +335,62 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-        //tell the truth
-        if (itemType->getTruth()) {
-          clue = "You are "+ std::to_string(x) +" grovnicks from the western border. ";
-
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,randomY,randomX);
+        // find a diamond to show the clue if clue is true
+        if(dice == 0 && tile->itemType->getTruth()){
+          // go through the whole map to find the diamond
+          for(int i=0;i<HEIGHT-1;++i){
+            for(int j=0;j<WIDTH-1;++j){
+                temp = map.getTile(i,j);
+              if(temp->type == 5){
+          //update
+                randomY = i;
+                randomX = j;
+          //break for loop
+                i = HEIGHT;
+          j = WIDTH;
+              }
+            }
+          }
         }
-
-        //tell the lie
+        // find one of the other 7 kinds of items
         else {
-          clue = "You are "+ std::to_string(y) +" grovnicks from the western border. ";
+          temp = NULL;
 
-          clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,randomY,randomX);
+          while(!temp || !isValid){
+              randomY = rand() % 51;
+              randomX = rand() % 51;
+              temp = map.getTile(y-25+randomY,x-25+randomX);
+
+              if (temp) {
+                // When lying only point to blank or obstacle tiles
+                isObstacle = (temp->itemType == NULL || temp->itemType->getType() == OBSTACLES);
+                isValid = (tile->itemType->getTruth() && !isObstacle) ||
+                          (!tile->itemType->getTruth() && isObstacle);
+             }
+
+              else {
+                isObstacle = false;
+                isValid = false;
+              }
+          }
+          //update
+          randomY = y-25+randomY;
+          randomX = x-25+randomX;
         }
 
-        //store the content in the tile of Clue
+        // The clue just needs to be non-blank to register with updatePosition();
+        clue = "1";
+        // store the content in the tile of Clue
         itemType->setClue(clue,randomY,randomX);
 
-        //store the position of the clue
+        // store the position of the clue in the player
         player.setClue(true,y,x);
 
         menu.display();
         tile->item = ' ';
-        break;
-
-      default:
-        break;
+      break;
+    default:
+      break;
     }
   }
 }
@@ -361,6 +411,10 @@ void Engine::updatePosition(){
   int targetY;
   int targetX;
   Tile * temp;
+  string article;
+  char fc;
+  string plural;
+  string typeName;
 
   //if the player has a clue, get the position of the clue
   if(player.hasClue(y,x)){
@@ -370,22 +424,56 @@ void Engine::updatePosition(){
 
     //get the position of the target
     if(itemType->getDetails(clue,targetY,targetX)){
-      temp = map.getTile(targetY,targetX);
-
-      //tell the truth
-      if (itemType->getTruth()) {
-        clue = "You are "+ std::to_string(px) +" grovnicks from the western border. ";
-
-        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(true,targetY,targetX);
+      // Reveal lie
+      int dist = player.hasBinoculars() ? 2: 1;
+      if (!itemType->getTruth() && (abs(py - targetY) <= dist && abs(px - targetX) <= dist)) {
+        clue = "FOOL! There is no diamond here. You have fallen victim to one of the classic blunders!";
       }
-
-      //tell the lie
       else {
-        clue = "You are "+ std::to_string(y+(px-x)) +" grovnicks from the western border. ";
+        temp = map.getTile(targetY,targetX);
 
-        clue += "There is a "+ temp->enumToString(temp->type) +" that "+ player.itemDirect(false,targetY,targetX);
+        if (!temp->itemType)
+          typeName = temp->enumToString(temp->type);
+        else
+          typeName = temp->itemType->enumToString();
+
+        // LIE
+        if (!itemType->getTruth()) {
+          typeName = "Royal Diamond";
+        }
+
+        // This section just does English grammar stuff
+        fc = tolower(typeName[0]); //first char
+
+        // Vowels
+        article = "a";
+        if (fc == 'a' || fc == 'e' || fc == 'i' || fc == 'o' || fc == 'u') {
+          article = "an";
+        }
+        if (typeName == "food") {
+          article = "some";
+        }
+        plural = "is";
+        if (typeName == "binoculars") {
+          article = "a pair of";
+        }
+
+        bool truth = itemType->getTruth();
+
+        // If we reach it dismiss clue
+        if (abs(targetY - py) == 0 && abs(targetX - px) == 0) {
+          clue = "You have found it!";
+        }
+        else {
+
+          clue = "You are "+ std::to_string(px) +" grovnicks from the western border.               ";
+
+    if(!temp->itemType)
+            clue += "There "+plural+" "+article+" "+ typeName +" that "+ plural + " " + player.itemDirect(truth,targetY,targetX);
+    else
+            clue += "There "+plural+" "+article+" "+ typeName +" that "+ plural + " " +  player.itemDirect(truth,targetY,targetX);
+        }
       }
-
       //update the content in the tile of Clue
       itemType->setClue(clue,targetY,targetX);
     }
@@ -404,14 +492,14 @@ void Engine::displayWin() {
 
         int y = floor(LINES/2);                 //calculates floor of half of the screens lines
         int x = floor(COLS/2);                  //calculates floor of half of the screens columns
-        x = x-12;
         char boarder = '#';                     //variable to store rectangle boarder symbol
-        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        int counter = 10;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU WON!!!";
         char ending_message2[] = "You found the Royal Diamond worth one zillion zillion whiffles!!!";
-
+        char ending_message3[] = "press any key to exit";
         char blank = ' ';
-        init_pair(1, COLOR_BLACK, COLOR_CYAN);
+        init_pair(2, COLOR_BLUE, COLOR_CYAN);
+        init_pair(1, COLOR_WHITE, COLOR_CYAN);
 
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
@@ -421,7 +509,7 @@ void Engine::displayWin() {
           }
         }
         //loops printing vertical "#" symbol line for rectangle
-        while(counter > -6)
+        while(counter > -10)
         {
                 attron(COLOR_PAIR(1));
                 mvprintw(y - counter, x+35, "%c", boarder);
@@ -436,38 +524,37 @@ void Engine::displayWin() {
         while(counter > -35)
         {
                 attron(COLOR_PAIR(1));
-                mvprintw(y+5, x-counter, "%c", boarder);
-                mvprintw(y-6, x-counter, "%c", boarder);
+                mvprintw(y+9, x-counter, "%c", boarder);
+                mvprintw(y-10, x-counter, "%c", boarder);
                 --counter;
                 attroff(COLOR_PAIR(1));
         }
 
-        attron(COLOR_PAIR(1));
-
+        attron(COLOR_PAIR(2));
         mvprintw(y-1,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
-        mvprintw(y,x-33, "%s", ending_message2);                   //prints hello world! message in center of rectangle
-        attroff(COLOR_PAIR(1));
-        refresh();                                              //refreshes window
-        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
+        mvprintw(y,x-32, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        mvprintw(y+10,x+14, "%s", ending_message3);                   //prints hello world! message in center of rectangle
+        attroff(COLOR_PAIR(2));
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
         endwin();                                               //ends ncurses window
 
 }
-
 void Engine::displayLose(){
         erase();
         initscr();                              //initializes screen
         start_color();
         int y = floor(LINES/2);                 //calculates floor of half of the screens lines
         int x = floor(COLS/2);                  //calculates floor of half of the screens columns
-        x = x-12;
         char boarder = '#';                     //variable to store rectangle boarder symbol
-        int counter = 6;                        //counter for loops, set for vertical lines of rectangle
+        int counter = 14;                        //counter for loops, set for vertical lines of rectangle
         char ending_message[] = "YOU LOSE!";
         char ending_message2[] = "You died from exhaustion! Game Over.";
-        char blank = ' ';
-        init_pair(1, COLOR_BLACK, COLOR_RED);
+        char ending_message3[] = "press any key to exit";
+
+	char blank = ' ';
+        init_pair(1, COLOR_WHITE, COLOR_RED);
+        init_pair(2, COLOR_BLACK, COLOR_RED);
 
         for(int i = LINES; i >= 0; --i){
           for(int j = COLS; j >= 0; --j){
@@ -479,44 +566,45 @@ void Engine::displayLose(){
 
 
        //loops printing vertical "#" symbol line for rectangle
-        while(counter > -6)
+        while(counter > -counter)
         {
-                attron(COLOR_PAIR(1));
-                mvprintw(y - counter, x+35, "%c", boarder);
-                mvprintw(y - counter, x-36, "%c", boarder);
-                attroff(COLOR_PAIR(1));
+                attron(COLOR_PAIR(2));
+                mvprintw(y - counter, x+counter, "%c", boarder);
+                mvprintw(y - counter, x-counter, "%c", boarder);
+                attroff(COLOR_PAIR(2));
                 --counter;
         }
 
-        counter = 35;                           //counter for loops, reset for horizontal lines of rectangle creation
+        counter = 14;                           //counter for loops, reset for horizontal lines of rectangle creation
 
         //loops printing horizontal "#" symbol line for rectangle
-        while(counter > -35)
+        while(counter > -counter)
         {
-                attron(COLOR_PAIR(1));
-                mvprintw(y+5, x-counter, "%c", boarder);
-                mvprintw(y-6, x-counter, "%c", boarder);
-                attroff(COLOR_PAIR(1));
+                attron(COLOR_PAIR(2));
+                mvprintw(y+counter, x+counter, "%c", boarder);
+                mvprintw(y+counter, x-counter, "%c", boarder);
+                attroff(COLOR_PAIR(2));
                 --counter;
         }
 
         attron(COLOR_PAIR(1));
 
-        mvprintw(y,x-6, "%s", ending_message);                   //prints hello world! message in center of rectangle
-        mvprintw(y+1,x-18, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        mvprintw(y,x-4, "%s", ending_message);                   //prints hello world! message in center of rectangle
+        mvprintw(y+1,x-15, "%s", ending_message2);                   //prints hello world! message in center of rectangle
+        mvprintw(y+10,x+14, "%s", ending_message3);                   //prints hello world! message in center of rectangle
         attroff(COLOR_PAIR(1));
-        refresh();                                              //refreshes window
-        move(LINES-1,COLS-1);                                   //moves cursor to lower right corner of screen
         refresh();                                              //refreshes window
         getchar();                                              //waits for user to input a character
         endwin();                                               //ends ncurses window
 
 }
+
 void Engine::moveCursor(int direction) {
 	menu.display();
 	int playerX =0, playerY=0;
 	player.locate(playerY, playerX);
 	map.display(playerY, playerX, player.hasBinoculars());
+
 	switch(direction) {
 		case KEY_UP:
 			cursor_y--;
@@ -531,15 +619,25 @@ void Engine::moveCursor(int direction) {
 			 cursor_x++;
 			 break;
 	}
-	// Check Y is in bounds
-  	if (cursor_y < 0) cursor_y = 0;
-  	if (cursor_y > HEIGHT - 1) cursor_y = HEIGHT - 1;
 
-  	// Check X is in bounds
-  	if (cursor_x < 0) cursor_x = 0;
-  	if (cursor_x > WIDTH - 25) cursor_x = WIDTH - 25;
-	
-	menu.displayTile(cursor_y, cursor_x);
+  int shiftY = 0, shiftX = 0;
+  map.getShift(shiftY, shiftX);
+
+	// Check Y is in bounds of map
+  if (cursor_y - shiftY < 0)
+    cursor_y = shiftY;
+  if (cursor_y - shiftY > LINES - 1)
+    cursor_y = LINES + shiftY - 1;
+
+  // Check X is in bounds of map
+  if (cursor_x - shiftX < 0)
+    cursor_x = shiftX;
+  if (cursor_x - shiftX > COLS - MENU_WIDTH - 1)
+    cursor_x = COLS - MENU_WIDTH + shiftX - 1;
+
+  menu.cursor_y = cursor_y;
+  menu.cursor_x = cursor_x;
+
+  menu.display();
 	map.highlightItem(cursor_y, cursor_x);
-
 }

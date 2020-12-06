@@ -4,7 +4,7 @@
 Player::Player():
                   toolCount(0),
                   binoculars(false), ship(false),
-		  clueY(0), clueX(0), clue(false), seeClue(true),
+                  clueY(0), clueX(0), clue(false), seeClue(true),
                   energy(100), money(1000),
                   y(0), x(0) {
 
@@ -57,55 +57,35 @@ string Player::itemDirect(bool truth,int itemY,int itemX) {
   std::ostringstream output;
   string direct;
 
+#ifdef TEST
   //truth
-  if(truth){
-    if(itemY >= y){
-      output << itemY-y;
-      direct = output.str() +" grovniks to the south";
-    }
-    else{
-      output << y-itemY;
-      direct = output.str() +" grovniks to the north";
-    }
-    //clear the buffer
-    output.str("");
-    output.clear();
-
-    direct += " and ";
-    if(itemX >= x){
-      output << itemX-x;
-      direct += output.str() +" grovniks to the east.";
-    }
-    else{
-      output << x-itemX;
-      direct += output.str() +" grovniks to the west.";
-    }
+  if(!truth){
+    mvprintw(0,0, "THE CLUE IS LYING!");
   }
+#endif // TEST
 
-  //lie -- reverse
+  if(itemY >= y){
+    output << itemY-y;
+    direct = output.str() +" grovniks to the south";
+  }
   else{
-    if(itemX >= x){
-      output << itemX-x;
-      direct = output.str() +" grovniks to the south";
-    }
-    else{
-      output << x-itemX;
-      direct = output.str() +" grovniks to the north";
-    }
-    //clear the buffer
-    output.str("");
-    output.clear();
-
-    direct += " and ";
-    if(itemY >= y){
-      output << itemY-y;
-      direct += output.str() +" grovniks to the east.";
-    }
-    else{
-      output << y-itemY;
-      direct += output.str() +" grovniks to the west.";
-    }
+    output << y-itemY;
+    direct = output.str() +" grovniks to the north";
   }
+  //clear the buffer
+  output.str("");
+  output.clear();
+
+  direct += " and ";
+  if(itemX >= x){
+    output << itemX-x;
+    direct += output.str() +" grovniks to the east.";
+  }
+  else{
+    output << x-itemX;
+    direct += output.str() +" grovniks to the west.";
+  }
+
   return direct;
 }
 

@@ -8,8 +8,12 @@ Map::Map() {
 
   for(int i=0;i<HEIGHT;++i){
     tiles[i] = new Tile[WIDTH];
-
   }
+}
+
+void Map::getShift(int &y, int &x) {
+  y = shiftY;
+  x = shiftX;
 }
 
 void Map::init() {
@@ -29,7 +33,7 @@ Map::~Map() {
   }
 
   for(int i=0;i<HEIGHT;++i){
-    delete []tiles[i];
+    delete [] tiles[i];
     tiles[i] = NULL;
   }
 
@@ -85,11 +89,7 @@ void Map::display(int playerY, int playerX, bool hasBinoculars)
       for(int w = shiftX; w < shiftX + wView; ++w)
       {
         //Check if visible = true, if true print tile, else print black
-#ifdef NOFOG
-        if (true)
-#else
         if (tiles[h][w].isVisible == true)
-#endif // NOFOG
         {
           char item = empty = ' ';
           if(tiles[h][w].item != empty)
@@ -148,9 +148,23 @@ bool Map::isPurchasable(int y, int x) {
 void Map::highlightItem(int y, int x) {
   Tile * tile = getTile(y, x);
 
+  // Don't reveal the item on the tile if it's not discovered
+  char c = tile->isVisible ? tile->item: ' ';
+
+  // apply map shift
+  y = y - shiftY;
+  x = x - shiftX;
+
+  // Check bounds
+  if (y < 0) y = 0;
+  if (y > LINES - 1) y = LINES - 1;
+
+  if (x < 0) x = 0;
+  if (x > COLS - MENU_WIDTH - 1) x = COLS - MENU_WIDTH - 1;
+
   // Change background color
   attron(COLOR_PAIR('H'));
-  mvaddch(y - shiftY, x - shiftX, tile->item);
+  mvaddch(y, x, c);
   attroff(COLOR_PAIR('H'));
   refresh();
 }
@@ -158,7 +172,11 @@ void Map::highlightItem(int y, int x) {
 void Map::load(int & playerStartY, int & playerStartX) {
 	string line;
 	int nline = 0;
+#ifdef TEST
+	ifstream mapfile ("test.txt");
+#else
 	ifstream mapfile ("map1.txt");
+#endif // TEST
 	if(mapfile.is_open()){
 		while (getline(mapfile, line)) {
 			for(unsigned i = 0; i < line.length(); i++) {
@@ -178,48 +196,55 @@ void Map::load(int & playerStartY, int & playerStartX) {
 					case 'D':
 						tiles[nline][i].type = DIAMOND;
 						tiles[nline][i].item = '$';
-            break;
+            					break;
 					case 'S':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'S';
 						tiles[nline][i].itemType = new Ship;
+						tiles[nline][i].itemType->setType(0);
 						break;
 					case 'B':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'B';
 						tiles[nline][i].itemType = new Binoculars;
+						tiles[nline][i].itemType->setType(1);
 						break;
 					case 'T':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'T';
 						tiles[nline][i].itemType = new Tool;
+						tiles[nline][i].itemType->setType(2);
 						break;
 					case 'F':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = 'F';
 						tiles[nline][i].itemType = new Food;
+						tiles[nline][i].itemType->setType(3);
 						break;
 					case '!':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '!';
 						tiles[nline][i].itemType = new Obstacle;
+						tiles[nline][i].itemType->setType(4);
 						break;
 					case '?':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '?';
 						tiles[nline][i].itemType = new Clue;
+						tiles[nline][i].itemType->setType(5);
 						break;
 					case '$':
 						tiles[nline][i].type = MEADOW;
 						tiles[nline][i].item = '$';
 						tiles[nline][i].itemType = new Treasure;
+						tiles[nline][i].itemType->setType(6);
 						break;
 					case '@':
-            tiles[nline][i].type = MEADOW;
-            playerStartY = nline;
-            playerStartX = i;
-            break;
-          default:
+            					tiles[nline][i].type = MEADOW;
+            					playerStartY = nline;
+            					playerStartX = i;
+            					break;
+          				default:
 						break;
 				}
 			}

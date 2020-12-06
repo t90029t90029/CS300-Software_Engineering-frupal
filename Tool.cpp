@@ -5,10 +5,10 @@ using namespace std;
 
 // Tool Constructor
 Tool::Tool() {
-  int itemCount = 3;
-  int ratingCount = 4;
-  int nameCount = 3;
-  int costMultiplier = 50;
+  const int itemCount = 3;
+  const int ratingCount = 4;
+  const int nameCount = 3;
+  const int costMultiplier = 50;
 
 	string names[itemCount][nameCount] = {
 		// Boulder
