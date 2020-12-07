@@ -164,6 +164,9 @@ void Engine::movePlayer(int direction) {
   // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
 
+  //update the clue for the menu
+  updatePosition();
+
   // If item is purchasable, highlight it
   if (map.isPurchasable(y, x)) {
     map.display(symbolY, symbolX, player.hasBinoculars());
@@ -182,9 +185,6 @@ void Engine::movePlayer(int direction) {
     foundItem(y,x);
     map.display(y, x, player.hasBinoculars());
   }
-  //update the clue for the menu
-  updatePosition();
-  menu.display();
 
   player.locate(cursor_y, cursor_x);
 
@@ -397,6 +397,8 @@ void Engine::foundItem(int y,int x) {
 
         // store the position of the clue in the player
         player.setClue(true,y,x);
+
+        updatePosition();
 
         menu.display();
         tile->item = ' ';

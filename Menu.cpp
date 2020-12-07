@@ -221,9 +221,6 @@ void Menu::displayOptions(int y, int x, bool full) {
   if (map->isPurchasable(y, x)) {
     player->setSeeClue(false);
 
-    // Turn off inventory
-    if(showInventory) displayInventoryToggle();
-
     Tile * tile = map->getTile(y, x);
     // First show error messages if player can't buy the item
     if (tile->item == 'B' && player->hasBinoculars()) {
@@ -244,7 +241,7 @@ void Menu::displayOptions(int y, int x, bool full) {
       mvprintw(++this->line, TEXT_X, " to buy this item! ");
       attroff(COLOR_PAIR('E'));
     }
-    else if (player->getNumberOfTool() >= MAX_INVENTORY) {
+    else if (tile->item == 'T' && player->getNumberOfTool() >= MAX_INVENTORY) {
       attron(COLOR_PAIR('E'));
       mvprintw(++this->line, TEXT_X, " You can only hold ");
       mvprintw(++this->line, TEXT_X, " %d tools at once ", MAX_INVENTORY);
