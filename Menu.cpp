@@ -330,7 +330,7 @@ void Menu::displayClue(void){
 void Menu::displayTool(vector<Tool *> tool) {
   ++this->line;
   attron(COLOR_PAIR('H'));
-  mvprintw(++this->line, TEXT_X, " Choose a Tool: ");
+  mvprintw(++this->line, TEXT_X, " Choose a Tool: [Power]");
   attroff(COLOR_PAIR('H'));
 
   if (tool.size() == 0) {
@@ -343,7 +343,8 @@ void Menu::displayTool(vector<Tool *> tool) {
   }
   else {
     for(unsigned int i = 0;i < tool.size(); i++) {
-      mvprintw(++this->line, TEXT_X,"%d. %s",i+1, tool[i]->getName().c_str());
+      mvprintw(++this->line, TEXT_X,"%d. [%d] \n   %s", i+1, tool[i]->getStrength(), tool[i]->getName().c_str());
+      ++this->line;
     }
 
     ++this->line;
