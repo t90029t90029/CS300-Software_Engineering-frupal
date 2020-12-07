@@ -37,10 +37,8 @@ The Enter key will buy an item, if the adventurer has enough whiffles.
 * Huy Doan (@huy26)
 * Shang Chun Lin (@t90029t90029)
 
-## Trailer and Development Dicussion ##
-[Video link](https://media.pdx.edu/media/1_i91qz32b)
-
-## Develpment Documents ##
+## Development Docs ##
+[Game Trailer and Developer Discussion](https://media.pdx.edu/media/1_i91qz32b)
 [Original proposed OOP design](https://drive.google.com/file/d/1uGqeCG1syLJbEF17rSoJDt6Tqrat4FJL/view?usp=sharing)
 
 ## Building
