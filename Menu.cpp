@@ -42,19 +42,23 @@ void Menu::display() {
   displayTile(cursor_y, cursor_x);
 
   // Display player inventory, opens with key: I
-  // Determined terminal height for showing clue or inventory: 46, 
+  // Determined terminal height for showing clue or inventory: 46,
   // can comfortably play at 38 expected, until max inv.
   // if show inv & clue triggered, clue takes priority.
   if(LINES < 46){
     if(showInventory){
-      --this->line;
-      if(player->wantSeeClue())
-	displayClue();
+      //--this->line;
+      displayOptions(y, x, false);
+      if(player->wantSeeClue()) {
+        displayClue();
+       }
       else
-	displayInventory();
+        displayInventory();
     }else if(player->wantSeeClue()){
+
+      displayOptions(y, x, false);
       if(showOptions){
-        --this->line;
+        //--this->line;
         displayClue();
       }
     }else{
@@ -63,9 +67,12 @@ void Menu::display() {
       }
     }
   }else{
-    if(showOptions){
+   if(showOptions){
       displayOptions(y, x);
       displayClue();
+    }
+    else {
+      displayOptions(y, x, false);
     }
     if(showInventory)
       displayInventory();
@@ -202,6 +209,10 @@ void Menu::displayTile(int y, int x) {
 }
 
 void Menu::displayOptions(int y, int x) {
+  displayOptions(y, x, true);
+}
+
+void Menu::displayOptions(int y, int x, bool full) {
   string direction;  // Direction text
 
   mvprintw(++this->line, TEXT_X, "Options:"); // Option heading
@@ -209,7 +220,10 @@ void Menu::displayOptions(int y, int x) {
   // If item is purchasable, display option to buy
   if (map->isPurchasable(y, x)) {
     player->setSeeClue(false);
-	
+
+    // Turn off inventory
+    if(showInventory) displayInventoryToggle();
+
     Tile * tile = map->getTile(y, x);
     // First show error messages if player can't buy the item
     if (tile->item == 'B' && player->hasBinoculars()) {
@@ -225,10 +239,15 @@ void Menu::displayOptions(int y, int x) {
       attroff(COLOR_PAIR('E'));
     }
     else if (player->getMoney() <= tile->itemType->getCost()) {
-
       attron(COLOR_PAIR('E'));
       mvprintw(++this->line, TEXT_X, " Not enough whiffles ");
       mvprintw(++this->line, TEXT_X, " to buy this item! ");
+      attroff(COLOR_PAIR('E'));
+    }
+    else if (player->getNumberOfTool() >= MAX_INVENTORY) {
+      attron(COLOR_PAIR('E'));
+      mvprintw(++this->line, TEXT_X, " You can only hold ");
+      mvprintw(++this->line, TEXT_X, " %d tools at once ", MAX_INVENTORY);
       attroff(COLOR_PAIR('E'));
     }
     // If they can buy it, show the option
@@ -240,46 +259,55 @@ void Menu::displayOptions(int y, int x) {
     ++this->line;
   }
 
-  // Check tiles neighboring player's position
-  for (int i = 0; i < 4; ++i) {
-    int _y = y, _x = x;
+  // We may not want to show directions in some cases
+  if (full) {
+    // Check tiles neighboring player's position
+    for (int i = 0; i < 4; ++i) {
+      int _y = y, _x = x;
 
-    switch (i) {
-    case 0:
-      direction = "W)     North";
-      --_y;
-      break;
-    case 1:
-      direction = "A)     West";
-      --_x;
-      break;
-    case 2:
-      direction = "S)     South";
-      ++_y;
-      break;
-    case 3:
-      direction = "D)     East";
-      ++_x;
-      break;
-    }
+      switch (i) {
+      case 0:
+        direction = "W)     North";
+        --_y;
+        break;
+      case 1:
+        direction = "A)     West";
+        --_x;
+        break;
+      case 2:
+        direction = "S)     South";
+        ++_y;
+        break;
+      case 3:
+        direction = "D)     East";
+        ++_x;
+        break;
+      }
 
-    // If the neigboring tile is passable, display the option to move
-    Tile * tile = map->getTile(_y, _x);
-    if (tile != NULL) {
-      if (tile->type == MEADOW || tile->type == SWAMP || (tile->type == WATER && player->hasShip())) {
-        mvprintw(++this->line, TEXT_X, direction.c_str());
+      // If the neigboring tile is passable, display the option to move
+      Tile * tile = map->getTile(_y, _x);
+      if (tile != NULL) {
+        if (tile->type == MEADOW || tile->type == SWAMP || (tile->type == WATER && player->hasShip())) {
+          mvprintw(++this->line, TEXT_X, direction.c_str());
+        }
       }
     }
+
+    mvprintw(++this->line, TEXT_X,">)     Inspect");
+
   }
 
-  ++this->line;
-  mvprintw(++this->line, TEXT_X,"Up)    Inspect North");
-  mvprintw(++this->line, TEXT_X,"Left)  Inspect West");
-  mvprintw(++this->line, TEXT_X,"Down)  Inspect South");
-  mvprintw(++this->line, TEXT_X,"Right) Inspect East");
+  if (player->wantSeeClue()) {
+    if (showInventory)
+      displayInventoryToggle();
+  }
 
-  ++this->line;
-  mvprintw(++this->line, TEXT_X,"I)     Inventory");
+  if (!showInventory) {
+    mvprintw(++this->line, TEXT_X,"I)     Inventory");
+  }
+  else {
+    mvprintw(++this->line, TEXT_X,"I)     Close");
+  }
 
   if (player->hasClue(y, x)) {
     if (player->wantSeeClue()) {
@@ -309,8 +337,8 @@ void Menu::displayClue(void){
     //if the player holds a clue, copy the coordinate into y,x
     if(player->hasClue(y,x)){
       tile = map->getTile(y, x);
-      this->line += 2;
-      mvprintw(this->line, TEXT_X,"Clue:");
+      ++this->line;
+      mvprintw(++this->line, TEXT_X,"Clue:");
       //if there is a clue, copy the content into the string and print it out
       if(tile->itemType->getDetails(clue,targetY,targetX)){
 	      clue += ' ';//append space for lastof to grab at end of line
@@ -375,10 +403,13 @@ void Menu::displayInventory(){
 
 void Menu::displayInventoryToggle(){
 
-	  if(!showInventory)
+	  if(!showInventory) {
+      player->setSeeClue(false);
 	    this->showInventory = true;
-	  else
+    }
+	  else {
 		  this->showInventory = false;
+    }
 
 }
 

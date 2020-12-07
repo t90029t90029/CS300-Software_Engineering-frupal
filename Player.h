@@ -2,7 +2,7 @@
 #include "Map.h"
 #include "Item.h"
 #include <vector>
-#define MAX_INVENTORY 10
+#define MAX_INVENTORY 8
 
 class Player {
   public:

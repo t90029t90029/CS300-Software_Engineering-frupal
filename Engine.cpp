@@ -274,10 +274,13 @@ void Engine::foundItem(int y,int x) {
           break;
         // Tool
         case 'T':
-          // Buy item, put in inventory, remove from map
-          player.setMoney(netMoney);
-          player.addTool(itemType);
-          tile->item = ' ';
+
+          if (player.getNumberOfTool() < MAX_INVENTORY) {
+            // Buy item, put in inventory, remove from map
+            player.setMoney(netMoney);
+            player.addTool(itemType);
+            tile->item = ' ';
+          }
           break;
         default:
           break;
