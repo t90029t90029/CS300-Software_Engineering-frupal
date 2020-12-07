@@ -14,8 +14,10 @@ class Menu {
     void displayTool(vector<Tool*> tool);
     //determines if inventory shows
     void displayInventoryToggle(void);
+    bool showingInventory(void);
     void displayStats(void);
-
+    //make space for obstacle tool selection
+    void toggleOptions(void);
     void displayTile(int y, int x);
     void clear(void);
 
@@ -28,7 +30,7 @@ class Menu {
     Map *map;
     Player *player;
     int line;
-    bool showInventory;
+    bool showInventory, showOptions;
 
     void displayOptions(int y, int x);
     void displayClue(void);
