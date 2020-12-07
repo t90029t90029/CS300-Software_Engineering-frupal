@@ -343,8 +343,7 @@ void Menu::displayTool(vector<Tool *> tool) {
   }
   else {
     for(unsigned int i = 0;i < tool.size(); i++) {
-      mvprintw(++this->line, TEXT_X,"%d. [%d] \n   %s", i+1, tool[i]->getStrength(), tool[i]->getName().c_str());
-      ++this->line;
+      mvprintw(++this->line, TEXT_X,"%d. [%d] %s", i+1, tool[i]->getStrength(), tool[i]->getName().c_str());
     }
 
     ++this->line;
