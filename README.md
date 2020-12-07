@@ -14,7 +14,7 @@ The adventurer can pre-emptively inspect grovnicks it has discovered before it m
 The adventurer only has a limited amount of energy for traveling. If the adventurer runs out of energy, the game is over.  
 Traveling across meadows (green) expends 1 energy, swamps (magenta) expend 2 energy. If using a ship on water, no energy is expended.  
 Food (F) can be bought to restore energy.  
-Obstacles (!) might be encountered such as monsters, large boulders, rough terrain, which expend much more energy.
+Obstacles (!) might be encountered such as monsters, large boulders, rough terrain, which expend much more energy.  
 Tools (T) can be bought to make overcoming these obstacles easier. Each tool only works on certain types of obstacles.  
 Tools can only be used once before they break.  
 
@@ -38,7 +38,7 @@ The Enter key will buy an item, if the adventurer has enough whiffles.
 * Shang Chun Lin (@t90029t90029)
 
 ## Development Docs ##
-[Game Trailer and Developer Discussion](https://media.pdx.edu/media/1_i91qz32b)
+[Game Trailer and Developer Discussion](https://media.pdx.edu/media/1_i91qz32b)  
 [Original proposed OOP design](https://drive.google.com/file/d/1uGqeCG1syLJbEF17rSoJDt6Tqrat4FJL/view?usp=sharing)
 
 ## Building
