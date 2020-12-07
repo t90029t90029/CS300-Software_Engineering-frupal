@@ -47,21 +47,21 @@ void Engine::receiveInput(int input) {
     menu.displayInventoryToggle();
     menu.display();
     break;
-  // Arrow keys
+  // Inspect cursor
   case KEY_UP:
   case KEY_DOWN:
   case KEY_RIGHT:
   case KEY_LEFT:
     moveCursor(input);
     break;
-  // Moving keys
+  // Player movement
   case 'w':
   case 's':
   case 'd':
   case 'a':
     movePlayer(input);
     break;
-    // Enter key
+  // Enter key
   case 10:
     // Purchase item
     player.locate(y, x);
@@ -77,14 +77,15 @@ void Engine::receiveInput(int input) {
     map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
-
   // Refresh the clue menu
   case 'c':
-    if(player.wantSeeClue())
-      player.setSeeClue(false);
-    else
-      player.setSeeClue(true);
-    menu.display();
+    if (player.hasClue(y, x)) {
+      if(player.wantSeeClue())
+        player.setSeeClue(false);
+      else
+        player.setSeeClue(true);
+      menu.display();
+    }
     break;
 
   default:
@@ -204,7 +205,7 @@ void Engine::foundItem(int y,int x) {
   char item = tile->item;
 
   // No item on this tile
-  if (item == ' ') return;
+  if (item  == ' ') return;
 
   // Stats that the tiles may need to reference
   Item * itemType = tile->itemType;
