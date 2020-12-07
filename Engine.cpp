@@ -286,6 +286,7 @@ void Engine::foundItem(int y,int x) {
   }
   // Non-purchasable items
   else {
+    bool invState = menu.showingInventory();
     switch(item) {
       // Treasure chest
       case '$':
@@ -316,9 +317,15 @@ void Engine::foundItem(int y,int x) {
         map.display(symbolY, symbolX, player.hasBinoculars());
         map.highlightItem(y, x);
 
+	menu.toggleOptions();//hide options for ! encounter
+	if(invState)
+		menu.displayInventoryToggle();
         menu.display();
         menu.displayTool(tools);
-
+	menu.toggleOptions();//restore options view after !
+	//restore Inventory view after action if was showing
+	if(menu.showingInventory() != invState)
+		menu.displayInventoryToggle();
         toolChoice = getch() - 1 - '0';
 
         if(tools.size() != 0) {
@@ -335,7 +342,9 @@ void Engine::foundItem(int y,int x) {
         break;
       // Clue
       case '?':
-        // find a diamond to show the clue if clue is true
+	//set clue viewing visibile for the menu
+	player.setSeeClue(true);
+	// find a diamond to show the clue if clue is true
         if(dice == 0 && tile->itemType->getTruth()){
           // go through the whole map to find the diamond
           for(int i=0;i<HEIGHT-1;++i){

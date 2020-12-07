@@ -6,6 +6,7 @@ using namespace std;
 void Menu::init(Map * m, Player * p) {
   this->line = 0; // This determines which line to print on
   this->showInventory = false;
+  this->showOptions = true;
   this->map = m;
   this->player = p;
 
@@ -41,24 +42,33 @@ void Menu::display() {
   displayTile(cursor_y, cursor_x);
 
   // Display player inventory, opens with key: I
-  if(showInventory) {
-    if(LINES < 38) {
+  // Determined terminal height for showing clue or inventory: 46, 
+  // can comfortably play at 38 expected, until max inv.
+  // if show inv & clue triggered, clue takes priority.
+  if(LINES < 46){
+    if(showInventory){
       --this->line;
-      displayInventory();
+      if(player->wantSeeClue())
+	displayClue();
+      else
+	displayInventory();
+    }else if(player->wantSeeClue()){
+      if(showOptions){
+        --this->line;
+        displayClue();
+      }
+    }else{
+      if(showOptions){//goes off when encounter obstacle
+        displayOptions(y, x);
+      }
     }
-    else {
-      //if terminal space allows, show all menu
+  }else{
+    if(showOptions){
       displayOptions(y, x);
       displayClue();
-      displayInventory();
     }
-  }
-  else {
-    // Display options for current tile
-    displayOptions(y, x);
-
-    // Display the clue if there is a clue
-    displayClue();
+    if(showInventory)
+      displayInventory();
   }
   displayStats();
 }
@@ -182,6 +192,10 @@ void Menu::displayTile(int y, int x) {
   }
   else {
     mvprintw(++this->line, TEXT_X, "> Grovnick: ?");
+    mvprintw(++this->line, TEXT_X, ">");
+    mvprintw(++this->line, TEXT_X, ">");
+    mvprintw(++this->line, TEXT_X, ">");
+    mvprintw(++this->line, TEXT_X, ">");
   }
 
   ++this->line; // Add separation line
@@ -194,6 +208,8 @@ void Menu::displayOptions(int y, int x) {
 
   // If item is purchasable, display option to buy
   if (map->isPurchasable(y, x)) {
+    player->setSeeClue(false);
+	
     Tile * tile = map->getTile(y, x);
     // First show error messages if player can't buy the item
     if (tile->item == 'B' && player->hasBinoculars()) {
@@ -312,7 +328,7 @@ void Menu::displayClue(void){
 }
 
 void Menu::displayTool(vector<Tool *> tool) {
-
+  ++this->line;
   attron(COLOR_PAIR('H'));
   mvprintw(++this->line, TEXT_X, " Choose a Tool: ");
   attroff(COLOR_PAIR('H'));
@@ -364,4 +380,14 @@ void Menu::displayInventoryToggle(){
 	  else
 		  this->showInventory = false;
 
+}
+
+bool Menu::showingInventory(){
+	return showInventory;
+}
+void Menu::toggleOptions(){
+	if(showOptions)
+		showOptions = false;
+	else
+		showOptions = true;
 }
