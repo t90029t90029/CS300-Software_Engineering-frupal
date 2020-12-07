@@ -22,6 +22,12 @@ Tools can only be used once before they break.
 Treasure chests ($) are located throughout the Kingdom, which contain a varying amount of whiffles.  
 There are clues (?) on the map to the locations of useful items, and maybe even the Royal Diamond. Be careful though, the clues can be deceptive.  
 
+## Controls
+The adventurer can move north (W), west (A), south (S), and east (D).  
+The adventurer can move the cursor to inspect grovnicks with the arrow keys.  
+The 'i' key toggles the adventurer's inventory view, which will show tools and quest items.  
+The Enter key will buy an item, if the adventurer has enough whiffles.
+
 ## Contributers
 
 **CS300 Group 10**
@@ -31,11 +37,11 @@ There are clues (?) on the map to the locations of useful items, and maybe even 
 * Huy Doan (@huy26)
 * Shang Chun Lin (@t90029t90029)
 
-## Controls
-The adventurer can move north (W), west (A), south (S), and east (D).  
-The adventurer can move the cursor to inspect grovnicks with the arrow keys.  
-The 'i' key toggles the adventurer's inventory view, which will show tools and quest items.  
-The Enter key will buy an item, if the adventurer has enough whiffles.
+## Trailer and Development Dicussion ##
+[Video link](https://media.pdx.edu/media/1_i91qz32b)
+
+## Develpment Documents ##
+[Original proposed OOP design](https://drive.google.com/file/d/1uGqeCG1syLJbEF17rSoJDt6Tqrat4FJL/view?usp=sharing)
 
 ## Building
 Frupal requires the ncurses library.  

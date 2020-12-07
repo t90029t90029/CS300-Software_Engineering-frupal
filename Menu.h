@@ -33,6 +33,7 @@ class Menu {
     bool showInventory, showOptions;
 
     void displayOptions(int y, int x);
+    void displayOptions(int y, int x, bool full);
     void displayClue(void);
     void displayInventory(void);
 };

@@ -47,21 +47,21 @@ void Engine::receiveInput(int input) {
     menu.displayInventoryToggle();
     menu.display();
     break;
-  // Arrow keys
+  // Inspect cursor
   case KEY_UP:
   case KEY_DOWN:
   case KEY_RIGHT:
   case KEY_LEFT:
     moveCursor(input);
     break;
-  // Moving keys
+  // Player movement
   case 'w':
   case 's':
   case 'd':
   case 'a':
     movePlayer(input);
     break;
-    // Enter key
+  // Enter key
   case 10:
     // Purchase item
     player.locate(y, x);
@@ -77,14 +77,15 @@ void Engine::receiveInput(int input) {
     map.display(y, x, player.hasBinoculars());
     menu.display();
     break;
-
   // Refresh the clue menu
   case 'c':
-    if(player.wantSeeClue())
-      player.setSeeClue(false);
-    else
-      player.setSeeClue(true);
-    menu.display();
+    if (player.hasClue(y, x)) {
+      if(player.wantSeeClue())
+        player.setSeeClue(false);
+      else
+        player.setSeeClue(true);
+      menu.display();
+    }
     break;
 
   default:
@@ -164,6 +165,9 @@ void Engine::movePlayer(int direction) {
   // Move and expend energy
   player.setEnergy(player.getEnergy()-enCost);
 
+  //update the clue for the menu
+  updatePosition();
+
   // If item is purchasable, highlight it
   if (map.isPurchasable(y, x)) {
     map.display(symbolY, symbolX, player.hasBinoculars());
@@ -182,9 +186,6 @@ void Engine::movePlayer(int direction) {
     foundItem(y,x);
     map.display(y, x, player.hasBinoculars());
   }
-  //update the clue for the menu
-  updatePosition();
-  menu.display();
 
   player.locate(cursor_y, cursor_x);
 
@@ -204,7 +205,7 @@ void Engine::foundItem(int y,int x) {
   char item = tile->item;
 
   // No item on this tile
-  if (item == ' ') return;
+  if (item  == ' ') return;
 
   // Stats that the tiles may need to reference
   Item * itemType = tile->itemType;
@@ -274,10 +275,13 @@ void Engine::foundItem(int y,int x) {
           break;
         // Tool
         case 'T':
-          // Buy item, put in inventory, remove from map
-          player.setMoney(netMoney);
-          player.addTool(itemType);
-          tile->item = ' ';
+
+          if (player.getNumberOfTool() < MAX_INVENTORY) {
+            // Buy item, put in inventory, remove from map
+            player.setMoney(netMoney);
+            player.addTool(itemType);
+            tile->item = ' ';
+          }
           break;
         default:
           break;
@@ -394,6 +398,8 @@ void Engine::foundItem(int y,int x) {
 
         // store the position of the clue in the player
         player.setClue(true,y,x);
+
+        updatePosition();
 
         menu.display();
         tile->item = ' ';
