@@ -38,7 +38,8 @@ The Enter key will buy an item, if the adventurer has enough whiffles.
 * Shang Chun Lin (@t90029t90029)
 
 ## Development Documents ##
-[Game Trailer and Developer Discussion](https://media.pdx.edu/media/1_i91qz32b)  
+[Game Trailer + Developer Discussion](https://media.pdx.edu/media/1_i91qz32b)  
+[Game Trailer only](https://media.pdx.edu/media/1_2nn52h4h)  
 [Map of the Kingdom of Frupal](https://drive.google.com/file/d/1PVO-CWQgRu9YMNzszVxnGrDWvj41KUdJ/view?usp=sharing)  
 [Original proposed OOP design](https://drive.google.com/file/d/1uGqeCG1syLJbEF17rSoJDt6Tqrat4FJL/view?usp=sharing)  
 
