@@ -24,7 +24,7 @@ There are clues (?) on the map to the locations of useful items, and maybe even 
 
 ## Controls
 The adventurer can move north (W), west (A), south (S), and east (D).  
-The adventurer can move the cursor to inspect grovnicks with the arrow keys.  
+The adventurer can move the cursor to inspect grovnicks with the arrow keys (indicated by > on the menu).  
 The 'i' key toggles the adventurer's inventory view, which will show tools and quest items.  
 The Enter key will buy an item, if the adventurer has enough whiffles.
 
