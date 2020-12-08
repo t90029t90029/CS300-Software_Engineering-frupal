@@ -2,23 +2,15 @@
 
 #include "Item.h"
 
-enum TileType {
-  EMPTY,
-  MEADOW,
-  WATER,
-  SWAMP,
-  WALL,
-  DIAMOND,
-  PLAYER
-};
+enum TileType { EMPTY, MEADOW, WATER, SWAMP, WALL, DIAMOND, PLAYER };
 
 class Tile {
-  public:
-    Tile();
-    ~Tile();
-    TileType type;
-    string enumToString(TileType);
-    char item;
-    bool isVisible;
-    Item *itemType;
+public:
+  Tile();
+  ~Tile();
+  TileType type;
+  string enumToString(TileType);
+  char item;
+  bool isVisible;
+  Item *itemType;
 };

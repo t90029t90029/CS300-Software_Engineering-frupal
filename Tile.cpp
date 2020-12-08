@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(): type(MEADOW), item(' ') , isVisible(false), itemType(NULL){
+Tile::Tile() : type(MEADOW), item(' '), isVisible(false), itemType(NULL) {
 #ifdef NOFOG
   isVisible = true;
 #endif // NOFOG
@@ -11,31 +11,30 @@ Tile::~Tile() {
     delete itemType;
 }
 
-string Tile::enumToString(TileType type){
-  switch(type){
-    case EMPTY:
-      return "EMPTY";
+string Tile::enumToString(TileType type) {
+  switch (type) {
+  case EMPTY:
+    return "EMPTY";
 
-    case MEADOW:
-      return "MEADOW";
+  case MEADOW:
+    return "MEADOW";
 
-    case WATER:
-      return "WATER";
+  case WATER:
+    return "WATER";
 
-    case SWAMP:
-      return "SWAMP";
+  case SWAMP:
+    return "SWAMP";
 
-    case WALL:
-      return "WALL";
+  case WALL:
+    return "WALL";
 
-    case DIAMOND:
-      return "Royal Diamond";
+  case DIAMOND:
+    return "Royal Diamond";
 
-    case PLAYER:
-      return "PLAYER";
+  case PLAYER:
+    return "PLAYER";
 
-    default:
-      return " ";
+  default:
+    return " ";
   }
 }
-

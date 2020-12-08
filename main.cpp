@@ -1,5 +1,5 @@
-#include <ncurses.h>
 #include <ctype.h>
+#include <ncurses.h>
 
 #include "Engine.h"
 
@@ -16,7 +16,7 @@ int main() {
   while (!engine.isGameOver() && (input = getch()) != INPUT_QUIT)
     engine.receiveInput(input);
 
-  if(engine.isGameWon() == false && input != INPUT_QUIT)
+  if (engine.isGameWon() == false && input != INPUT_QUIT)
     engine.displayLose();
   endwin();
 

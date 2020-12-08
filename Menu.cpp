@@ -1,9 +1,9 @@
 #include "Menu.h"
-#include <string>
 #include <cstring>
+#include <string>
 using namespace std;
 
-void Menu::init(Map * m, Player * p) {
+void Menu::init(Map *m, Player *p) {
   this->line = 0; // This determines which line to print on
   this->showInventory = false;
   this->showOptions = true;
@@ -45,36 +45,34 @@ void Menu::display() {
   // Determined terminal height for showing clue or inventory: 46,
   // can comfortably play at 38 expected, until max inv.
   // if show inv & clue triggered, clue takes priority.
-  if(LINES < 46){
-    if(showInventory){
+  if (LINES < 46) {
+    if (showInventory) {
       //--this->line;
       displayOptions(y, x, false);
-      if(player->wantSeeClue()) {
+      if (player->wantSeeClue()) {
         displayClue();
-       }
-      else
+      } else
         displayInventory();
-    }else if(player->wantSeeClue()){
+    } else if (player->wantSeeClue()) {
 
       displayOptions(y, x, false);
-      if(showOptions){
+      if (showOptions) {
         //--this->line;
         displayClue();
       }
-    }else{
-      if(showOptions){//goes off when encounter obstacle
+    } else {
+      if (showOptions) { // goes off when encounter obstacle
         displayOptions(y, x);
       }
     }
-  }else{
-   if(showOptions){
+  } else {
+    if (showOptions) {
       displayOptions(y, x);
       displayClue();
-    }
-    else {
+    } else {
       displayOptions(y, x, false);
     }
-    if(showInventory)
+    if (showInventory)
       displayInventory();
   }
   displayStats();
@@ -107,32 +105,32 @@ void Menu::clear() {
 }
 
 void Menu::displayTile(int y, int x) {
-  //Examine tile at player's position
-  Tile * tile = map->getTile(y, x);
+  // Examine tile at player's position
+  Tile *tile = map->getTile(y, x);
   char itemChar = tile->item;
 
-  Item * item = tile->itemType;
+  Item *item = tile->itemType;
   string floor = " ";
 
-  //Pretty'ing the names of the tiles
-  switch(tile->type){
-	case MEADOW:
-	   floor= "Meadow";
-	   break;
-	case WATER:
-	   floor = "Water";
-	   break;
-	case WALL:
-	   floor = "Wall";
-	   break;
-	case SWAMP:
-	   floor = "Swamp";
-	   break;
-	case DIAMOND:
-	   floor = "*+Diamond+*";
-	   break;
-	default:
-	   break;
+  // Pretty'ing the names of the tiles
+  switch (tile->type) {
+  case MEADOW:
+    floor = "Meadow";
+    break;
+  case WATER:
+    floor = "Water";
+    break;
+  case WALL:
+    floor = "Wall";
+    break;
+  case SWAMP:
+    floor = "Swamp";
+    break;
+  case DIAMOND:
+    floor = "*+Diamond+*";
+    break;
+  default:
+    break;
   }
 
   if (tile->isVisible) {
@@ -140,55 +138,45 @@ void Menu::displayTile(int y, int x) {
 
     // Tile may not have an item, or it may be removed from the map
     if (item != NULL && itemChar != ' ') {
-      mvprintw(++this->line, TEXT_X, "> Item:" );
-      mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str() );
+      mvprintw(++this->line, TEXT_X, "> Item:");
+      mvprintw(++this->line, TEXT_X, "  %s ", item->getName().c_str());
 
       // Display info about what the tool can be used for
       if (itemChar == 'T') {
-        mvprintw(++this->line, TEXT_X, "> Use: " );
-        switch (item->getObstacle()-1) {
-          case BOULDER:
-            mvprintw(++this->line, TEXT_X, "  Rocks" );
+        mvprintw(++this->line, TEXT_X, "> Use: ");
+        switch (item->getObstacle() - 1) {
+        case BOULDER:
+          mvprintw(++this->line, TEXT_X, "  Rocks");
           break;
-          case TREE:
-            mvprintw(++this->line, TEXT_X, "  Plants" );
+        case TREE:
+          mvprintw(++this->line, TEXT_X, "  Plants");
           break;
-          case MONSTER:
-            mvprintw(++this->line, TEXT_X, "  Monsters");
+        case MONSTER:
+          mvprintw(++this->line, TEXT_X, "  Monsters");
           break;
         }
       }
 
-      //treasure does not work as expected, substitute detectoin method used
-      if(0 < item->getMoney())
-      {
+      // treasure does not work as expected, substitute detectoin method used
+      if (0 < item->getMoney()) {
         mvprintw(++this->line, TEXT_X, "> Fortune: %d", item->getMoney());
-      }
-      else if (itemChar != '!' && itemChar != '?')
-      {
+      } else if (itemChar != '!' && itemChar != '?') {
         mvprintw(++this->line, TEXT_X, "> Cost: %d", item->getCost());
       }
 
-      if(itemChar == 'T' || itemChar == '!')
-      {
+      if (itemChar == 'T' || itemChar == '!') {
         mvprintw(++this->line, TEXT_X, "> Strength: %d", item->getStrength());
-      }
-      else if(itemChar == 'B' || itemChar == 'S' || itemChar == '$' || itemChar == '?')
-      {
+      } else if (itemChar == 'B' || itemChar == 'S' || itemChar == '$' ||
+                 itemChar == '?') {
         ++this->line;
-      }
-      else
-      {
+      } else {
         mvprintw(++this->line, TEXT_X, "> Energy: %d", item->getStrength());
       }
-    }
-    else
-    {
+    } else {
       int enCost = -1;
-      if(tile->type == SWAMP) {
+      if (tile->type == SWAMP) {
         --enCost;
-      }
-      else if(tile->type == WATER) {
+      } else if (tile->type == WATER) {
         ++enCost;
       }
       mvprintw(++this->line, TEXT_X, ">");
@@ -196,8 +184,7 @@ void Menu::displayTile(int y, int x) {
       mvprintw(++this->line, TEXT_X, ">");
       mvprintw(++this->line, TEXT_X, "> Energy: %d", enCost);
     }
-  }
-  else {
+  } else {
     mvprintw(++this->line, TEXT_X, "> Grovnick: ?");
     mvprintw(++this->line, TEXT_X, ">");
     mvprintw(++this->line, TEXT_X, ">");
@@ -208,38 +195,34 @@ void Menu::displayTile(int y, int x) {
   ++this->line; // Add separation line
 }
 
-void Menu::displayOptions(int y, int x) {
-  displayOptions(y, x, true);
-}
+void Menu::displayOptions(int y, int x) { displayOptions(y, x, true); }
 
 void Menu::displayOptions(int y, int x, bool full) {
-  string direction;  // Direction text
+  string direction; // Direction text
 
   mvprintw(++this->line, TEXT_X, "Options:"); // Option heading
 
   // If item is purchasable, display option to buy
   if (map->isPurchasable(y, x)) {
-    Tile * tile = map->getTile(y, x);
+    Tile *tile = map->getTile(y, x);
     // First show error messages if player can't buy the item
     if (tile->item == 'B' && player->hasBinoculars()) {
       attron(COLOR_PAIR('E'));
       mvprintw(++this->line, TEXT_X, " You already have ");
       mvprintw(++this->line, TEXT_X, " binoculars. ");
       attroff(COLOR_PAIR('E'));
-    }
-    else if (tile->item == 'S' && player->hasShip()) {
+    } else if (tile->item == 'S' && player->hasShip()) {
       attron(COLOR_PAIR('E'));
       mvprintw(++this->line, TEXT_X, " You already have ");
       mvprintw(++this->line, TEXT_X, " a ship. ");
       attroff(COLOR_PAIR('E'));
-    }
-    else if (player->getMoney() <= tile->itemType->getCost()) {
+    } else if (player->getMoney() <= tile->itemType->getCost()) {
       attron(COLOR_PAIR('E'));
       mvprintw(++this->line, TEXT_X, " Not enough whiffles ");
       mvprintw(++this->line, TEXT_X, " to buy this item! ");
       attroff(COLOR_PAIR('E'));
-    }
-    else if (tile->item == 'T' && player->getNumberOfTool() >= MAX_INVENTORY) {
+    } else if (tile->item == 'T' &&
+               player->getNumberOfTool() >= MAX_INVENTORY) {
       attron(COLOR_PAIR('E'));
       mvprintw(++this->line, TEXT_X, " You can only hold ");
       mvprintw(++this->line, TEXT_X, " %d tools at once ", MAX_INVENTORY);
@@ -280,16 +263,16 @@ void Menu::displayOptions(int y, int x, bool full) {
       }
 
       // If the neigboring tile is passable, display the option to move
-      Tile * tile = map->getTile(_y, _x);
+      Tile *tile = map->getTile(_y, _x);
       if (tile != NULL) {
-        if (tile->type == MEADOW || tile->type == SWAMP || (tile->type == WATER && player->hasShip())) {
+        if (tile->type == MEADOW || tile->type == SWAMP ||
+            (tile->type == WATER && player->hasShip())) {
           mvprintw(++this->line, TEXT_X, direction.c_str());
         }
       }
     }
 
-    mvprintw(++this->line, TEXT_X,">) Inspect");
-
+    mvprintw(++this->line, TEXT_X, ">) Inspect");
   }
 
   if (player->wantSeeClue()) {
@@ -298,54 +281,52 @@ void Menu::displayOptions(int y, int x, bool full) {
   }
 
   if (!showInventory) {
-    mvprintw(++this->line, TEXT_X,"I) Inventory");
-  }
-  else {
-    mvprintw(++this->line, TEXT_X,"I) Close Inventory");
+    mvprintw(++this->line, TEXT_X, "I) Inventory");
+  } else {
+    mvprintw(++this->line, TEXT_X, "I) Close Inventory");
   }
 
   if (player->hasClue(y, x)) {
     if (player->wantSeeClue()) {
-      mvprintw(++this->line, TEXT_X,"C) Hide Clue");
-    }
-    else {
-      mvprintw(++this->line, TEXT_X,"C) Show Clue");
+      mvprintw(++this->line, TEXT_X, "C) Hide Clue");
+    } else {
+      mvprintw(++this->line, TEXT_X, "C) Show Clue");
     }
   }
 }
 
-void Menu::displayClue(void){
-  //the position of the clue
+void Menu::displayClue(void) {
+  // the position of the clue
   int y;
   int x;
-  //the position of the target
+  // the position of the target
   int targetY;
   int targetX;
 
   string clue;
   string piece;
-  Tile * tile;
+  Tile *tile;
   long unsigned int i = 0;
   unsigned int marker = 0;
 
-  if(player->wantSeeClue()){
-    //if the player holds a clue, copy the coordinate into y,x
-    if(player->hasClue(y,x)){
+  if (player->wantSeeClue()) {
+    // if the player holds a clue, copy the coordinate into y,x
+    if (player->hasClue(y, x)) {
       tile = map->getTile(y, x);
       ++this->line;
-      mvprintw(++this->line, TEXT_X,"Clue:");
+      mvprintw(++this->line, TEXT_X, "Clue:");
       int lastLine = LINES - 4;
-      //if there is a clue, copy the content into the string and print it out
-      if(tile->itemType->getDetails(clue,targetY,targetX)){
-	      clue += ' ';//append space for lastof to grab at end of line
-        while(i < clue.length()-1){
-	  marker = clue.find_last_of(' ', i+MENU_WIDTH - 2);
+      // if there is a clue, copy the content into the string and print it out
+      if (tile->itemType->getDetails(clue, targetY, targetX)) {
+        clue += ' '; // append space for lastof to grab at end of line
+        while (i < clue.length() - 1) {
+          marker = clue.find_last_of(' ', i + MENU_WIDTH - 2);
 
-          piece = clue.substr(i, marker-i);
+          piece = clue.substr(i, marker - i);
 
           mvprintw(++this->line, TEXT_X, "%s", piece.c_str());
 
-          i = marker+1;
+          i = marker + 1;
 
           if (this->line >= lastLine) {
             move(lastLine, TEXT_X);
@@ -366,77 +347,72 @@ void Menu::displayTool(vector<Tool *> tool) {
   attroff(COLOR_PAIR('H'));
 
   if (tool.size() == 0) {
-    mvprintw(++this->line, TEXT_X, " No tools available " );
-    mvprintw(++this->line, TEXT_X, " for this obstacle. " );
+    mvprintw(++this->line, TEXT_X, " No tools available ");
+    mvprintw(++this->line, TEXT_X, " for this obstacle. ");
 
     ++this->line;
     mvprintw(++this->line, TEXT_X, " Press any key ");
     mvprintw(++this->line, TEXT_X, " to engage barehanded ");
-  }
-  else {
-    for(unsigned int i = 0;i < tool.size(); i++) {
-      mvprintw(++this->line, TEXT_X,"%d. [%d] %s", i+1, tool[i]->getStrength(), tool[i]->getName().c_str());
+  } else {
+    for (unsigned int i = 0; i < tool.size(); i++) {
+      mvprintw(++this->line, TEXT_X, "%d. [%d] %s", i + 1,
+               tool[i]->getStrength(), tool[i]->getName().c_str());
     }
 
     ++this->line;
     mvprintw(++this->line, TEXT_X, " Press any other key ");
     mvprintw(++this->line, TEXT_X, " to engage barehanded ");
   }
-
 }
 
+void Menu::displayInventory() {
+  ++this->line;
+  mvprintw(++this->line, TEXT_X, "Inventory: [Strength] ");
 
-void Menu::displayInventory(){
-	++this->line;
-	mvprintw(++this->line, TEXT_X, "Inventory: [Strength] ");
-
-	Tool** tools = player->getTools();
-	int toolCount = player->getNumberOfTool();
-	if((tools) == NULL || (toolCount == 0 && !player->hasBinoculars() && !player->hasShip()))	{
+  Tool **tools = player->getTools();
+  int toolCount = player->getNumberOfTool();
+  if ((tools) == NULL ||
+      (toolCount == 0 && !player->hasBinoculars() && !player->hasShip())) {
     mvprintw(++this->line, TEXT_X, "No tools yet");
   }
 
   int lastLine = LINES - 4;
 
-	for(int k =0; k< toolCount; ++k){
+  for (int k = 0; k < toolCount; ++k) {
     if (++this->line >= lastLine) {
       mvprintw(lastLine, TEXT_X, "...");
       break;
+    } else {
+      if (tools[k] != NULL)
+        mvprintw(this->line, TEXT_X, "[%d] %s", tools[k]->getStrength(),
+                 tools[k]->getName().c_str());
     }
-    else {
-      if(tools[k]!= NULL)
-        mvprintw(this->line, TEXT_X, "[%d] %s", tools[k]->getStrength(), tools[k] ->getName().c_str());
-    }
-	}
+  }
 
   if (this->line < lastLine) {
-    if(player->hasBinoculars())
+    if (player->hasBinoculars())
       mvprintw(++this->line, TEXT_X, "[-] Binoculars");
-    if(player->hasShip())
+    if (player->hasShip())
       mvprintw(++this->line, TEXT_X, "[-] Ship");
   }
 
-	return;
+  return;
 }
 
-void Menu::displayInventoryToggle(){
+void Menu::displayInventoryToggle() {
 
-	  if(!showInventory) {
-      player->setSeeClue(false);
-	    this->showInventory = true;
-    }
-	  else {
-		  this->showInventory = false;
-    }
-
+  if (!showInventory) {
+    player->setSeeClue(false);
+    this->showInventory = true;
+  } else {
+    this->showInventory = false;
+  }
 }
 
-bool Menu::showingInventory(){
-	return showInventory;
-}
-void Menu::toggleOptions(){
-	if(showOptions)
-		showOptions = false;
-	else
-		showOptions = true;
+bool Menu::showingInventory() { return showInventory; }
+void Menu::toggleOptions() {
+  if (showOptions)
+    showOptions = false;
+  else
+    showOptions = true;
 }

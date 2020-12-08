@@ -1,42 +1,23 @@
 #include "Item.h"
 
 // Randomly generate Ship
-Ship::Ship(){
-  value = rand() % 901 + 100;
-}
+Ship::Ship() { value = rand() % 901 + 100; }
 
-Ship::~Ship(){
-}
+Ship::~Ship() {}
 
-int Ship::getCost(){
-  return value;
-}
+int Ship::getCost() { return value; }
 
-int Ship::getStrength(){
-  return 0;
-}
+int Ship::getStrength() { return 0; }
 
-ObstacleType Ship::getObstacle(){
-  return BOULDER;
-}
+ObstacleType Ship::getObstacle() { return BOULDER; }
 
-int Ship::getDetails(string & source,int & y,int & x){
-  return 0;
-}
+int Ship::getDetails(string &source, int &y, int &x) { return 0; }
 
 // Get money
-int Ship::getMoney(){
-  return 0;
-}
+int Ship::getMoney() { return 0; }
 
-int Ship::getTruth(){
-  return 0;
-}
+int Ship::getTruth() { return 0; }
 
-void Ship::setClue(string clue,int y,int x){
-  return;
-}
+void Ship::setClue(string clue, int y, int x) { return; }
 
-string Ship::getName(){
-	return "Ship";
-}
+string Ship::getName() { return "Ship"; }
