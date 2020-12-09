@@ -663,7 +663,10 @@ void Engine::moveCursor(int direction) {
     cursor_x = shiftX;
   if (cursor_x - shiftX > COLS - MENU_WIDTH - 1)
     cursor_x = COLS - MENU_WIDTH + shiftX - 1;
-
+  
+  // avoid segfault
+  if (cursor_x >  WIDTH - 1) cursor_x = WIDTH - 1;
+  
   menu.cursor_y = cursor_y;
   menu.cursor_x = cursor_x;
 
